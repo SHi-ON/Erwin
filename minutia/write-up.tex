@@ -23,11 +23,25 @@
 
 \section{Preliminaries}
 
+\section{Bounding}
+We can use available inequalities to bound our solution. We are always interested in finding upperbound for the policies or solution we propose. Hence, by applying those inequalities -based on requirements of each of them- the upper-bound can be found. Confidence intervals come into the problem where the results are bounded with an upper-bound. Moreover, confidence intervals are authentic measures of reliability of a solution.
+
+    \subsection{Markov's Inequality}
+The most simplistic inequality among the other described here in terms of being realxed about the constraints and requirements. The only requirement that needs to be satisfied is $X \geq 0$.
+\begin{equation}
+\mathrm {P}(X \geq a ) \leq \frac { \mathrm { E}( X ) } { a }
+\end{equation}
+
+    \subsection{Chebyshev's Inequality}
+    \subsection{Chernoff bound}
+
 
 \section{Methodology}
-These two methods have distinct approach in distribution modeling. MaxLike estimates probability of occurrence, while MaxEnt estimates a relative suitability index. According to Fitzpatrick et al. (2013) there is no apparent correlation or proximity between MaxEnt’s indices and probability of occurrence. By default, the MaxEnt algorithm assumes a baseline species prevalence of 0.5 \cite{Phillips2008}. Therefore, MaxEnt assigns occurrence probability of 0.5 to most occurrence locations
+
 
 \section{Case Study}
+The current case is a study on an invasive plant (non-native to the ecosystem) in New England area, namely glossy buckthorn [capitalization?].
+
 
 % \includegraphics[width=1\columnwidth]{elements.png}
 
