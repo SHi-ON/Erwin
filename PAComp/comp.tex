@@ -1,0 +1,68 @@
+\documentclass{article}
+
+\usepackage{aaai}
+\usepackage{xcolor}
+
+
+\begin{document}
+
+\title{Statistical comparisons over species distribution modeling methods using presence-only data: MaxEnt vs. MaxLike}
+\author{Shayan Amani, Marek Petrik}
+\maketitle\
+
+\section*{Abstract}
+[Needs to be filled wisely!]
+
+\section*{Introduction}
+These two methods have distinct approach in distribution modeling. MaxLike estimates probability of occurrence, while MaxEnt estimates a relative suitability index. According to Fitzpatrick et al. (2013) there is no apparent correlation or proximity between MaxEnt’s indices and probability of occurrence. By default, the MaxEnt algorithm assumes a baseline species prevalence of 0.5 \cite{Phillips2008}. Therefore, MaxEnt assigns occurrence probability of 0.5 to most occurrence locations \cite{FitzpatrickMC;GotelliNJ;Ellison2013}.
+
+MaxLike assigns substantially higher probabilities to locations with recorded presences … than did any of the implementations of MaxEnt \cite{FitzpatrickMC;GotelliNJ;Ellison2013}.
+
+\subsection*{Occurrence Probability}
+As Fithian et al. (2013) discussed occurrence probability can varies with altering quadrat size in the surveyed land area or other sampling parameters. Survey path length -a factor of sampling scheme- acts as a predictor in different species distribution models in a wide variety of sampling units which introduces a level of vagueness to the way of interpreting the models' resulted maps \cite{Fithian2013}.
+
+\section*{MaxEnt}
+
+\subsection*{Pros and Cons}
+It is problematic that MaxEnt rarely predicts any areas with a high probability of occurrence ($p > 0.80$) and typically generates a relatively narrow distribution of occurrence probabilities of mean $p \approx 0.5$ for recorded presences. These probabilities depend on the assumed value of species prevalence (MaxEnt $default = 0.5$) \cite{FitzpatrickMC;GotelliNJ;Ellison2013}
+
+\subsection*{Concepts and Methodology}
+In MaxEnt literature true distribution of species $\pi$ in the study site $x$ is the probability distribution $\pi (x)$ which assigns non-negative values to each area $x$ with a total of one. Model constraints (features) are nothing more than functions of environmental \textcolor{red}{covariates}. In order to elude model under-specification which is most likely to happen when applying a number of constraints to the model we pick the feature having maximum entropy meaning most unconstrained one among the whole set. Applying Bayes’ rule to the conditional probability $P(x|y=1)$ ---the probability of being at $x$, given that the species is present--- proceeds as follows: 
+
+\begin{equation} \label{eq: Bayes' rule on MaxEnt's conditional probability}
+P ( y = 1 |  x )= \frac {P ( x | y = 1 )  P ( y = | 1 ) }{  P (  x )} =  \pi ( x ) P ( y = 1 ) | X |
+\end{equation}
+
+Equation \ref{eq: Bayes' rule on MaxEnt's conditional probability} exhibits that $\pi$ is proportional to probability of presence. However, if we have only occurrence data, we cannot determine the species’ prevalence \cite{Phillips2006}; \cite{Ward2009}. Therefore, instead of estimating $P(x|y=1)$ directly, we estimate the distribution $\pi$. According to Section 2 of Dudík et al. (2004) the Maxent distribution belongs to the family of Gibbs distributions derived from the set of features. Gibbs distributions are exponential distributions:
+
+\begin{equation} \label{eq:Gibbs distribution}
+q_\lambda (x) = \frac{ \mathrm{exp} (\Sigma_{j=1}^{n} \lambda_j f_j(x))} {Z_\lambda}
+\end{equation}
+
+where $\lambda$ is vector of feature weights, $Z_\lambda$ is normalization constant to guarantee that all probabilities $q_\lambda (x)$ sum to one over the study region.
+
+\section*{MaxLike}
+
+
+\subsection*{Pros and Cons}
+In contrast, MaxLike usually generates a broader range of occurrence probabilities, with generally higher occurrence probabilities \cite{Phillips2006}.
+
+\section*{Inhomogeneous Poisson Process}
+IPP, a relatively simple model which is defined by the intensity function of each point $Z$ in the area domain $D$ as:
+
+\begin{equation} \label{eq:IPP intensity function}
+\lambda : D \longrightarrow [0,\infty].
+\end{equation}
+
+
+
+\section*{Likelihood}
+
+[To be completed soon!]
+
+
+\bibliographystyle{aaai}
+\bibliography{library}
+
+
+\end{document}
