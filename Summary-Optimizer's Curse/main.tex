@@ -1,0 +1,60 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+%
+% For alternative styles, see the biblatex manual:
+% http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf
+%
+% The 'verbose' family of styles produces full citations in footnotes, 
+% with and a variety of options for ibidem abbreviations.
+%
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
+\bibliography{sample}
+
+\usepackage{lipsum} % for dummy text
+
+\title{The Optimizer’s Curse: Skepticism and
+Postdecision Surprise in Decision Analysis}
+
+\author{Shayan Amani}
+
+\date{October 3, 2018}
+
+\begin{document}
+\maketitle
+
+\section{Intro}
+This paper discuss an issue may happen in an analysis and the results inferred from it. As a close relationship with bias-variance trade-off concept, optimizer's curse is all about clarifying that being relied on the values emerged out of an analysis and reusing that pool again to build a selection scheme upon those values could potentially end up not to the desired quality outcomes. The authors deliberate about that matter in a way that exhibit there is a relationship with the way we select values as a decision maker.
+
+
+\section{Questions}
+
+\subsection{Why is this paper relevant to reinforcement learning?}
+According to the definition of reinforcement learning, the agent tries to choose the best action possible to get maximum final cumulative reward. Neglecting the need of information about the future in this learning method, we can probe the authors efforts to improve decission making process with limited information about the future.
+
+
+\subsection{How would you beat the optimizer's curse without using Bayesian estimates?}
+In order to eliminate this so called curse effect, we can turn to the Bayesian settings and use the prior estimations. However and as a proposed way of dealing with that effect, they have bring up a model namely hierarchical model in section 3. 
+
+
+\subsection{What are the pro's and con's of using Bayesian estimates?}
+Laying out a Bayesian approach could be not straightforward in all cases. Generally speaking, Bayesian model needs a prior mean estimation and that is not always an uncomplicated objective to be done. On the other hand, it can easily make sure that using a skeptical Bayesian approach may not end up with disappointment.
+
+
+
+% This is an example citation \autocite{ginsberg}.
+% \lipsum[1] % dummy text
+
+% This is another example citation \autocite{brassard}.
+% \lipsum[2] % dummy text
+
+% This is a repeated citation \autocite{brassard}.
+% \lipsum[3] % dummy text
+
+% This is another example citation \autocite{adorf}.
+% \lipsum[4] % dummy text 
+
+\end{document}

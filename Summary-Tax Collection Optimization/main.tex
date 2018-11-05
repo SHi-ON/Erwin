@@ -1,0 +1,63 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+%
+% For alternative styles, see the biblatex manual:
+% http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf
+%
+% The 'verbose' family of styles produces full citations in footnotes, 
+% with and a variety of options for ibidem abbreviations.
+%
+\usepackage{csquotes}
+\usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
+\bibliography{sample}
+
+\usepackage{lipsum} % for dummy text
+
+\title{Tax Collections Optimization for New York State - A Brief Overview}
+
+\author{Shayan Amani}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Discovering the case}
+ Tax collections process is a complex process involving various restrictions and constraints arising from business, legal and organizational considerations. Consequently most existing approaches in the market rely on rigid manually constructed rules indeed this was the case with the legacy system in New York State. Leaving fragments will get intact wherever necessary and automatically configure the rest of the process in an adaptive manner based on data analytics and optimization. In order to do so it needs a mathematical framework to describe such a complex business process and the framework that is used is so-called Constrained-MDP. 
+ 
+ As it's shown in Figure 1, taxpayers can be viewed as transitioning from states to states depending on their stage in the collection process. Actions are the collections action taking on to them by the tax authority and the rewards are some function of the amount collected. 
+ 
+ Another critical aspect of the MDP is the way it formulates the goal to be the maximization of long-term rewards. This may allow the system to recognize for example the value of issuing a warrant in a no one warranted state even if it may not yield any immediate payoff. Since it is a prerequisite to the balancing to a stage in which levy can be performed.
+ 
+ Another group of constraints is the resource constraints. For example, if a case is assigned to a district office the case will consume resources from that the district office and not from the call center. 
+ 
+
+\section{Now the solution}
+ 
+They have used a special case of RL (C-RL) for solving MDP given only access to the data generated from it. 
+
+The constrained version of the Bellman equation shown in Figure 3 is the root of iterative method that this paper used. For estimating the expected long-term reward as a function of the state and action. The idea is that the long-term reward equals to the sum of the immediate reward and the long-term reward expected from the next state.
+
+As in the original value iteration procedure for solving bellman equation, it iterates this process each time by updating the value of $R$ on the left-hand side using the estimated value of $R$ from the previous iteration on the right-hand side. The iterative procedure is consisting of analytics and optimization is repeated each time performing further look ahead and improving the quality of estimation and optimization. 
+
+
+The method provides a comprehensive approach that integrates analytics optimization and rules the engine receives as input action constraints expressed as rules, resource constraints and training data consisting of historical state sequences and corresponding actions at multiple time stamps per taxpayer. it did perform the iterative modeling and optimization process and finally produces as output segment and action allocation rules which are then executed in a rules processor. 
+
+\section{Just a quick statistic}
+It was pointed out in the class and I thought it may helpful to recap those statistics here. The analytics involves ten collection actions, approximately 200 features and an order of about a thousand output segments. In one week the solution process is several million events for a few hundred thousand taxpayers resulting in action allocations for those taxpayers.
+
+% This is an example citation \autocite{ginsberg}.
+% \lipsum[1] % dummy text
+
+% This is another example citation \autocite{brassard}.
+% \lipsum[2] % dummy text
+
+% This is a repeated citation \autocite{brassard}.
+% \lipsum[3] % dummy text
+
+% This is another example citation \autocite{adorf}.
+% \lipsum[4] % dummy text 
+
+\end{document}
