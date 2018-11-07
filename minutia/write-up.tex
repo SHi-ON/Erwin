@@ -24,7 +24,7 @@
 \section{Preliminaries}
 
 \section{Bounding}
-We can use available inequalities to bound our solution. We are always interested in finding upperbound for the policies or solution we propose. Hence, by applying those inequalities -based on requirements of each of them- the upper-bound can be found. Confidence intervals come into the problem where the results are bounded with an upper-bound. Moreover, confidence intervals are authentic measures of reliability of a solution.
+We can use available inequalities to bound our solution. We are always interested in finding upper bound for the policies or solution we propose. Hence, by applying those inequalities -based on requirements of each of them- the upper-bound can be found. Confidence intervals come into the problem where the results are bounded with an upper-bound. Moreover, confidence intervals are authentic measures of reliability of a solution.
 
     \subsection{Markov's Inequality}
 The most simplistic inequality among the other described here in terms of being realxed about the constraints and requirements. The only requirement that needs to be satisfied is $X \geq 0$.
@@ -48,8 +48,8 @@ Sampling using a logistic regression (or any other methods) we can generate some
 
 % \includegraphics[width=1\columnwidth]{elements.png}
 
-\section{A/B Test vs. Multi-armed Bandit Problem}
-In a multi-armed bandit problem agent choose and pull one of the arms randomly at the beginning. The pulled arm bandit generates a distribution with specific values of mean $\mu_i$ and variance. The distribution is stationary but still unknown before pulling. \autocite{\autocite{brassard}}
+\section{Multi-armed Bandit Problem vs. A/B Test}
+In a multi-armed bandit problem agent choose and pull one of the arms randomly at the beginning. The pulled arm bandit generates a distribution with specific values of mean $\mu_i$ and variance. The distribution is stationary but still unknown before pulling. \autocite{Strehl and Littman 2008}
 
 \begin{tabular}{|c|c|}
     \hline
@@ -69,6 +69,12 @@ Upper confidence interval includes true expected value and it gets narrow down (
 \begin{itemize}
     \item Confidence interval becomes tighter along with iterations
     \item Return value along iterations converges to the expected true value.
+\end{itemize}
+
+\section {Future Review}
+\begin{itemize}
+    \item Interval Estimation approach relationship with multi-armed bandit.
+
 \end{itemize}
 
 
