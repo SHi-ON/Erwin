@@ -45,8 +45,31 @@ The current case is a study on an invasive plant (non-native to the ecosystem) i
 
 \section{Bayesian Settings}
 Sampling using a logistic regression (or any other methods) we can generate some distributions for our features (bio10 and bio5 REVIEW and alpha) then we are able to feed these to a linear program to calculate weights (L1 norm or any other distance metrics) and then we can build our ambiguity set based on what we get as weights.
+
 % \includegraphics[width=1\columnwidth]{elements.png}
 
+\section{A/B Test vs. Multi-armed Bandit Problem}
+In a multi-armed bandit problem agent choose and pull one of the arms randomly at the beginning. The pulled arm bandit generates a distribution with specific values of mean $\mu_i$ and variance. The distribution is stationary but still unknown before pulling. \autocite{\autocite{brassard}}
+
+\begin{tabular}{|c|c|}
+    \hline
+    \textbf{A/B test}    &   \textbf{Multi-armed bandit}  \\
+    \hline
+    \hline
+    pure exploration    &   exploration along with exploitation \\
+    \hline
+    return after completion &   immediate return while running \\
+    \hline
+    expensive   &   cost-efficient \\
+    \hline
+\end{tabular}
+
+\subsubsection{Upper Confidence Bound Algorithm}
+Upper confidence interval includes true expected value and it gets narrow down (becomes smaller) after each iteration of the algorithm. In other words, the agent becomes more assured about the return value as it runs through each iterations. The agent picks the next upper confidence interval to exploit and continue with that until it finds a new higher value. Unneeded to mention that the two main actor in this algorithm are as follows:
+\begin{itemize}
+    \item Confidence interval becomes tighter along with iterations
+    \item Return value along iterations converges to the expected true value.
+\end{itemize}
 
 
 % This is an example citation \autocite{ginsberg}.
