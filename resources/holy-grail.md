@@ -5,4 +5,4 @@
 
 
 ## Tutorials:
-* https://medium.freecodecamp.org/an-introduction-to-reinforcement-learning-4339519de419
+* https://simoninithomas.github.io/Deep_reinforcement_learning_Course/
