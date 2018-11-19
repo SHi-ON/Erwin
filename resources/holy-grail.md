@@ -6,3 +6,7 @@
 
 ## Tutorials:
 * https://simoninithomas.github.io/Deep_reinforcement_learning_Course/
+
+
+## Good to read:
+* https://medium.com/@jonathan_hui/rl-model-based-reinforcement-learning-3c2b6f0aa323
