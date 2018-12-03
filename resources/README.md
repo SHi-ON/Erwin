@@ -7,7 +7,11 @@
 * [UC Berkeley Deep Reinforcement Learning course](http://rail.eecs.berkeley.edu/deeprlcourse/)
 * https://simoninithomas.github.io/Deep_reinforcement_learning_Course/
 
+### Lectures and Talks:
+* [David Silver's video lecture on Deep Reinforcement Learning](http://videolectures.net/rldm2015_silver_reinforcement_learning/)
+
 ### Good to read:
 * https://medium.com/@jonathan_hui/rl-model-based-reinforcement-learning-3c2b6f0aa323
 * https://towardsdatascience.com/introduction-to-various-reinforcement-learning-algorithms-i-q-learning-sarsa-dqn-ddpg-72a5e0cb6287
+* [Catch game with DRL based on simple RL example based on DQN paper implementation](https://medium.freecodecamp.org/deep-reinforcement-learning-where-to-start-291fb0058c01)
 * https://towardsdatascience.com/using-deep-q-learning-in-fifa-18-to-perfect-the-art-of-free-kicks-f2e4e979ee66
