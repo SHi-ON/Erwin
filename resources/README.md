@@ -16,4 +16,4 @@
 * https://medium.com/@jonathan_hui/rl-model-based-reinforcement-learning-3c2b6f0aa323
 * https://towardsdatascience.com/introduction-to-various-reinforcement-learning-algorithms-i-q-learning-sarsa-dqn-ddpg-72a5e0cb6287
 * [Catch game with DRL based on simple RL example](https://medium.freecodecamp.org/deep-reinforcement-learning-where-to-start-291fb0058c01)
-* https://towardsdatascience.com/using-deep-q-learning-in-fifa-18-to-perfect-the-art-of-free-kicks-f2e4e979ee66
+* [Keras plays Catch, a single file Reinforcement Learning example](https://edersantana.github.io/articles/keras_rl/)
