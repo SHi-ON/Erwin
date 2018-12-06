@@ -1,5 +1,8 @@
 ### List of beneficial resources
 
+#### Books:
+* [Reinforcement Learning](https://drive.google.com/file/d/1opPSz5AZ_kVa1uWOdOiveNiBFiEOHjkG/view)
+
 #### Papers:
 * [A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Halvorsen 2013](https://content.sciendo.com/view/journals/som/36/1/article-p1.xml)
 
