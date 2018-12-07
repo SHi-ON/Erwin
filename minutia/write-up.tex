@@ -25,7 +25,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Preliminaries}
-Number of possible policies is equal to number of actions to the power of number of states.
+Number of possible policies is equal to number of actions to the power of number of states. In reinforcement learning, the model trains from interactions with its environment (reward), instead of labeled data.\textbf{}
 
 \subsection{Action}
 
@@ -114,10 +114,18 @@ Note that it should be not confused with Markov brothers' inequality.
 \mathbb {P}(|X - \mathbb{E}[X]| \geq a ) \leq \frac { \mathrm { Var}( X ) } { a^2 }
 \end{equation}
 
+
 \subsection{Hoeffding's inequality}
 Using Hoeffding's lemma we can prove this inequality which the definition is as follows:
+
+Let $X_i$ be a bounded random variable with $X_i \in [b, d]$:
 \begin{equation}
-\mathbb {P} \left( \left| \frac{1}{n} \sum_{i=1}^{n} X_i - \mathbb{E}[X_i] \right| \geq a \right) \leq { \exp \left( \frac{-2 n a ^ {2} }{ \left(d-b \right) ^ 2} \right) }
+    \mathbb {P} \left( \left| \frac{1}{n} \sum_{i=1}^{n} X_i - \mathbb{E}[X_i] \right| \geq a \right) \leq { \exp \left( \frac{-2 n a ^ {2} }{ \left(d-b \right) ^ 2} \right) }
+\end{equation}
+
+In order to prove the above inequality we need to use Hoeffding's lemma:
+\begin{equation}
+    \mathbb {E} \left[ \exp \left( {\lambda ( X - \mathbb {E}[X] )} \right)  \right] \leq \exp \left( \frac{\lambda ^ 2 (d-b)^2}{8} \right)
 \end{equation}
 
 As PAC Optimal MDP Planning paper \autocite{Telghan et al. 2015} proposed they replaced Hoeffding-bound with Weissman confidence interval.
