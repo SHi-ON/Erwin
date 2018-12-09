@@ -1,17 +1,14 @@
 import pandas as pd
-import random
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn import model_selection
 from sklearn.linear_model import LogisticRegression
-from sklearn import datasets
 
 import pystan
 
-### cd /home/reazul/PhD_Research/MaxEnt_PointProcess/Codes/Experiments
-df = pd.read_csv("datasets/barberry_sim_NewEngland.csv")
+df = pd.read_csv("../datasets/barberry_sim_NewEngland.csv")
 num_sub_samples = 200
 sub_samples = df.sample(n=num_sub_samples)
 
@@ -30,7 +27,7 @@ Y = abundance_samples['N'].values
 def fit_bayesian_logistic_regression(X, y):
     stan_dat = {'N': len(X), 'detected': y.astype(int), 'bio10_5': X[:, 0], 'bio10_prMay': X[:, 1]}
 
-    sm = pystan.StanModel(file='model_logistic.stan')  # pystan.StanModel(model_code=m1)
+    sm = pystan.StanModel(file='./models/model_logistic.stan')  # pystan.StanModel(model_code=m1)
     # fit = sm.sampling(data=stan_dat, iter=20, chains=4, refresh=0)
     fit = sm.sampling(data=stan_dat, iter=180, chains=3, refresh=0)
 
