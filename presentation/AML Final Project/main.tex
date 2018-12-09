@@ -1,20 +1,34 @@
-\documentclass[a4paper,12pt]{article}
-\usepackage[english]{babel}
+% Golden Spiral can be approximated with Golden ratio or Fibonacci sequence.
+% Golden Ratio: a+b/a = a/b
+
+\documentclass{beamer}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 
-\usepackage{graphicx}
-\usepackage{csquotes}
-\usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
-\bibliography{sample}
+\usetheme{Cuerna}
+\usecolortheme{default}
+% default, bluesimplex, lettuce, brick
 
-\title{Advanced Machine Learning - Final Project}
-
+\title{TITLE}
 \author{Shayan Amani}
 
-\begin{document}
-\maketitle
+\date{DATE 2018}
+\institute{Department of Computer Science, University of New Hampshire}
 
-\section{Questions}
+\begin{document}
+
+  \begin{frame}
+    \titlepage
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Pneumonoultramicroscopicsilicovolcanoconiosis}
+    \framesubtitle{SUB}
+
+  \end{frame}
+
+
+    \section{Questions}
 \begin{itemize}
     \item 2000 samples for 10 times of 200 years. What kind of times?
     \item What are states? How many?
@@ -24,7 +38,7 @@
 We have 2000 samples for 200 years. In terms of games, this is like a already played game and we have the history of the gameplay.
 
 \subsection{State}
-each row 
+each row
 
 \subsection{Action}
 2 actions: 0 and 10.
@@ -36,4 +50,9 @@ A summation according to it's definition.
 
 \section{Methodology}
 We can use either On-Policy or Off-Policy methods. From the given samples it could be simply inferred that a model-free algorithm is needed and the reason is that the problem doesn't provide the transition probabilities.
+
+
+	%\includegraphics[scale=0.45]{img.jpg}
+
+
 \end{document}
