@@ -2,6 +2,9 @@
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 
+% CSL style files for Mendeley and other referencing tools:
+% https://github.com/citation-style-language/styles
+
 %
 % For alternative styles, see the biblatex manual:
 % http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf
@@ -25,12 +28,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Preliminaries}
-Number of possible policies is equal to number of actions to the power of number of states. In reinforcement learning, the model trains from interactions with its environment (reward), instead of labeled data.\textbf{}
+
+\subsection{Reinforcement Learning}
+In reinforcement learning, the model trains from interactions with its environment (reward), instead of labeled data. Reinforcement learning falls in between \textit{supervised learning} and \textit{unsupervised learning} in which you have sparse (possibly) and time-delayed labels, so called \textit{rewards} 
 
 \subsection{Action}
 
 \subsubsection{Exploration vs. Exploitation dilemma}
-Whether an AI should trust on the already learned part of the environment (exploitation) or trying new parts (actions, states, etc.) in hope for getting a higher \textit{reward} (exploration).  
+Whether an AI should trust on the already learned part of the environment (exploitation) or trying new parts (actions, states, etc.) in hope for getting a higher \textit{reward} (exploration). 
+
+\subsubsection{Credit assignment problem}
+This issue discusses which of the previous actions had a major role in bringing the reward and how big it was the share of participation of that specific action in the reward.
 
 \subsection{Reward}
 Reward is nothing more than \textit{time-delayed} labels to help agent interact with the environment through trial and error. 
@@ -40,6 +48,9 @@ Immediate reward, $r$ is what the agent gets after taking the action $a$ in stat
     Q ^ { * } ( s , a ) = \mathbb { E } _ { s ^ { \prime } \sim \mathcal { E } } \left[ r + \gamma \max _ { a ^ { \prime } } Q ^ { * } \left( s ^ { \prime } , a ^ { \prime } \right) | s , a \right]
 \end{equation}
 we can call Q(s,a) is value of an action and V(s,a) function is value of a state. 
+
+\subsection{Policy}
+Number of possible policies is equal to number of actions to the power of the number of states.
 
 \subsection{Prediction \& Control Tasks}
 From the perspective of tasks, one can divide RL tasks into two distinct categories, prediction and control. It is worth to mention that policy iteration includes both prediction and control steps.
@@ -160,7 +171,7 @@ TD-learning has lower \textit{variance} (than FVMC) because it depends on less f
 \end{itemize}
 
 \subsection{Q-learning}
-A variation of TD-learning which calculates and (then iteratively updates) Q function -which represents (predicts) maximum cumulative discounted reward with performing action $a$ in state $s$- using Bellman equation.  
+A variation of TD-learning which calculates and (then iteratively updates) Q function -which represents (predicts) maximum cumulative discounted reward with performing action $a$ in state $s$- using Bellman equation. This method is a table-based (tabular) algorithm and we use Q-table as a table with the dimensions of states $\times$ actions.
 
 \subsection{$\epsilon$-greedy}
 Popular in Deep Reinforcement Learning (DRL) which makes a good trade-off in terms of exploration and exploitation.
@@ -169,7 +180,15 @@ Popular in Deep Reinforcement Learning (DRL) which makes a good trade-off in ter
 Intrinsic to supervised learning methods, training is always time consuming and from a specific stage and on it becomes little-to-no improvement so the reasonable choice is switching to Reinforcement Learning framework.
 
 \subsubsection{Deep Q Network (DQN)}
-Renowned for higher dimensional problems like Atari games.
+Renowned for solving higher dimensional problems like Atari games.
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\subsubsection{Experience Replay}
+DQN mostly Relied on a stabilization technique with neural networks, called Experience replay.
+
+
 
 \subsubsection{Deep Deterministic Policy Gradient (DDPG)}
 Good choice for continuous action space such as real-world control tasks.
@@ -189,11 +208,6 @@ Good choice for continuous action space such as real-world control tasks.
     \caption{Caption}
     \label{tab:my_label}
 \end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Case Study}
-The current case is a study on an invasive plant (non-native to the ecosystem) in New England area, namely glossy buckthorn [capitalization?].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -230,6 +244,18 @@ Upper confidence interval includes true expected value and it gets narrow down (
     \item Confidence interval becomes tighter along with iterations
     \item Return value along iterations converges to the expected true value.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Paper Summaries}
+
+\subsection{Deep Q-Learning}
+\cite{Mnih2015}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Case Study}
+The current case is a study on an invasive plant (non-native to the ecosystem) in New England area, namely glossy buckthorn [capitalization?].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
