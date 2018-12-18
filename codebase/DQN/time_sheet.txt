@@ -1,0 +1,8 @@
+dqn_model_10_1 for project_sample1 = 59.21 seconds 
+dqn_model_10_1 for project_sample1 = 4.5 seconds 
+dqn_model_10_1 for project_sample1 = 3.81 seconds 
+dqn_model_10_1 for project_sample1 = 3.75 seconds 
+dqn_model_10_1 for project_sample1 = 3.74 seconds 
+dqn_model_10_1 for project_sample1 = 3.47 seconds 
+dqn_model_10_1 for project_sample1 = 3.57 seconds 
+dqn_model_10_1 for project_sample1 = 4.17 seconds 
