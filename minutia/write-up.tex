@@ -157,7 +157,7 @@ For building a model using repeated \textbf{random sampling} \autocite{For more 
     \item model-free
     \item episodic
     \item  all steps look ahead (observes rewards for \textbf{all steps} in an episode)
-    \item higher variance than TD
+    \item higher variance than TD: W $\leftarrow$ W $\frac{1}{b(A|S)}$ b is probability and if it becomes very small so W becomes so big.
     \item no bias
 \end{itemize}
 
