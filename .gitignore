@@ -3,7 +3,7 @@
 .idea
 
 ## JupyterNotebook ##
-.ipynb_checkpoints
+codebase/DQN/experiment/.ipynb_checkpoints
 */.ipynb_checkpoints/*
 
 ### LaTeX ###
@@ -348,7 +348,7 @@ docs/_build/
 target/
 
 # Jupyter Notebook
-.ipynb_checkpoints
+codebase/DQN/experiment/.ipynb_checkpoints
 
 # IPython
 profile_default/
