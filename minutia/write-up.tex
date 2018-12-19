@@ -12,10 +12,18 @@
 % The 'verbose' family of styles produces full citations in footnotes, 
 % with and a variety of options for ibidem abbreviations.
 %
+
 \usepackage{graphicx}
 \usepackage{csquotes}
 \usepackage{amsfonts} % \mathbb in equations
 \usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
+
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+
 \bibliography{sample}
 
 \title{Markovian Approach to Positive-only Problems}
@@ -201,11 +209,59 @@ Popular in Deep Reinforcement Learning (DRL) which makes a good trade-off in ter
 \subsection{Deep Reinforcement Learning}
 Intrinsic to supervised learning methods, training is always time consuming and from a specific stage and on it becomes little-to-no improvement so the reasonable choice is switching to Reinforcement Learning framework.
 
-\subsubsection{Deep Q Network (DQN)}
-Renowned for solving higher dimensional problems like Atari games.
+\subsubsection{Deep Q-Network (DQN)}
+Renowned for solving higher dimensional problems like Atari games. All of the steps are explained in Algorithm~\ref{alg:DQN}.
+
 \begin{itemize}
     \item batch RL algorithm
 \end{itemize}
+
+\begin{algorithm}[H]
+\caption{DQN algorithm in batch mode}
+\label{alg:DQN}
+\begin{algorithmic}[1]
+    \State init D \Comment{\textcolor{BlueViolet}{replay memory}}
+    \State init Q \Comment{\textcolor{BlueViolet}{Q-table w/ random weights}}
+    \State \textcolor{OrangeRed}{get} or observe $s_0$ \Comment{\textcolor{BlueViolet}{the initial state}}
+    \For{episodes}
+        \State \textit{\textcolor{OrangeRed}{- skip $\epsilon$-greedy exploration}}
+        \State $a = argmax_a Q(s,a)$
+        \State \textit{\textcolor{OrangeRed}{- skip applying action $a$ to the environment}}
+        \rlap{\smash{$\left.\begin{array}{@{}c@{}}\\{}\\{}\end{array}\color{BlueViolet}\right\}%
+          \color{BlueViolet} experience$}}
+        \State \textcolor{OrangeRed}{get} or observe $r, s'$
+        \State store the \textbf{experience} $<s, a, r, s'>$ in replay memory $D$
+        \State \textit{random} \textbf{sampling} from $D$ $<ss, aa, rr, ss'>$  \Comment{\textcolor{BlueViolet}{[mini]-batch}}
+        \If{$ss' \neq $ terminal state} \Comment{\textcolor{BlueViolet}{target for each mini-batch}}
+            \State $tt = rr + \gamma max_{aa'} Q(ss', aa')$
+        \Else
+            \State $tt = rr$
+        \EndIf
+        \State train the network
+    \EndFor
+\end{algorithmic}
+\end{algorithm}
+
+% \algnewcommand{\algorithmicgoto}{\textbf{go to}}%
+% \algnewcommand{\Goto}[1]{\algorithmicgoto~\ref{#1}}%
+% \begin{algorithm}
+%   \caption{Euclid’s algorithm}\label{euclid}
+%   \begin{algorithmic}[1]
+%     \Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
+%     \State $r\gets a\bmod b$
+%     \While{$r\not=0$} \Comment{We have the answer if r is 0}\label{marker}
+%       \State $a\gets b$
+%       \State $b\gets r$\hspace*{4em}%
+%         \rlap{\smash{$\left.\begin{array}{@{}c@{}}\\{}\\{}\\{}\\{}\end{array}\color{red}\right\}%
+%           \color{red}\begin{tabular}{l}We loop here\\until $r=0$.\end{tabular}$}}
+%       \State $r\gets a\bmod b$
+%     \EndWhile
+%     \State \textbf{return} $b$\Comment{The gcd is b}
+%     \State \Goto{marker}
+%   \EndProcedure
+% \end{algorithmic}
+% \end{algorithm}
+
 
 \subsubsection{Experience Replay}
 DQN mostly Relied on a stabilization technique with neural networks, called Experience replay.
@@ -227,7 +283,7 @@ Good choice for continuous action space such as real-world control tasks.
     DDPG    &   model-free  &   on-policy   &   continuous  &   Actor-critic\\
     \hline
 \end{tabular}
-    \caption{Caption}
+    \caption{DRL methods comparison chart}
     \label{tab:my_label}
 \end{table}
 
