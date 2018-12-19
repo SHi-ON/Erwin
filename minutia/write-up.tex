@@ -20,6 +20,9 @@
 
 \usepackage[dvipsnames]{xcolor}
 
+\usepackage{array}
+\newcolumntype{L}{>{\centering\arraybackslash}m{3cm}}
+
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{caption}
@@ -273,18 +276,18 @@ DQN mostly Relied on a stabilization technique with neural networks, called Expe
 \subsubsection{Deep Deterministic Policy Gradient (DDPG)}
 Good choice for continuous action space such as real-world control tasks.
 
-
-\begin{table}[]
+\begin{table}
     \centering
-    \begin{tabular}{|c|c|c|c|c|}
-    \hline
-    Method  &    Model Dependence    &   Policy Dependence   &   Action Continuity  & Parent Algorithm(s)\\
-    \hline
-    DQN &   model-free  &   on-policy   &   discrete    &   Q-learning, DL\\
-    \hline
-    DDPG    &   model-free  &   on-policy   &   continuous  &   Actor-critic\\
-    \hline
-\end{tabular}
+    \begin{tabular}{|c|L|L|L|L|}
+        \hline
+        \textbf{Method}  &    \textbf{Model Dependence}    &   \textbf{Policy Dependence}   &   \textbf{Action Continuity}  & \textbf{Parent Algorithm(s)}\\
+        \hline
+        \hline
+        DQN &   model-free  &   on-policy   &   discrete    &   Q-learning, DL\\
+        \hline
+        DDPG    &   model-free  &   on-policy   &   continuous  &   Actor-critic\\
+        \hline
+    \end{tabular}
     \caption{DRL methods comparison chart}
     \label{tab:my_label}
 \end{table}
