@@ -220,24 +220,26 @@ Renowned for solving higher dimensional problems like Atari games. All of the st
 \caption{DQN algorithm in batch mode}
 \label{alg:DQN}
 \begin{algorithmic}[1]
-    \State init D \Comment{\textcolor{BlueViolet}{replay memory}}
-    \State init Q \Comment{\textcolor{BlueViolet}{Q-table w/ random weights}}
-    \State \textcolor{OrangeRed}{get} or observe $s_0$ \Comment{\textcolor{BlueViolet}{the initial state}}
-    \For{episodes}
-        \State \textit{\textcolor{OrangeRed}{- skip $\epsilon$-greedy exploration}}
-        \State $a = argmax_a Q(s,a)$
-        \State \textit{\textcolor{OrangeRed}{- skip applying action $a$ to the environment}}
-        \rlap{\smash{$\left.\begin{array}{@{}c@{}}\\{}\\{}\end{array}\color{BlueViolet}\right\}%
-          \color{BlueViolet} experience$}}
-        \State \textcolor{OrangeRed}{get} or observe $r, s'$
-        \State store the \textbf{experience} $<s, a, r, s'>$ in replay memory $D$
-        \State \textit{random} \textbf{sampling} from $D$ $<ss, aa, rr, ss'>$  \Comment{\textcolor{BlueViolet}{[mini]-batch}}
-        \If{$ss' \neq $ terminal state} \Comment{\textcolor{BlueViolet}{target for each mini-batch}}
-            \State $tt = rr + \gamma max_{aa'} Q(ss', aa')$
-        \Else
-            \State $tt = rr$
-        \EndIf
-        \State train the network
+    \State Init D \Comment{\textcolor{BlueViolet}{replay memory}}
+    \State Init Q \Comment{\textcolor{BlueViolet}{Q-table w/ random weights}}
+    \State \textcolor{OrangeRed}{Get} or Observe $s_0$ \Comment{\textcolor{BlueViolet}{the initial state}}
+    \For{each episode}
+        \For{samples in each episode}
+            \State \textit{\textcolor{OrangeRed}{- skip $\epsilon$-greedy exploration}}
+            \State $a = argmax_a Q(s,a)$
+            \State \textit{\textcolor{OrangeRed}{- skip applying action $a$ to the environment}}
+            \rlap{\smash{$\left.\begin{array}{@{}c@{}}\\{}\\{}\end{array}\color{BlueViolet}\right\}%
+              \color{BlueViolet} experience$}}
+            \State \textcolor{OrangeRed}{Get} or Observe $r, s'$
+            \State Store the \textbf{experience} $<s, a, r, s'>$ in replay memory $D$
+            \State \textit{Random} \textbf{sampling} from $D$ $<ss, aa, rr, ss'>$  \Comment{\textcolor{BlueViolet}{[mini]-batch}}
+            \If{$ss' \neq $ terminal state} \Comment{\textcolor{BlueViolet}{target for each mini-batch}}
+                \State $tt = rr + \gamma max_{aa'} Q(ss', aa')$
+            \Else
+                \State $tt = rr$
+            \EndIf
+            \State Train the network
+        \EndFor    
     \EndFor
 \end{algorithmic}
 \end{algorithm}
@@ -328,7 +330,7 @@ Upper confidence interval includes true expected value and it gets narrow down (
 \section{Paper Summaries}
 
 \subsection{Deep Q-Learning}
-\cite{Mnih2015}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -341,9 +343,8 @@ The current case is a study on an invasive plant (non-native to the ecosystem) i
 \begin{itemize}
     \item Interval Estimation approach relationship with multi-armed bandit.
     \item Thompson sampling
-    \item Bernstein inequalities 
-
-
+    \item Bernstein inequalities
+    \item DRL approach to invasive species management
 \end{itemize}
 
 
