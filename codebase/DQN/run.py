@@ -1,30 +1,13 @@
 import numpy as np
 import pandas as pd
-from keras.models import model_from_json
 import matplotlib.pyplot as plt
 
-from qtrain import *
 from util import *
 import sample as samp
 
 
-def model_import():
-    with open("./models/" + model_name + ".json", "r") as m_file:
-        mdl = model_from_json(json.load(m_file))
-        mdl.load_weights("./models/" + model_name + ".h5")
-        mdl.compile("adam", "mse")  # TODO
-    return mdl
-
-
-def policy_store(df, plc):
-    plc_df = pd.DataFrame(plc)
-    new_df = pd.concat([df, plc_df], axis=1, sort=False)
-    new_df.columns = policy_col_names
-    new_df.to_csv("./datasets/" + policy_name + samples_name + ".csv", sep=",")
-
-
 def run_model():
-    d_f = handler()
+    d_f = dataset_import()
     smpl = samp.Sample(d_f, v1_max, reward_col)
     epochs = smpl.get_epochs()
 
@@ -61,7 +44,7 @@ def run_model():
             # plt.show()
             # plt.savefig("./figs/%03d.png" % (ep + 1))
 
-    policy_store(d_f, policy)
+    policy_export(d_f, policy)
 
 
 def moving_average_diff(a, n=100):

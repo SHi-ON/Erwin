@@ -1,4 +1,7 @@
 import numpy as np
+import pandas as pd
+import json
+from keras.models import model_from_json
 
 grid_size = 9  # 3 x 3
 num_actions = 2  # [0, 10]
@@ -41,6 +44,36 @@ policy_col_names = ['V1', 'pop_1', 'pop_2', 'pop_3', 'pop_4', 'pop_5', 'pop_6',
                  'actions', 'rewards', 'policy']
 
 
+def dataset_import():
+    _df = pd.read_csv("./datasets/" + samples_name + ".csv", names=col_names, header=0)
+    print(_df.head())
+    _df.isnull().any()
+    return _df
+
+
+# open the already-trained model's weights and configurations
+def model_import():
+    with open("./models/" + model_name + ".json", "r") as m_file:
+        mdl = model_from_json(json.load(m_file))
+        mdl.load_weights("./models/" + model_name + ".h5")
+        mdl.compile("adam", "mse")  # TODO
+    return mdl
+
+
+# store trained model's weights and configurations
+def model_export(mdl):
+    mdl.save_weights("./models/" + model_name + ".h5", overwrite=True)
+    with open("./models/" + model_name + ".json", "w") as out_handle:
+        json.dump(mdl.to_json(), out_handle)
+
+
+def policy_export(df, plc):
+    plc_df = pd.DataFrame(plc)
+    new_df = pd.concat([df, plc_df], axis=1, sort=False)
+    new_df.columns = policy_col_names
+    new_df.to_csv("./datasets/" + policy_name + samples_name + ".csv", sep=",")
+
+
 def pick_action(q):
     idx = np.argmax(q)
     return 0 if idx == 0 else 10
@@ -55,5 +88,3 @@ def stopwatch_log(start, end):
 def plotter(df, idx, loss):
     if loss > 10e6:
         df.iloc[idx, 1] = 10e6
-
-

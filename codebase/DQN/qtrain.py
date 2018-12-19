@@ -7,7 +7,6 @@ from keras.layers import Dense
 # from keras.optimizers import sgd
 from keras.optimizers import rmsprop
 # from keras.optimizers import adam
-import json
 import time
 
 import matplotlib.pyplot as plt
@@ -23,16 +22,6 @@ import memory as memo
 # os.chdir("./codebase/DQN")
 
 
-def handler():
-    _df = pd.read_csv("./datasets/" + samples_name + ".csv", names=col_names, header=0)
-
-    print(_df.head())
-
-    _df.isnull().any()
-
-    return _df
-
-
 def network_builder():
     model = Sequential()
     # grid_size x 2 = 18 inputs
@@ -45,13 +34,6 @@ def network_builder():
 
     model.summary()
     return model
-
-
-# store trained model's weights and configurations
-def model_export(mdl):
-    mdl.save_weights("./models/" + model_name + ".h5", overwrite=True)
-    with open("./models/" + model_name + ".json", "w") as out_handle:
-        json.dump(mdl.to_json(), out_handle)
 
 
 def train(df):
@@ -102,7 +84,7 @@ def train(df):
 
 
 if __name__ == '__main__':
-    data_frame = handler()
+    data_frame = dataset_import()
 
     a_time = time.time()
     train(data_frame)
