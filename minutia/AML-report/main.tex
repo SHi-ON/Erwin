@@ -1,5 +1,5 @@
 \documentclass[12pt]{report}
-\usepackage[english]{babel}
+
 \usepackage[utf8]{inputenc}
 
 \usepackage[dvipsnames]{xcolor}
@@ -13,6 +13,9 @@
 
 \usepackage{graphicx}
 \usepackage{csquotes}
+
+\renewcommand{\bibname}{References}
+
 
 \title{Advanced Machine Learning\\Final Report}
 
@@ -40,11 +43,10 @@ We have two different point of view to look at this problem. Firstly a batch rei
 
 
 
-
 \chapter{Proposed and Implemented Method}
 Considering this sample-based problem I have picked and implemented a deep reinforcement learning approach, namely Deep Q-Networks (DQN). The elements of this method are explained in the following sections.
 
-This needs to be mentioned that I have examined different method which are excelled in the literature. One of these methods is Deep Deterministic Policy Gradient (DDPG). According 
+This needs to be mentioned that I have examined different method which are excelled in the literature. One of these methods is Deep Deterministic Policy Gradient (DDPG). According to \citet{}
 
 \section{Algorithm}
 The whole algorithm is described in Algorithm \ref{alg:DQN}.
@@ -83,6 +85,9 @@ DQN is mostly relied on a stabilization technique with neural networks, called E
 
 
 % \includegraphics[width=1\columnwidth]{elements.png}
+
+\bibliographystyle{nips}
+\bibliography{library}
 
 
 \end{document}
