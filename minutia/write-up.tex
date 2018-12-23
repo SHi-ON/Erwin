@@ -15,7 +15,7 @@
 \usepackage{graphicx}
 \usepackage{csquotes}
 \usepackage{amsfonts} % \mathbb in equations
-\usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
+% \usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
 
 \usepackage[dvipsnames]{xcolor}
 
@@ -25,8 +25,6 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{caption}
-
-\bibliography{library}
 
 \title{Markovian Approach to Positive-only Problems}
 
@@ -162,7 +160,7 @@ In order to prove the above inequality we need to use Hoeffding's lemma:
     \mathbb {E} \left[ \exp \left( {\lambda ( X - \mathbb {E}[X] )} \right)  \right] \leq \exp \left( \frac{\lambda ^ 2 (d-b)^2}{8} \right)
 \end{equation}
 
-As PAC Optimal MDP Planning paper \autocite{Telghan et al. 2015} proposed they replaced Hoeffding-bound with Weissman confidence interval.
+As PAC Optimal MDP Planning paper \cite{AlkaeeTaleghan2015a} proposed they replaced Hoeffding-bound with Weissman confidence interval.
 
 \subsection{Bernstein inequalities}
 \begin{equation}
@@ -190,7 +188,7 @@ Finds and learns a linear approximation of Q-function. LSPI is a generalization 
 \end{itemize}
 
 \subsection{First-visit Monte Carlo}
-For building a model using repeated \textbf{random sampling} \autocite{For more read on Thompson sampling}. It works only on episodic tasks. Because FVMC updates all the action's value based on the final return, it has no bias at all.
+For building a model using repeated \textbf{random sampling} \footnote{For more read on Thompson sampling}. It works only on episodic tasks. Because FVMC updates all the action's value based on the final return, it has no bias at all.
 \begin{itemize}
     \item model-free
     \item episodic
@@ -311,7 +309,7 @@ Sampling using a logistic regression (or any other methods) we can generate some
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Multi-armed Bandit Problem vs. A/B Test}
-In a multi-armed bandit problem agent choose and pull one of the arms randomly at the beginning. The pulled arm bandit generates a distribution with specific values of mean $\mu_i$ and variance. The distribution is stationary but still unknown before pulling. \autocite{Strehl and Littman 2008}
+In a multi-armed bandit problem agent choose and pull one of the arms randomly at the beginning. The pulled arm bandit generates a distribution with specific values of mean $\mu_i$ and variance. The distribution is stationary but still unknown before pulling \cite{Strehl2008}.
 
 \begin{tabular}{|c|c|}
     \hline
