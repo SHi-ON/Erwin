@@ -21,7 +21,7 @@
 
 \author{Shayan Amani}
 
-\date{\today}
+\date{December 19, 2018}
 
 \begin{document}
 \maketitle
@@ -53,6 +53,7 @@ According to the attributes that are observed from the given problem, the final 
 \begin{itemize}
     \item Model is not provided.
     \item Dataset is only a set of generated samples.
+    \item Episodic problem.
     \item Inaccessible agent therefore online learning is not possible.
     \item Evidently high correlation between consequent year samples.
 \end{itemize}
@@ -127,6 +128,8 @@ Samples are accumulated in the memory while reading from the dataset and within 
 \section{Random Exploration}
 One of the key steps in DQN algorithm is $\epsilon$-greedy exploration. The main purpose of this step is to address exploration-exploitation dilemma. However in this problem we have a batch RL problem and I've skipped this step in the main algorithm.
 
+\section{Results}
+Results are provided as dataset which in a policy column is appended. policy says which action should be taken at the end of each year for each episodes. From the loss values observed while training the network and the performance during the run-time, the results seems to be promising. I have also performed a set of measurements on after training like accuracy which shows the method works in operational regions.
 
 % \includegraphics[width=1\columnwidth]{elements.png}
 
