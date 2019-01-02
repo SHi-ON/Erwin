@@ -17,6 +17,8 @@
 \usepackage{amsfonts} % \mathbb in equations
 % \usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
 
+\usepackage{cite}
+
 \usepackage[dvipsnames]{xcolor}
 
 \usepackage{array}
@@ -219,7 +221,10 @@ The combination of deep learning and reinforcement learning methods which in int
 Two types of layers are commonly used within the community of deep RL:
 
 \subsubsection{Convolutional layers}
-Keeping in mind the main attribute of layers of this type, namely \textit{translation invariance} , they are good options to apply to image and sequential data problems \cite{Francois-Lavet2018}. 
+Form of a feedforward layer with majority of unlearnable weights(zero-valued) and other shared wights (non-zero-valued) \cite{Francois-Lavet2018}. Keeping in mind the main attribute of layers of this type, namely \textit{translation invariance}, makes them a decent candidate for image classification and sequential data. \cite{lecun1995a, Francois-Lavet2018}.
+
+\subsubsection{Recurrent layers}
+Renowned in such a way that makes them to be a good candidate for sequential data.
 
 
 \subsection{Deep Q-Network (DQN)}
