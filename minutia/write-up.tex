@@ -18,6 +18,7 @@
 % \usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
 
 \usepackage{cite}
+% \usepackage{natbib}
 
 \usepackage[dvipsnames]{xcolor}
 
@@ -128,9 +129,16 @@ In this learning way, samples are extracted from the given dataset. We may have 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Adversarial Deep Reinforcement Learning}
+Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---has been translated into guarantee of performance over a certain baseline value. We, in this paper, try to scrutinize deep RL state-of-art algorithms from robustness point of view utilizing adversarial attacks. 
 
 \subsection{Adversarial Attacks}
-Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}.
+Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such a weaknesses could possibly results to unrecognizable differences for unaided eye in presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}.
+
+\subsection{Adversarial attacks on different methodologies}
+Here we review adversarial attacks on a variety of value function based state-of-art algorithms proposed by the community so far. As \citet{Pattanaik2018} pointed out, the concept of achieving a successful adversarial attack is unalike in reinforcement learning tasks compared to image classification tasks. Worst \textit{action} is tangible and feasible but not worst \textit{image}.
+
+\subsubsection{Deep Q Learning (DQN)}
+Utilizing experience replay and leveraging target network, DQN take advantage of them to gain more stability \cite{Pattanaik2018}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
