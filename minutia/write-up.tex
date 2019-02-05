@@ -29,7 +29,7 @@
 \usepackage{algpseudocode}
 \usepackage{caption}
 
-\title{Markovian Approach to Positive-only Problems}
+\title{Markovian Approach to Data-driven Problems}
 
 \author{Shayan Amani}
 
@@ -129,10 +129,23 @@ In this learning way, samples are extracted from the given dataset. We may have 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Adversarial Deep Reinforcement Learning}
-Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---has been translated into guarantee of performance over a certain baseline value. We, in this paper, try to scrutinize deep RL state-of-art algorithms from robustness point of view utilizing adversarial attacks. 
+
+\subsection{Introduction}
+Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---has been translated into guarantee of performance over a certain baseline value. We, in this paper, try to scrutinize deep RL state-of-art algorithms from robustness point of view utilizing adversarial attacks in order to coming up with a guarantee that we make sure which definitely works in the claimed criterion.
+
+\subsection{Definition}
+For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations to the end of this paper.
+
+\subsubsection{Adversarial attacks classification}
+The designed attack may have different levels of access to the underlying training policy which have motivated the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or \textit{black-box} attacks. White-box attacks illustrating the scenario in which the 
+
+\subsection{Related Work}
+ 
 
 \subsection{Adversarial Attacks}
 Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such a weaknesses could possibly results to unrecognizable differences for unaided eye in presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}.
+
+In order to expand the applicability of designed adversarial attacks to an assortment of algorithms [models], we rely on \textit{transferability property} of RL-specific adversarial attacks \cite{Szegedy2014, Papernot2016, Goodfellow2014a}. \citet{Huang2017} clearly assert [or asserts?!] attacks deployabilty to a group of trained RL models aimed at the same task.  
 
 \subsection{Adversarial attacks on different methodologies}
 Here we review adversarial attacks on a variety of value function based state-of-art algorithms proposed by the community so far. As \citet{Pattanaik2018} pointed out, the concept of achieving a successful adversarial attack is unalike in reinforcement learning tasks compared to image classification tasks. Worst \textit{action} is tangible and feasible but not worst \textit{image}.
@@ -256,6 +269,9 @@ Renowned for solving higher dimensional problems like Atari games. All of the st
 \begin{itemize}
     \item batch RL algorithm
     \item \textcolor{red}{reward clipping is almost a must to limit scale of error derivatives} \cite{Francois-Lavet2018}
+    \item off-policy method \cite{Huang2017}: $\epsilon$-greedy exploration.
+    \item $Q^{*}(s,a)$: expected cumulative discounted reward.
+
 \end{itemize}
 
 \begin{algorithm}[H]
@@ -307,10 +323,11 @@ Renowned for solving higher dimensional problems like Atari games. All of the st
 % \end{algorithm}
 
 
-\subsection{Experience Replay}
-DQN is mostly relied on a stabilization technique with neural networks, called Experience replay.
+\subsubsection{Experience Replay}
+DQN is mostly relied on a stabilization technique with neural networks, called Experience replay. The method utilizes this procedure to lower the variance of each Q updates \cite{Mnih2015}.
 
-
+\subsection{Asynchronous Advantage Actor-Critic (A3C)}
+Based on the actor-critic concept, a neural network policy $\pi(a|s;\theta)$ is the actor and an estimation of value function $V(s;\theta_v)$ has the critic role \cite{Mnih2016b}. 
 
 \subsection{Deep Deterministic Policy Gradient (DDPG)}
 Good choice for continuous action space such as real-world control tasks.
@@ -322,9 +339,13 @@ Good choice for continuous action space such as real-world control tasks.
         \textbf{Method}  &    \textbf{Model Dependence}    &   \textbf{Policy Dependence}   &   \textbf{Action Continuity}  & \textbf{Parent Algorithm(s)}\\
         \hline
         \hline
-        DQN &   model-free  &   on-policy   &   discrete    &   Q-learning, DL\\
+        DQN &   model-free  &   off-policy \cite{Huang2017}   &   discrete    &   Q-learning, DL\\
+        \hline
+        A3C &   -   &   on-policy \cite{Huang2017}  &   -   &   -   \\
         \hline
         DDPG    &   model-free  &   on-policy   &   continuous  &   Actor-critic\\
+        \hline
+        TRPO    &   -   &   on-policy \cite{Huang2017}  &   -   &   -   \\
         \hline
     \end{tabular}
     \caption{DRL methods comparison chart}
