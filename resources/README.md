@@ -24,3 +24,6 @@
 
 #### Videos:
 * [A funny and slightly awkward introduction to RL](https://www.youtube.com/watch?v=b1a53hE0yQs)
+
+#### Code Repositories:
+* [An adversarial example library for constructing attacks, building defenses, and benchmarking both [80+ contributers]](https://github.com/tensorflow/cleverhans)
