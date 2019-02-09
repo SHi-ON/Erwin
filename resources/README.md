@@ -11,10 +11,11 @@
 * [UC Berkeley Deep Reinforcement Learning course](http://rail.eecs.berkeley.edu/deeprlcourse/)
 * https://simoninithomas.github.io/Deep_reinforcement_learning_Course/
 * [Simple DQN based on DeepMind's paper published in Nature - from the author of Demystifying DRL article](https://github.com/tambetm/simple_dqn)
+* [Adversarial Robustness: Theory and Practice - J. Zico Kolter · Aleksander Madry](https://adversarial-ml-tutorial.org/)
 
 #### Lectures:
 * [David Silver's video lecture on Deep Reinforcement Learning](http://videolectures.net/rldm2015_silver_reinforcement_learning/)
-* [Adversarial Robustness: Theory and Practice - J. Zico Kolter · Aleksander Madry](https://nips.cc/Conferences/2018/Schedule?showEvent=10978)
+* [Adversarial Robustness: Theory and Practice - J. Zico Kolter · Aleksander Madry (accompanied with the Tutorial)](https://nips.cc/Conferences/2018/Schedule?showEvent=10978)
 
 #### Articles:
 * [Demystifying Deep Reinforcement Learning](https://ai.intel.com/demystifying-deep-reinforcement-learning/)
