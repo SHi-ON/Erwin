@@ -29,7 +29,10 @@
 \usepackage{algpseudocode}
 \usepackage{caption}
 
-\title{Markovian Approach to Data-driven Problems}
+\usepackage{amsmath} % mathbb and aligned
+
+% \title{Markovian Approach to Data-driven Problems}
+\title{Adversarially Robust Reinforcement Learning Models}
 
 \author{Shayan Amani}
 
@@ -131,19 +134,41 @@ In this learning way, samples are extracted from the given dataset. We may have 
 \section{Adversarial Deep Reinforcement Learning}
 
 \subsection{Introduction}
-Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---has been translated into guarantee of performance over a certain baseline value. We, in this paper, try to scrutinize deep RL state-of-art algorithms from robustness point of view utilizing adversarial attacks in order to coming up with a guarantee that we make sure which definitely works in the claimed criterion.
+Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---elevates assurance about method performance and reliability to the foreground. We, in this paper, try to scrutinize state-of-the-art deep RL algorithms from robustness point of view utilizing adversarial attacks in order to coming up with a guarantee that we make sure which definitely works in the claimed criterion.
 
 \subsection{Definition}
 For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations to the end of this paper.
 
-\subsubsection{Adversarial attacks classification}
-The designed attack may have different levels of access to the underlying training policy which have motivated the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or \textit{black-box} attacks. White-box attacks illustrating the scenario in which the 
+\subsubsection{Adversarial attacks categorization}
+The designed attack may have different levels of access to the underlying training policy which have motivated the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or \textit{black-box} attacks. White-box attacks illustrating the scenario in which the .... In the following we wrapped up adversarial examples in three different stages:
+\begin{itemize}
+    \item Train: Data poisoning
+    \item Test: Adversarial examples
+    \item Deploy: Black-box attacks
+\end{itemize}
+Adversarial misclassification (aka adversarial examples) ...
+
+\subsubsection{Benchmarks}
+When it comes to benchmarking, an acute shortage of a comprehensive testbed is felt.
+ 
 
 \subsection{Related Work}
- 
 
 \subsection{Adversarial Attacks}
 Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such a weaknesses could possibly results to unrecognizable differences for unaided eye in presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}.
+
+\subsubsection{Objective}
+The main goal of adversarial training can be expressed briefly in form of the following equation:
+
+\begin{equation*}
+\begin{aligned}
+& \underset{\theta}{\textbb{min}}
+& & \sum_{x,y \in S} \underset{\delta \in \Delta}{\textbb{max}}
+& & & \textbb{Loss}(x + \delta, y; \theta)
+\end{aligned}
+\end{equation*}
+
+where in we trying to find an adversarial example (inner maximization) in order to adversarially train a robust model (outer minimization)
 
 In order to expand the applicability of designed adversarial attacks to an assortment of algorithms [models], we rely on \textit{transferability property} of RL-specific adversarial attacks \cite{Szegedy2014, Papernot2016, Goodfellow2014a}. \citet{Huang2017} clearly assert [or asserts?!] attacks deployabilty to a group of trained RL models aimed at the same task.  
 
@@ -153,10 +178,19 @@ Here we review adversarial attacks on a variety of value function based state-of
 \subsubsection{Deep Q Learning (DQN)}
 Utilizing experience replay and leveraging target network, DQN take advantage of them to gain more stability \cite{Pattanaik2018}.
 
+\subsection{Experiment}
+In order to achieve more robustness, we need to omit loosely correlated features in training the model.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Bounding}
 We can use available inequalities to bound our solution. We are always interested in finding upper bound for the policies or solution we propose. Hence, by applying those inequalities -based on requirements of each of them- the upper-bound can be found. Confidence intervals come into the problem where the results are bounded with an upper-bound. Moreover, confidence intervals are authentic measures of reliability of a solution.
+
+\subsection{Norms}
+Some of the intrinsic properties of norms are listed here:
+\begin{itemize}
+    \item $\ell_2$: tends to have more mass in a particular region and less spread out. 
+\end{itemize}
 
 \subsection{Martingales}
 Sequence of random variable that:
