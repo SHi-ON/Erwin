@@ -14,6 +14,7 @@
 
 #### Lectures:
 * [David Silver's video lecture on Deep Reinforcement Learning](http://videolectures.net/rldm2015_silver_reinforcement_learning/)
+* [Adversarial Robustness: Theory and Practice - J. Zico Kolter · Aleksander Madry](https://nips.cc/Conferences/2018/Schedule?showEvent=10978)
 
 #### Articles:
 * [Demystifying Deep Reinforcement Learning](https://ai.intel.com/demystifying-deep-reinforcement-learning/)
