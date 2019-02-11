@@ -136,30 +136,68 @@ In this learning way, samples are extracted from the given dataset. We may have 
 \subsection{Introduction}
 Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---elevates assurance about method performance and reliability to the foreground. We, in this paper, try to scrutinize state-of-the-art deep RL algorithms from robustness point of view utilizing adversarial attacks in order to coming up with a guarantee that we make sure which definitely works in the claimed criterion.
 
+While the newly emerged methods are growing at a staggering pace, a parallel area of research has been formed where in a variety of techniques have been utilized to make these methods contravene their promised functionality. These efforts would be served to develop robustness in those spectacular models and reduce their susceptibility to data tampering or dynamics of the environment.
+
 \subsection{Definition}
 For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations to the end of this paper.
 
-\subsubsection{Adversarial attacks categorization}
-The designed attack may have different levels of access to the underlying training policy which have motivated the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or \textit{black-box} attacks. White-box attacks illustrating the scenario in which the .... In the following we wrapped up adversarial examples in three different stages:
+\subsubsection{Adversarial attacks}
+The designed attack may have different levels of access to the underlying training policy which have motivated the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or \textit{black-box} attacks. White-box attacks illustrating the scenario in which the.... Adversarial attacks fall in either one of the following categories based upon the stage which in the adversary perturbs the model:
 \begin{itemize}
-    \item Train: Data poisoning
-    \item Test: Adversarial examples
-    \item Deploy: Black-box attacks
+    \item Train time: Data poisoning.
+    \item Evaluation time: Adversarial examples.
+    \item Deploy time: Black-box attacks.
 \end{itemize}
-Adversarial misclassification (aka adversarial examples) ...
 
-\subsubsection{Benchmarks}
-When it comes to benchmarking, an acute shortage of a comprehensive testbed is felt.
- 
 
-\subsection{Related Work}
-
-\subsection{Adversarial Attacks}
-Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such a weaknesses could possibly results to unrecognizable differences for unaided eye in presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}.
+\subsection{Devising Adversarial Attacks}
+Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such a weaknesses could possibly results to unrecognizable differences for unaided eye in presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}. 
 
 \subsubsection{Objective}
-The main goal of adversarial training can be expressed briefly in form of the following equation:
+The ultimate goal is deceiving the model either in choosing the worst possible action in an RL task or misclassifying an input in a classification task in a way which is not perceptible for unaided eye.
 
+
+
+
+
+
+
+% Hypothesis function, $h_\theta$ is a map from input to the output $h_\theta : \mathcal{X} \rightarrow \mathbb{R}^k$ where $k$ is the number of classes being predicted; note that like in our model above, the output corresponds to the logit space, so these are real-valued numbers that can be positive or negative.  The $\theta$ vector represents all the parameters defining this model, (i.e., all the convolutional filters, fully-connected layer weight matrices, baises, etc; the $\theta$ parameters are what we typically optimize over when we train a neural network.  And finally, note that this $h_\theta$ corresponds precisely the `model` object in the Python code above.
+
+% Second, we define a loss function $\ell: \mathbb{R}^k \times \mathbb{Z}_+ \rightarrow \mathbb{R}_+$ as a mapping from the model predictions and true labels to a non-negative number.  The semantics of this loss function are that the first argument is the model output (logits which can be positive or negative), and the second argument is the _index_ of the true class (that is, a number from 1 to $k$ denoting the index of the true label). Thus, the notation
+% \begin{equation}
+% \ell(h_\theta(x), y)
+% \end{equation}
+% for $x \in \mathcal{X}$ the input and $y \in \mathbb{Z}$ the true class, denotes the loss that the classifier achieves in its predictions on $x$, assuming the true class is $y$.  **By far the most common form of loss used in deep learning is the cross entropy loss (also sometimes called the softmax loss)**, defined as
+% \begin{equation}
+% \ell(h_\theta(x), y) = \log \left ( \sum_{j=1}^k \exp(h_\theta(x)_j) \right ) - h_\theta(x)_y
+% \end{equation}
+% where $h_\theta(x)_j$ denotes the $j$th elements of the vector $h_\theta(x)$.
+
+% **Aside:** For those who are unfamiliar with the convention above, note that the form of this loss function comes from the typical softmax activation.  Defining the softmax operator $\sigma : \mathbb{R}^k \rightarrow \mathbb{R}^k$ applied to a vector
+% \begin{equation}
+% \sigma(z)_i = \frac{exp(z_i)}{\sum_{j=1}^{k}\exp(z_{j})}
+% \end{equation}
+% to be a mapping from the class logits returned by $h_\theta$ to a probability distribution.  Then the typical goal of training a network is to maximize the probability of the true class label.  Since probabilities themselves get vanishingly small, it is more common to maximize the _log_ of the probability of the true class label, which is given by
+% \begin{equation}
+% \log \sigma(h_\theta(x))_y = \log \left(\frac{exp(h_\theta(x)_y)}{\sum_{j=1}^{k}\exp(h_\theta(x)_{j})} \right) = h_\theta(x)_y - \log \left (\sum_{j=1}^{k}\exp(h_\theta(x)_{j}) \right ).
+% \end{equation}
+% Since the convention is that we want to _minimize_ loss (rather than maximizing probability), we use the negation of this quantity as our loss function.  We can evaluate this loss in PyTorch using the following command.
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Attacks Based upon Fast Gradient Sign Method}
+
+
+
+The main goal of adversarial training and examples can be expressed briefly in form of the following equation:
 \begin{equation*}
 \begin{aligned}
 & \underset{\theta}{\textbb{min}}
@@ -167,8 +205,8 @@ The main goal of adversarial training can be expressed briefly in form of the fo
 & & & \textbb{Loss}(x + \delta, y; \theta)
 \end{aligned}
 \end{equation*}
+where in we trying to find an adversarial example (inner maximization) in order to adversarially train a robust model (outer minimization).
 
-where in we trying to find an adversarial example (inner maximization) in order to adversarially train a robust model (outer minimization)
 
 In order to expand the applicability of designed adversarial attacks to an assortment of algorithms [models], we rely on \textit{transferability property} of RL-specific adversarial attacks \cite{Szegedy2014, Papernot2016, Goodfellow2014a}. \citet{Huang2017} clearly assert [or asserts?!] attacks deployabilty to a group of trained RL models aimed at the same task.  
 
@@ -180,6 +218,17 @@ Utilizing experience replay and leveraging target network, DQN take advantage of
 
 \subsection{Experiment}
 In order to achieve more robustness, we need to omit loosely correlated features in training the model.
+
+\subsubsection{Benchmarks}
+When it comes to benchmarking, an acute shortage of a comprehensive testbed is felt. Two available evaluation frameworks are as follows:
+\begin{itemize}
+    \item CleverHans \cite{Papernot2016}
+    \item Robust ML 
+\end{itemize}
+ 
+
+\subsection{Future Works}
+We developed the presented approach with having reproducibility in mind. It could be served as a launching pad for the future contributors who wants to surf this newly emerged field deeper.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -296,6 +345,8 @@ Form of a feedforward layer with majority of unlearnable weights(zero-valued) an
 \subsubsection{Recurrent layers}
 Renowned in such a way that makes them to be a good candidate for sequential data.
 
+\subsection{Loss}
+By far deep learning community has mostly tended toward using cross entropy loss (a.k.a. softmax loss).
 
 \subsection{Deep Q-Network (DQN)}
 Renowned for solving higher dimensional problems like Atari games. All of the steps are explained in Algorithm~\ref{alg:DQN}.
