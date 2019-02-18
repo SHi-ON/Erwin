@@ -4,8 +4,8 @@ from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 
 
-def f_func(a, b):
-    return 802 * a ** 2 - 400 * a * b + 200 * b ** 2
+def f_rosenbrock(a, b):
+    return 100 * (b - a ** 2) ** 2 + (1 - a) ** 2
 
 
 if __name__ == "__main__":
@@ -14,17 +14,18 @@ if __name__ == "__main__":
     y = np.linspace(-6, 6, 30)
 
     X, Y = np.meshgrid(x, y)
-    Z = f_func(X, Y)
+    Z = f_rosenbrock(X, Y)
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')
 
     ax.contour3D(X, Y, Z, 200, cmap='magma')
 
+    ax.view_init(60, 35)
     fig.show()
 
     # min finding
-    min_func = np.min(f_func(X, Y))
+    min_func = np.min(f_rosenbrock(X, Y))
     print("min=", min_func)
 
     # eigenvalues
@@ -32,5 +33,9 @@ if __name__ == "__main__":
     eig_val, eig_vec = la.eig(A)
     print("eigenvalues:", eig_val, la.eigvals(A))
     print("eigenvectors:", eig_vec)
+
+    # gradient
+    grad = np.gradient(f_rosenbrock(X, Y))
+    grad
 
 
