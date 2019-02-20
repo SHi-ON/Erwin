@@ -25,6 +25,7 @@
 * [Keras plays Catch, a single file Reinforcement Learning example](https://edersantana.github.io/articles/keras_rl/)
 
 #### Videos:
+* [SVM with polynomial kernel visualization](https://www.youtube.com/watch?v=3liCbRZPrZA)
 * [A funny and slightly awkward introduction to RL](https://www.youtube.com/watch?v=b1a53hE0yQs)
 
 #### Code Repositories:
