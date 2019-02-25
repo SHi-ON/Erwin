@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[letterpaper,12pt]{article}
 \usepackage[utf8]{inputenc}
 
 % CSL style files for Mendeley and other referencing tools:
@@ -29,7 +29,7 @@
 \usepackage{algpseudocode}
 \usepackage{caption}
 
-\usepackage{amsmath} % mathbb and aligned
+\usepackage{amsmath} % \mathbb and \aligned
 
 % \title{Markovian Approach to Data-driven Problems}
 \title{Adversarially Robust Reinforcement Learning Models}
@@ -42,6 +42,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Preliminaries}
+
+\subsection{Supervised Learning}
+Data bifurcating could be done with 20/80 percents between training set and test set in classic machine learning. Other used names for test set are such as validation set, evaluating set, etc. Model optimization is discussed into two areas, \textit{algorithmic} or \textit{parametric} optimization. In deep learning where in the models heavily depend on \textit{hyperparameters}, test set could be served to "train" hyperparameters prior to optimization. 
 
 \subsection{Reinforcement Learning}
 Reinforcement learning as a branch of machine learning concerns about sequential decision-making in order to maximize a perception of cumulative rewards. In reinforcement learning, the model trains from interactions with its environment (reward), instead of labeled data. Reinforcement learning falls in between \textit{supervised learning} and \textit{unsupervised learning} in which you have sparse (possibly) and time-delayed labels, so called \textit{rewards} 
@@ -200,8 +203,8 @@ The ultimate goal is deceiving the model either in choosing the worst possible a
 The main goal of adversarial training and examples can be expressed briefly in form of the following equation:
 \begin{equation*}
 \begin{aligned}
-& \underset{\theta}{\textbb{min}}
-& & \sum_{x,y \in S} \underset{\delta \in \Delta}{\textbb{max}}
+& \underset{\theta}{\min}
+& & \sum_{x,y \in S} \underset{\delta \in \Delta}{\max}
 & & & \textbb{Loss}(x + \delta, y; \theta)
 \end{aligned}
 \end{equation*}
