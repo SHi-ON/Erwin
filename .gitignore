@@ -1,5 +1,7 @@
 /codebase/figs
 
+codebase/cleverhans
+
 .idea
 
 ## JupyterNotebook ##
