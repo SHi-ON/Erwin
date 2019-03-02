@@ -3,6 +3,8 @@ from numpy import linalg as la
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 
+from rosenbrock import *
+
 
 def f_rosenbrock(a, b):
     return 100 * (b - a ** 2) ** 2 + (1 - a) ** 2
@@ -14,7 +16,7 @@ if __name__ == "__main__":
     y = np.linspace(-6, 6, 30)
 
     X, Y = np.meshgrid(x, y)
-    Z = f_rosenbrock(X, Y)
+    Z = rb(np.array([X, Y]))
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')
@@ -22,6 +24,7 @@ if __name__ == "__main__":
     ax.contour3D(X, Y, Z, 200, cmap='magma')
 
     ax.view_init(60, 35)
+    fig.show()
     fig.show()
 
     # min finding
