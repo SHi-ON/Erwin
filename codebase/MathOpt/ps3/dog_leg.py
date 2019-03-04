@@ -49,7 +49,7 @@ if __name__ == '__main__':
             x_k = x_k + p_sol
 
     print("The minimum happens at\n", x_k)
-
+cted
     # sanity check
     # for i in range(10000):
     #     rnd = np.random.random()
