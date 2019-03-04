@@ -1,0 +1,50 @@
+2019-02-27 21:34:09.211368: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX
+2019-02-27 21:34:09.288396: I tensorflow/core/common_runtime/process_util.cc:69] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/utils_tf.py:516: UserWarning: No GPUS, running on CPU
+  warnings.warn("No GPUS, running on CPU")
+[INFO 2019-02-27 21:35:08,164 cleverhans] Epoch 0 took 56.73336935043335 seconds
+[INFO 2019-02-27 21:36:09,994 cleverhans] Epoch 1 took 58.8930881023407 seconds
+[INFO 2019-02-27 21:37:12,466 cleverhans] Epoch 2 took 58.39120936393738 seconds
+[INFO 2019-02-27 21:38:12,617 cleverhans] Epoch 3 took 57.10943675041199 seconds
+[INFO 2019-02-27 21:39:14,373 cleverhans] Epoch 4 took 58.85689091682434 seconds
+[INFO 2019-02-27 21:40:16,486 cleverhans] Epoch 5 took 59.28044009208679 seconds
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/attacks_tf.py:27: UserWarning: attacks_tf is deprecated and will be removed on 2019-07-18 or after. Code should import functions from their new locations directly.
+  warnings.warn("attacks_tf is deprecated and will be removed on 2019-07-18"
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_max at 0x7fbfcb2ac0d0> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_sum at 0x7fbfcb2a6840> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/loss.py:41: UserWarning: callable attacks are deprecated, switch to an Attack subclass. callable attacks will not be supported after 2019-05-05.
+  warnings.warn("callable attacks are deprecated, switch to an Attack "
+[INFO 2019-02-27 21:42:50,463 cleverhans] Epoch 0 took 139.5138499736786 seconds
+[INFO 2019-02-27 21:45:24,224 cleverhans] Epoch 1 took 141.76049399375916 seconds
+[INFO 2019-02-27 21:48:02,338 cleverhans] Epoch 2 took 143.492835521698 seconds
+[INFO 2019-02-27 21:50:33,274 cleverhans] Epoch 3 took 138.5478436946869 seconds
+[INFO 2019-02-27 21:53:08,971 cleverhans] Epoch 4 took 142.33083724975586 seconds
+[INFO 2019-02-27 21:55:41,535 cleverhans] Epoch 5 took 139.10325288772583 seconds
+Defined TensorFlow model graph.
+train_dir None
+Model was not loaded, training from scratch.
+num_devices:  1
+Test accuracy on legitimate examples: 0.9853
+Test accuracy on legitimate examples: 0.9909
+Test accuracy on legitimate examples: 0.9927
+Test accuracy on legitimate examples: 0.9927
+Test accuracy on legitimate examples: 0.9924
+Test accuracy on legitimate examples: 0.9935
+Test accuracy on adversarial examples: 0.0613
+
+Repeating the process, using adversarial training
+num_devices:  1
+Test accuracy on legitimate examples: 0.9827
+Test accuracy on adversarial examples: 0.8616
+Test accuracy on legitimate examples: 0.9839
+Test accuracy on adversarial examples: 0.8915
+Test accuracy on legitimate examples: 0.9856
+Test accuracy on adversarial examples: 0.8877
+Test accuracy on legitimate examples: 0.9898
+Test accuracy on adversarial examples: 0.9000
+Test accuracy on legitimate examples: 0.9903
+Test accuracy on adversarial examples: 0.9192
+Test accuracy on legitimate examples: 0.9906
+Test accuracy on adversarial examples: 0.9237

@@ -1,0 +1,63 @@
+2019-02-27 22:48:03.137011: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX
+2019-02-27 22:48:03.155667: I tensorflow/core/common_runtime/process_util.cc:69] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/utils_tf.py:516: UserWarning: No GPUS, running on CPU
+  warnings.warn("No GPUS, running on CPU")
+[INFO 2019-02-27 22:49:09,756 cleverhans] Epoch 0 took 58.08569121360779 seconds
+[INFO 2019-02-27 22:50:04,942 cleverhans] Epoch 1 took 55.07639789581299 seconds
+[INFO 2019-02-27 22:50:59,161 cleverhans] Epoch 2 took 54.12494111061096 seconds
+[INFO 2019-02-27 22:51:53,827 cleverhans] Epoch 3 took 54.572078466415405 seconds
+[INFO 2019-02-27 22:52:48,395 cleverhans] Epoch 4 took 54.46910285949707 seconds
+[INFO 2019-02-27 22:53:42,741 cleverhans] Epoch 5 took 54.24965500831604 seconds
+[INFO 2019-02-27 22:54:37,356 cleverhans] Epoch 6 took 54.52142786979675 seconds
+[INFO 2019-02-27 22:55:32,035 cleverhans] Epoch 7 took 54.583900690078735 seconds
+[INFO 2019-02-27 22:56:26,668 cleverhans] Epoch 8 took 54.539305210113525 seconds
+[INFO 2019-02-27 22:57:21,495 cleverhans] Epoch 9 took 54.73214864730835 seconds
+[INFO 2019-02-27 22:57:25,130 cleverhans] Epoch 0 took 0.20112895965576172 seconds
+[INFO 2019-02-27 22:57:25,142 cleverhans] Epoch 1 took 0.011657953262329102 seconds
+[INFO 2019-02-27 22:57:25,154 cleverhans] Epoch 2 took 0.010931730270385742 seconds
+[INFO 2019-02-27 22:57:25,168 cleverhans] Epoch 3 took 0.01290440559387207 seconds
+[INFO 2019-02-27 22:57:25,181 cleverhans] Epoch 4 took 0.011929512023925781 seconds
+[INFO 2019-02-27 22:57:25,190 cleverhans] Epoch 5 took 0.007861852645874023 seconds
+[INFO 2019-02-27 22:57:25,201 cleverhans] Epoch 6 took 0.01032876968383789 seconds
+[INFO 2019-02-27 22:57:25,212 cleverhans] Epoch 7 took 0.010389328002929688 seconds
+[INFO 2019-02-27 22:57:25,221 cleverhans] Epoch 8 took 0.008524656295776367 seconds
+[INFO 2019-02-27 22:57:25,230 cleverhans] Epoch 9 took 0.00873422622680664 seconds
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/utils_tf.py:299: UserWarning: batch_eval has moved to cleverhans.evaluation. batch_eval will be removed from utils_tf on or after 2019-03-09.
+  warnings.warn("batch_eval has moved to cleverhans.evaluation. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/evaluation.py:443: UserWarning: `args` is deprecated and will be removed on or after 2019-03-09. Pass `batch_size` directly.
+  warnings.warn("`args` is deprecated and will be removed on or "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/attacks_tf.py:27: UserWarning: attacks_tf is deprecated and will be removed on 2019-07-18 or after. Code should import functions from their new locations directly.
+  warnings.warn("attacks_tf is deprecated and will be removed on 2019-07-18"
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_max at 0x7fee2a605158> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_sum at 0x7fee2a6008c8> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+Preparing the black-box model.
+Defined TensorFlow model graph.
+num_devices:  1
+Test accuracy of black-box on legitimate test examples: 0.9930964467005076
+Training the substitute model.
+Defined TensorFlow model graph for the substitute.
+Substitute training epoch #0
+num_devices:  1
+Augmenting substitute training data.
+Labeling substitute training data.
+Substitute training epoch #1
+num_devices:  1
+Augmenting substitute training data.
+Labeling substitute training data.
+Substitute training epoch #2
+num_devices:  1
+Augmenting substitute training data.
+Labeling substitute training data.
+Substitute training epoch #3
+num_devices:  1
+Augmenting substitute training data.
+Labeling substitute training data.
+Substitute training epoch #4
+num_devices:  1
+Augmenting substitute training data.
+Labeling substitute training data.
+Substitute training epoch #5
+num_devices:  1
+Test accuracy of oracle on adversarial examples generated using the substitute: 0.6834517766497462

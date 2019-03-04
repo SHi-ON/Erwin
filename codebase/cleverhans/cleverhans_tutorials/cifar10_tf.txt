@@ -1,0 +1,49 @@
+2019-02-28 11:14:34.954927: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX
+2019-02-28 11:14:34.955868: I tensorflow/core/common_runtime/process_util.cc:69] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/utils_tf.py:516: UserWarning: No GPUS, running on CPU
+  warnings.warn("No GPUS, running on CPU")
+[INFO 2019-02-28 11:32:27,486 cleverhans] Epoch 0 took 1070.4433736801147 seconds
+[INFO 2019-02-28 11:52:20,597 cleverhans] Epoch 1 took 1107.214462518692 seconds
+[INFO 2019-02-28 12:11:37,637 cleverhans] Epoch 2 took 1073.309870004654 seconds
+[INFO 2019-02-28 12:30:59,245 cleverhans] Epoch 3 took 1077.3038737773895 seconds
+[INFO 2019-02-28 12:50:13,546 cleverhans] Epoch 4 took 1069.776039838791 seconds
+[INFO 2019-02-28 13:09:53,571 cleverhans] Epoch 5 took 1095.529789686203 seconds
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/attacks_tf.py:27: UserWarning: attacks_tf is deprecated and will be removed on 2019-07-18 or after. Code should import functions from their new locations directly.
+  warnings.warn("attacks_tf is deprecated and will be removed on 2019-07-18"
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_max at 0x7f6a949ad158> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_sum at 0x7f6a949ab8c8> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/loss.py:41: UserWarning: callable attacks are deprecated, switch to an Attack subclass. callable attacks will not be supported after 2019-05-05.
+  warnings.warn("callable attacks are deprecated, switch to an Attack "
+[INFO 2019-02-28 13:56:02,388 cleverhans] Epoch 0 took 2432.8357043266296 seconds
+[INFO 2019-02-28 14:42:12,270 cleverhans] Epoch 1 took 2437.665542125702 seconds
+[INFO 2019-02-28 15:28:01,778 cleverhans] Epoch 2 took 2413.2402968406677 seconds
+[INFO 2019-02-28 16:14:35,029 cleverhans] Epoch 3 took 2466.3014781475067 seconds
+[INFO 2019-02-28 17:00:31,721 cleverhans] Epoch 4 took 2429.116053342819 seconds
+[INFO 2019-02-28 17:46:09,445 cleverhans] Epoch 5 took 2407.7981338500977 seconds
+x_train shape: (50000, 32, 32, 3)
+50000 train samples
+10000 test samples
+num_devices:  1
+Test accuracy on legitimate examples: 0.4830
+Test accuracy on legitimate examples: 0.6387
+Test accuracy on legitimate examples: 0.7142
+Test accuracy on legitimate examples: 0.7554
+Test accuracy on legitimate examples: 0.7944
+Test accuracy on legitimate examples: 0.7912
+Test accuracy on adversarial examples: 0.1056
+Repeating the process, using adversarial training
+num_devices:  1
+Test accuracy on legitimate examples: 0.4729
+Test accuracy on adversarial examples: 0.2329
+Test accuracy on legitimate examples: 0.6270
+Test accuracy on adversarial examples: 0.4854
+Test accuracy on legitimate examples: 0.6754
+Test accuracy on adversarial examples: 0.5612
+Test accuracy on legitimate examples: 0.7287
+Test accuracy on adversarial examples: 0.5902
+Test accuracy on legitimate examples: 0.7395
+Test accuracy on adversarial examples: 0.6431
+Test accuracy on legitimate examples: 0.7729
+Test accuracy on adversarial examples: 0.6957
