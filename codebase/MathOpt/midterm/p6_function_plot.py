@@ -1,9 +1,9 @@
 # by Shayan Amani
 # https://shayanamani.com
-# @SHi-ON
 
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def f(x):
