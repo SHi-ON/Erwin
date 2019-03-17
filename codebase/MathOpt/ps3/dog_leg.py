@@ -24,6 +24,8 @@ def obj_fun(p):
 
 
 # constraint function
+# According to a marked note
+# on page 68, Numerical Optimization, J. Nocedal
 def cons_fun(p):
     return del_k ** 2 - (p.T @ p)
 
@@ -32,7 +34,7 @@ if __name__ == '__main__':
 
     for i in range(N_ITER):
         # constraints
-        cons = ({'type': 'ineq', 'fun': cons_fun})
+        cons = {'type': 'ineq', 'fun': cons_fun}
 
         # SciPy optimizer - Sequential Least SQuares Programming method
         # this method satisfies our approximate solution need
@@ -49,7 +51,7 @@ if __name__ == '__main__':
             x_k = x_k + p_sol
 
     print("The minimum happens at\n", x_k)
-cted
+
     # sanity check
     # for i in range(10000):
     #     rnd = np.random.random()
