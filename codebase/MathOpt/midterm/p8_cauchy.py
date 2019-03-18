@@ -76,15 +76,20 @@ if __name__ == "__main__":
 
     ####### Calculations
 
+    init = np.array([[0], [1]])
+
     g_k = np.array([[1], [9]])
     g_k
 
-    delta_k = 2
-
     cal_pc1 = - (0.5 / np.sqrt(82)) * g_k
     cal_pc1
+    init + cal_pc1
 
+    delta_k = 2
     mult = ((np.sqrt(82) ** 3) / (delta_k * (15 + 9 * 82)))
 
     cal_pc2 = - ((2 * (mult)) / np.sqrt(82)) * g_k
     cal_pc2
+    init + cal_pc2
+
+
