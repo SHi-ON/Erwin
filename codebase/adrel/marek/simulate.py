@@ -11,6 +11,9 @@ env = gym.make('CartPole-v1')
 policy = pd.read_csv("policy_nn.csv")
 scales = pd.read_csv("scales.csv").values
 
+# policy = pd.read_csv("codebase/adrel/marek/policy_nn.csv")
+# scales = pd.read_csv("codebase/adrel/marek/scales.csv").values
+
 statefeatures = policy.values[:,0:4]
 stateids = np.array(policy["State"])
 actions = np.array(policy["Action"])
@@ -37,6 +40,7 @@ for trial in tqdm.trange(trials):
         if i > 0:
             # find the closest state
             statescaled = state @ scales
+            statefeatures += 1
             dst = np.linalg.norm(statefeatures - np.repeat(np.atleast_2d(statescaled), statefeatures.shape[0], 0), axis=1)    
             
             statei = np.argmin(dst) # state index in the file, not the number of the state
