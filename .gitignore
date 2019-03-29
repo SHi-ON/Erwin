@@ -1,10 +1,12 @@
 /codebase/figs
 
+codebase/cleverhans
+
 .idea
 
 ## JupyterNotebook ##
 codebase/DQN/experiment/.ipynb_checkpoints
-*/.ipynb_checkpoints/*
+.ipynb_checkpoints
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:

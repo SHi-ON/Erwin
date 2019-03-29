@@ -1,0 +1,46 @@
+2019-02-27 15:42:31.843269: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX
+2019-02-27 15:42:31.850762: I tensorflow/core/common_runtime/process_util.cc:69] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/utils_tf.py:516: UserWarning: No GPUS, running on CPU
+  warnings.warn("No GPUS, running on CPU")
+[INFO 2019-02-27 15:43:34,017 cleverhans] Epoch 0 took 60.83811545372009 seconds
+[INFO 2019-02-27 15:44:39,234 cleverhans] Epoch 1 took 61.90869355201721 seconds
+[INFO 2019-02-27 15:45:42,649 cleverhans] Epoch 2 took 59.82632088661194 seconds
+[INFO 2019-02-27 15:46:42,857 cleverhans] Epoch 3 took 57.194939374923706 seconds
+[INFO 2019-02-27 15:47:43,083 cleverhans] Epoch 4 took 57.31215834617615 seconds
+[INFO 2019-02-27 15:48:42,699 cleverhans] Epoch 5 took 56.70007276535034 seconds
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/attacks_tf.py:27: UserWarning: attacks_tf is deprecated and will be removed on 2019-07-18 or after. Code should import functions from their new locations directly.
+  warnings.warn("attacks_tf is deprecated and will be removed on 2019-07-18"
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_max at 0x7f060f0800d0> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_sum at 0x7f060f07d840> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/loss.py:41: UserWarning: callable attacks are deprecated, switch to an Attack subclass. callable attacks will not be supported after 2019-05-05.
+  warnings.warn("callable attacks are deprecated, switch to an Attack "
+[INFO 2019-02-27 15:51:16,222 cleverhans] Epoch 0 took 139.77592658996582 seconds
+[INFO 2019-02-27 15:53:45,621 cleverhans] Epoch 1 took 137.08115077018738 seconds
+[INFO 2019-02-27 15:56:15,628 cleverhans] Epoch 2 took 136.90527391433716 seconds
+[INFO 2019-02-27 15:58:45,256 cleverhans] Epoch 3 took 137.09229040145874 seconds
+[INFO 2019-02-27 16:01:13,629 cleverhans] Epoch 4 took 136.4195954799652 seconds
+[INFO 2019-02-27 16:03:53,803 cleverhans] Epoch 5 took 146.3861129283905 seconds
+num_devices:  1
+Test accuracy on legitimate examples: 0.9876
+Test accuracy on legitimate examples: 0.9901
+Test accuracy on legitimate examples: 0.9922
+Test accuracy on legitimate examples: 0.9924
+Test accuracy on legitimate examples: 0.9925
+Test accuracy on legitimate examples: 0.9932
+Test accuracy on adversarial examples: 0.1407
+Repeating the process, using adversarial training
+num_devices:  1
+Test accuracy on legitimate examples: 0.9808
+Test accuracy on adversarial examples: 0.8554
+Test accuracy on legitimate examples: 0.9861
+Test accuracy on adversarial examples: 0.8880
+Test accuracy on legitimate examples: 0.9888
+Test accuracy on adversarial examples: 0.9056
+Test accuracy on legitimate examples: 0.9908
+Test accuracy on adversarial examples: 0.9254
+Test accuracy on legitimate examples: 0.9908
+Test accuracy on adversarial examples: 0.9220
+Test accuracy on legitimate examples: 0.9920
+Test accuracy on adversarial examples: 0.9447

@@ -23,8 +23,10 @@
 * https://towardsdatascience.com/introduction-to-various-reinforcement-learning-algorithms-i-q-learning-sarsa-dqn-ddpg-72a5e0cb6287
 * [Catch game with DRL based on simple RL example](https://medium.freecodecamp.org/deep-reinforcement-learning-where-to-start-291fb0058c01)
 * [Keras plays Catch, a single file Reinforcement Learning example](https://edersantana.github.io/articles/keras_rl/)
+* [TensorFlow optimizers quick and informative review](https://stackoverflow.com/questions/36162180/gradient-descent-vs-adagrad-vs-momentum-in-tensorflow)
 
 #### Videos:
+* [SVM with polynomial kernel visualization](https://www.youtube.com/watch?v=3liCbRZPrZA)
 * [A funny and slightly awkward introduction to RL](https://www.youtube.com/watch?v=b1a53hE0yQs)
 
 #### Code Repositories:
