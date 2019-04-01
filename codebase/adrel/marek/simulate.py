@@ -40,6 +40,8 @@ info_list = []
 t_perf = time.perf_counter()
 t_elapsed = time.process_time()
 
+eps = 0.09
+
 for trial in tqdm.trange(trials):
     env.reset()
     done = False
@@ -49,7 +51,7 @@ for trial in tqdm.trange(trials):
         if i > 0:
             # find the closest state
             statescaled = state @ scales
-            # statefeatures += 1
+            statefeatures += eps * state
             dst = np.linalg.norm(statefeatures - np.repeat(np.atleast_2d(statescaled), statefeatures.shape[0], 0),
                                  axis=1)
 
