@@ -28,6 +28,7 @@
 #### Videos:
 * [SVM with polynomial kernel visualization](https://www.youtube.com/watch?v=3liCbRZPrZA)
 * [A funny and slightly awkward introduction to RL](https://www.youtube.com/watch?v=b1a53hE0yQs)
+* [Taking dual of LP](https://www.youtube.com/watch?v=TOHmhRkxhi4)
 
 #### Code Repositories:
 * [An adversarial example library for constructing attacks, building defenses, and benchmarking both [80+ contributers]](https://github.com/tensorflow/cleverhans)
