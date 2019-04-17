@@ -1,0 +1,41 @@
+2019-02-27 20:59:02.424588: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX
+Defined Keras model.
+Train on 60000 samples, validate on 10000 samples
+Epoch 1/6
+ - 127s - loss: 0.6544 - acc: 0.9566 - adv_acc: 0.0407 - val_loss: 0.1480 - val_acc: 0.9890 - val_adv_acc: 0.0520
+Epoch 2/6
+ - 129s - loss: 0.5477 - acc: 0.9903 - adv_acc: 0.0390 - val_loss: 0.1167 - val_acc: 0.9912 - val_adv_acc: 0.0512
+Epoch 3/6
+ - 132s - loss: 0.5329 - acc: 0.9944 - adv_acc: 0.0438 - val_loss: 0.1283 - val_acc: 0.9933 - val_adv_acc: 0.0512
+Epoch 4/6
+ - 127s - loss: 0.5242 - acc: 0.9968 - adv_acc: 0.0532 - val_loss: 0.1337 - val_acc: 0.9929 - val_adv_acc: 0.0644
+Epoch 5/6
+ - 128s - loss: 0.5186 - acc: 0.9979 - adv_acc: 0.0598 - val_loss: 0.1272 - val_acc: 0.9928 - val_adv_acc: 0.0702
+Epoch 6/6
+ - 128s - loss: 0.5145 - acc: 0.9988 - adv_acc: 0.0690 - val_loss: 0.1286 - val_acc: 0.9929 - val_adv_acc: 0.0871
+Test accuracy on legitimate examples: 0.9929
+Test accuracy on adversarial examples: 0.0871
+
+Repeating the process, using adversarial training
+Train on 60000 samples, validate on 10000 samples
+Epoch 1/6
+ - 180s - loss: 0.9424 - acc: 0.9447 - adv_acc: 0.6867 - val_loss: 0.3591 - val_acc: 0.9811 - val_adv_acc: 0.8225
+Epoch 2/6
+ - 179s - loss: 0.7005 - acc: 0.9821 - adv_acc: 0.8448 - val_loss: 0.2829 - val_acc: 0.9850 - val_adv_acc: 0.8649
+Epoch 3/6
+ - 187s - loss: 0.6499 - acc: 0.9869 - adv_acc: 0.8848 - val_loss: 0.2307 - val_acc: 0.9877 - val_adv_acc: 0.9026
+Epoch 4/6
+ - 178s - loss: 0.6217 - acc: 0.9898 - adv_acc: 0.9070 - val_loss: 0.2362 - val_acc: 0.9880 - val_adv_acc: 0.9030
+Epoch 5/6
+ - 183s - loss: 0.6100 - acc: 0.9916 - adv_acc: 0.9167 - val_loss: 0.2227 - val_acc: 0.9905 - val_adv_acc: 0.9071
+Epoch 6/6
+ - 188s - loss: 0.6120 - acc: 0.9929 - adv_acc: 0.9128 - val_loss: 0.2344 - val_acc: 0.9901 - val_adv_acc: 0.9003
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/attacks_tf.py:27: UserWarning: attacks_tf is deprecated and will be removed on 2019-07-18 or after. Code should import functions from their new locations directly.
+  warnings.warn("attacks_tf is deprecated and will be removed on 2019-07-18"
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_max at 0x7fbfc348e048> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+/home/shi-on/PycharmProjects/Erwin/codebase/cleverhans/cleverhans/compat.py:23: UserWarning: <function reduce_sum at 0x7fbfc348a7b8> is deprecated. Switch to calling the equivalent function in tensorflow.  This function was originally needed as a compatibility layer for old versions of tensorflow,  but support for those versions has now been dropped.
+  warnings.warn(str(f) + " is deprecated. Switch to calling the equivalent function in tensorflow. "
+Test accuracy on legitimate examples: 0.9901
+Test accuracy on adversarial examples: 0.9003
+
