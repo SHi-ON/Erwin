@@ -32,7 +32,7 @@
 \usepackage{amsmath} % \mathbb and \aligned
 
 % \title{Markovian Approach to Data-driven Problems}
-\title{Adversarially Robust Reinforcement Learning Models}
+\title{Adversarially Robust Reinforcement Learning}
 
 \author{Shayan Amani}
 
@@ -44,7 +44,7 @@
 \section{Preliminaries}
 
 \subsection{Supervised Learning}
-Data bifurcating could be done with 20/80 percents between training set and test set in classic machine learning. Other used names for test set are such as validation set, evaluating set, etc. Model optimization is discussed into two areas, \textit{algorithmic} or \textit{parametric} optimization. In deep learning where in the models heavily depend on \textit{hyperparameters}, test set could be served to "train" hyperparameters prior to optimization. 
+Data bifurcating could be done with 20/80 percents between training set and test set in classic machine learning. Other used names for test set are such as validation set, evaluating set, etc. Model optimization is discussed into two areas, \textit{algorithmic} or \textit{parametric} optimization. In deep learning where in the models heavily depend on \textit{hyperparameters}, test set could be served to "train" hyperparameters prior to optimization. As a side note about logistic regression method, generalized linear model does not minimize square error in y-units (as in linear model it does) but maximizes data likelihood under the chosen model. In order to go further, a generalized additive model which in addition to re-shaping the y distribution uses splines to learn re-shapings of the x-data could be more desired.
 
 \subsection{Reinforcement Learning}
 Reinforcement learning as a branch of machine learning concerns about sequential decision-making in order to maximize a perception of cumulative rewards. In reinforcement learning, the model trains from interactions with its environment (reward), instead of labeled data. Reinforcement learning falls in between \textit{supervised learning} and \textit{unsupervised learning} in which you have sparse (possibly) and time-delayed labels, so called \textit{rewards} 
@@ -140,6 +140,9 @@ In this learning way, samples are extracted from the given dataset. We may have 
 Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---elevates assurance about method performance and reliability to the foreground. We, in this paper, try to scrutinize state-of-the-art deep RL algorithms from robustness point of view utilizing adversarial attacks in order to coming up with a guarantee that we make sure which definitely works in the claimed criterion.
 
 While the newly emerged methods are growing at a staggering pace, a parallel area of research has been formed where in a variety of techniques have been utilized to make these methods contravene their promised functionality. These efforts would be served to develop robustness in those spectacular models and reduce their susceptibility to data tampering or dynamics of the environment.
+
+\subsection{Related Work}
+\citet{Goodfellow2014} stated and consequently depicted that the root cause of vulnerability to adversarial examples laid behind the piecewise linearity attributes of neural network models.
 
 \subsection{Definition}
 For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations to the end of this paper.
@@ -336,6 +339,11 @@ A variation of TD-learning which calculates and (then iteratively updates) Q fun
 \subsection{$\epsilon$-greedy}
 Popular in Deep Reinforcement Learning (DRL) which makes a good trade-off in terms of exploration and exploitation.
 
+
+\section{Deep Learning}
+\subsection{Model configuration}
+Several configuration has been proposed in the literature which have their own use cases based on the purpose. Convolutional neural network as a successful type of these networks has demonstrated substantial performance so far which outperformed other runner-ups in visual recognition competitions \cite{lecun1998gradient, krizhevsky2012a, zeiler2013, szegedy2014going, he2016a}. The architecture for a deep learning network commonly consists of a set of convolutional modules which carry out feature extraction task. Each module encapsulate a convolutional layer followed by a pooling layer. Terminal layers are usually dense (fully-connected) to take part in classification part. In the last dense layer, there are a node with softmax activation function to produce a probability for each classes that the model can predict.
+
 \section{Deep Reinforcement Learning}
 The combination of deep learning and reinforcement learning methods which in intrinsic to supervised learning methods, training is always time consuming and from a specific stage and on it becomes little-to-no improvement so the reasonable choice is switching to Reinforcement Learning framework. This newly emerged framework has yielded promising results in application to high dimensional state-space problems \cite{Francois-Lavet2018}. \textcolor{red}{ Analogy-wise this approach turns regular banana (chocolate) pudding to calorie-free pudding as it preserves strength of RL with diminishing its weaknesses by adding DL as an instrument.}
 
@@ -508,4 +516,3 @@ The current case is a study on an invasive plant (non-native to the ecosystem) i
 \bibliography{library}
 
 \end{document}
-
