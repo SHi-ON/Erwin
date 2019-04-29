@@ -9,7 +9,7 @@
 
 #### Tutorials:
 * [UC Berkeley Deep Reinforcement Learning course](http://rail.eecs.berkeley.edu/deeprlcourse/)
-* https://simoninithomas.github.io/Deep_reinforcement_learning_Course/
+* [Deep Reinforcement Learning from beginner to expert](https://simoninithomas.github.io/Deep_reinforcement_learning_Course/)
 * [Simple DQN based on DeepMind's paper published in Nature - from the author of Demystifying DRL article](https://github.com/tambetm/simple_dqn)
 * [Adversarial Robustness: Theory and Practice - J. Zico Kolter · Aleksander Madry](https://adversarial-ml-tutorial.org/)
 
