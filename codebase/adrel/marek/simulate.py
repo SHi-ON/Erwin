@@ -43,7 +43,7 @@ else:
 
 # number of runs to determine how good is the policy
 trials = 100
-is_q = False
+is_q = True
 total_reward = 0
 
 # n = 0
