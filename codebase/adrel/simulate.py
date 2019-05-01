@@ -61,8 +61,8 @@ for trial in tqdm.trange(trials):
     env.reset()
     done = False
     for i in range(200):
-        env.render()
-        time.sleep(0.05)
+        # env.render()
+        # time.sleep(0.05)
         if i > 0:
             # find the closest state
             statescaled = state @ scales
@@ -85,7 +85,7 @@ for trial in tqdm.trange(trials):
                 # switch between q-learning or the policy
                 action = select_action(statei) if is_q else int(actions[statei])
 
-            print(i, stateids[statei], action, values[statei], np.linalg.norm(statescaled - statefeatures[statei]))
+            # print(i, stateids[statei], action, values[statei], np.linalg.norm(statescaled - statefeatures[statei]))
         else:
             # n += 1
             action = env.action_space.sample()
@@ -95,8 +95,8 @@ for trial in tqdm.trange(trials):
             break
 
         [state, reward, done, info] = env.step(action)  # take a random action
-        print(state, reward, done, info)
-        env.render()
+        # print(state, reward, done, info)
+        # env.render()
 
         # (state, reward, done, info) = en v.step(action)  # take a random action
         if any(info):
