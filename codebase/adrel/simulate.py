@@ -6,11 +6,12 @@ import pandas as pd
 import tqdm
 
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def select_action(s):
     state_q = q_values.loc[q_values['idstate'] == s]
-    a = state_q.max()[1]
+    a = state_q.loc[state_q['qvalue'] == state_q.max()[2]]['idaction']
     return int(a)
 
 
@@ -42,7 +43,7 @@ else:
     probabilities = None
 
 # number of runs to determine how good is the policy
-trials = 100
+trials = 1000
 is_q = True
 total_reward = 0
 
@@ -126,7 +127,12 @@ y_axis = np.array([i for i in rewards.values()])
 cm = plt.cm.get_cmap('viridis')
 # cc = np.linspace(0, 2, 30)
 # sc = plt.scatter(x_axis, y_axis, vmin=0, vmax=200)
-plt.plot(x_axis, y_axis, '-')
+plt.plot(x_axis, y_axis,  '-')
+plt.ylim((0, 200))
+
+plt.figure()
+sns.lineplot(x_axis, y_axis)
+
 # plt.colorbar(sc)
 plt.title("Reward per each trial using the provided {}".format('q values' if is_q else 'policy'))
 plt.show()
