@@ -5,6 +5,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
 \usetheme{Cuerna}
 \usecolortheme{default}
 % default, bluesimplex, lettuce, brick
@@ -17,10 +25,10 @@
     \insertframenumber/\inserttotalframenumber
 }
 
-\title{TITLE}
+\title{Gradient Descent Algorithms}
 \author{Shayan Amani}
 
-\date{DATE 2018}
+\date{spring '19}
 \institute{Department of Computer Science, University of New Hampshire}
 
 \begin{document}
@@ -30,15 +38,83 @@
   \end{frame}
 
 \begin{frame}
-    \frametitle{Pneumonoultramicroscopicsilicovolcanoconiosis}
-    \framesubtitle{SUB}
+    \frametitle{Introduction}
+    % \framesubtitle{SUB}
     
-    List of TensorFlow optimizers: https://www.tensorflow.org/api_docs/python/tf/keras/optimizers
+    There are numerous varients of GD algorithms:
+    \begin{itemize}
+        \item Batch gradient descent
+        \item
+    \end{itemize}
+    
+   
     Adam optimizer's paper: https://arxiv.org/pdf/1412.6980.pdf
 
   \end{frame}
+  
+\begin{frame}
+    \frametitle{Motivation}
+    Almost every prominent differentiable programming frameworks are using Gradient Descent-based optimizers. 
+    
+    \begin{table}[]
+        \centering
+        \begin{tabular}{c|c}
+                \includegraphics[scale=0.1]{tf-logo-vertical.png}
+ &      \includegraphics[scale=0.15]{pytorch-logo-vertical.png}
+\\
+\hline
+            \includegraphics[scale=0.15]{caffe-logo.png}
+     &     \includegraphics[scale=0.2]{cntk-logo.png}
+\\
+        \end{tabular}
+        \label{tab:logos-motivation}
+    \end{table}
+    
+\end{frame}
+  
+\begin{frame}
+    \frametitle{Motivation}
+    \framesubtitle{TensorFlow}
+    
+    \begin{table}
+        \centering
+        \begin{tabular}{c}
+        \includegraphics[scale=0.3]{tf-keras-optimizers.png}
+ \\
+        \end{tabular}
+        \label{tab:tf-motivation}
+    \end{table}
+    
+\end{frame}
 
-	%\includegraphics[scale=0.45]{img.jpg}
+\begin{frame}
+    \frametitle{Motivation}
+    \framesubtitle{PyTorch}
+    
+    \begin{table}
+        \centering
+        \begin{tabular}{c c}
+        \includegraphics[width=0.5\columnwidth]{pytorch-algs-1.png} & \includegraphics[width=0.5\columnwidth]{pytorch-algs-2.png} 
+ \\
+        \end{tabular}
+        \label{tab:pytorch-motivation}
+    \end{table}
+    
+\end{frame}
 
+\begin{frame}
+    \frametitle{Motivation}
+    \framesubtitle{Caffe}
+    
+    \includegraphics[width=1\columnwidth]{caffe-algs.png}
+    
+\end{frame}
 
+\begin{frame}
+    \frametitle{Motivation}
+    \framesubtitle{Microsoft Cognitive Toolkit}
+    
+    \includegraphics[width=1\columnwidth]{cntk-algs.png}
+    
+\end{frame}
 \end{document}
