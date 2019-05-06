@@ -581,7 +581,7 @@ for iter in range(num_epoch):
         w1_nadam = w1_nadam - (learn_rate / (np.sqrt(Nadam_v_1_hat) + Nadam_e)) * (
                 Nadam_Beta_1 * Nadam_m_1_hat + (((1 - Nadam_Beta_1) * grad_1) / (1 - Nadam_Beta_1)))
     if iter % 10 == 0:
-        print("h. Nadam current Iter: ", iter, " Total Cost: ", total_cost)
+        print("h. NAdam current Iter: ", iter, " Total Cost: ", total_cost)
     cost_temp_array.append(total_cost)
     total_cost = 0
 cost_array.append(cost_temp_array)
