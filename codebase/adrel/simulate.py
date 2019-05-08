@@ -1,13 +1,10 @@
-import time
-
-import gym
 import numpy as np
 import pandas as pd
-import tqdm
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from player import CartPolePlayer
 
 """
      Observation: 
@@ -35,133 +32,42 @@ import seaborn as sns
         Episode length is greater than 200
     Solved Requirements:
         Considered solved when the average reward is greater than or equal to 195.0 over 100 consecutive trials.
-    """
+"""
 
 
-def select_action(s):
-    state_q = q_values.loc[q_values['idstate'] == s]
-    a = state_q.loc[state_q['qvalue'] == state_q.max()[2]]['idaction']
-    return int(a)
+if __name__ == "__main__":
 
+    policies = [{'dir': 'initial', 'q': False},
+                {'dir': 'qvals', 'q': True}]
+    files_name = {'policy': '/policy_nn.csv', 'scale': '/scales.csv', 'q_values': '/qvalues.csv'}
 
-env = gym.make('CartPole-v1')
+    trials = 1000
+    render = False
+    epsilon = 1
 
-# policy = pd.read_csv("initial/policy_nn.csv")
-policy = pd.read_csv("qvals/policy_nn.csv")
+    for p in policies:
+        path_policy = p['dir'] + files_name['policy']
+        path_scale = p['dir'] + files_name['scale']
+        path_q_values = p['dir'] + files_name['q_values']
 
-q_values = pd.read_csv("qvals/qvalues.csv")
+        policy = pd.read_csv(path_policy)
+        scale = pd.read_csv(path_scale).values
+        q_values = pd.read_csv(path_q_values) if p['q'] else None
 
-# scales = pd.read_csv("initial/scales.csv").values # converting to an ndarray
-scales = pd.read_csv("qvals/scales.csv").values  # converting to an ndarray
+        cart_pole = CartPolePlayer(policy, scale, q_values, render)
+        total_rewards = cart_pole.play(trials, epsilon)
 
-# policy = pd.read_csv("codebase/adrel/marek/policy_nn.csv")
-# scales = pd.read_csv("codebase/adrel/marek/scales.csv").values
+        average_reward = sum(total_rewards.values()) / trials
+        print("Average reward per trial", average_reward)
 
-state_features = policy.values[:, 0:4]
-stateids = np.array(policy["State"])
-actions = np.array(policy["Action"])
-values = np.array(policy["Value"])
+        x_axis = np.array([i for i in range(trials)])
+        y_axis = np.array([i for i in total_rewards.values()])
 
-if "Probability" in policy.columns:
-    print("Using a randomized policy")
-    policy_randomized = True
-    probabilities = np.array(policy["Probability"])
-else:
-    print("Using a deterministic policy")
-    policy_randomized = False
-    probabilities = None
+        cm = plt.cm.get_cmap('viridis')
+        plt.figure()
+        sns.lineplot(x_axis, y_axis)
+        sns.set()
 
-# number of runs to determine how good is the policy
-trials = 100
-eps = 1
-is_q = True
-
-rewards = dict()
-info_list = []
-total_reward = 0
-
-# will not include sleep time as time.perf_counter will
-t_perf = time.perf_counter()
-t_elapsed = time.process_time()
-
-for trial in tqdm.trange(trials):
-    env.reset()
-    done = False
-    for i in range(200):
-        # faster with no graphical output
-        # env.render()
-        # time.sleep(0.05)
-        if i > 0:
-            # scale observed state
-            state_scaled = state @ scales
-            state_scaled = state_scaled @ np.eye(scales.shape[0]) * (1 + eps)
-            # ||Sc+e - Sc||
-            dst = np.linalg.norm(state_features - np.repeat(np.atleast_2d(state_scaled), state_features.shape[0], 0),
-                                 axis=1)
-            # find the closest state to the observed state in the policy
-            statei = np.argmin(dst)  # state index in the file, not the number of the state
-
-            if policy_randomized:
-                idstate = stateids[statei]
-                all_statei = np.where(stateids == idstate)[0]  # find all relevant state ids
-                all_probs = probabilities[all_statei]
-                all_acts = actions[all_statei]
-                assert (abs(1 - sum(all_probs)) < 0.01)
-                action = int(np.random.choice(all_acts, p=all_probs))
-            else:
-                # assume that there is a single action for each state
-                # switch between q-learning or the policy
-                action = select_action(statei) if is_q else int(actions[statei])
-
-            # print(i, stateids[statei], action, values[statei], np.linalg.norm(state_scaled - state_features[statei]))
-        else:
-            action = env.action_space.sample()
-
-        # stop only after saving the state
-        if done:
-            break
-
-        [state, reward, done, info] = env.step(action)  # take a random action
-        # print(state, reward, done, info)
-        # env.render()
-
-        # (state, reward, done, info) = en v.step(action)  # take a random action
-        if any(info):
-            info_list.append(info)
-
-        if trial in rewards:
-            rewards[trial] += reward
-        else:
-            rewards[trial] = reward
-
-        total_reward += reward
-
-env.close()
-
-elapsed_time = time.process_time() - t_elapsed
-perf_time = time.perf_counter() - t_perf
-
-average_reward = total_reward / trials
-print("Average reward per trial", average_reward)
-
-print("elapsed time:", elapsed_time)
-print("elapsed time:", perf_time)
-print('list of info is:', info_list)
-
-x_axis = np.array([i for i in range(trials)])
-y_axis = np.array([i for i in rewards.values()])
-
-cm = plt.cm.get_cmap('viridis')
-# cc = np.linspace(0, 2, 30)
-# sc = plt.scatter(x_axis, y_axis, vmin=0, vmax=200)
-# plt.plot(x_axis, y_axis, '-')
-# plt.ylim((0, 200))
-# plt.yticks([1, 100, 200])
-
-plt.figure()
-sns.lineplot(x_axis, y_axis)
-sns.set()
-
-plt.title("Reward per each episode | {} | eps={} | avg. reward={}"
-          .format('q_values' if is_q else 'policy', eps, average_reward))
-plt.show()
+        plt.title("Reward per episode | {} | eps={} | avg. reward={}"
+                  .format(p['dir'], epsilon, average_reward))
+        plt.show()
