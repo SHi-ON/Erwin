@@ -1,3 +1,7 @@
+# Gradient Descent-based algorithms comparison
+# Shayan Amani
+# http://shayanamani.com
+
 import numpy as np
 from sklearn.utils import shuffle
 from tensorflow.examples.tutorials.mnist import input_data
