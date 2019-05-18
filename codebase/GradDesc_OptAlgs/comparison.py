@@ -240,7 +240,7 @@ for iter in range(num_epoch):
         grad_1_part_3 = current_image
         grad_1 = grad_1_part_3.T.dot(grad_1_part_1 * grad_1_part_2)
 
-        # ------- FAKE GRADIENT --------
+        # -------  --------
         fake_w3_ng = w3_ng - alpha * v3
         fake_w2_ng = w2_ng - alpha * v2
         fake_w1_ng = w1_ng - alpha * v1
@@ -268,7 +268,7 @@ for iter in range(num_epoch):
         grad_1_part_2 = d_elu(l1)
         grad_1_part_3 = current_image
         grad_1_fake = grad_1_part_3.T.dot(grad_1_part_1 * grad_1_part_2)
-        # ------- FAKE GRADIENT --------
+        # -------  --------
 
         v3 = v3 * alpha + learn_rate * grad_3_fake
         v2 = v2 * alpha + learn_rate * grad_2_fake
