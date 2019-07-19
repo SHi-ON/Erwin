@@ -33,3 +33,6 @@
 
 #### Code Repositories:
 * [An adversarial example library for constructing attacks, building defenses, and benchmarking both [80+ contributers]](https://github.com/tensorflow/cleverhans)
+
+### External Collections:
+* [AI and ML resources around the web](https://medium.com/machine-learning-in-practice/my-curated-list-of-ai-and-machine-learning-resources-from-around-the-web-9a97823b8524)
