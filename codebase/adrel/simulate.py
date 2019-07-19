@@ -1,24 +1,31 @@
+import time
+import pickle
+
 import numpy as np
-import tqdm
-
 import gym
-
+import tqdm
 import matplotlib.pyplot as plt
-import seaborn as sns
+# import seaborn as sns
 
 from agent_policy import AgentPolicy
 from agent_dqn import AgentDQN
+from util import timing, pickle_store
 
 # gym/envs/__init__.py'
 # different max_episode_steps 'CartPole-v0' and 'CartPole-v1'
 GYM_ENV = 'CartPole-v1'
-EPISODES = 1000
-MAX_EPISODE_STEPS = 200
-BATCH_SIZE = 32
 
-
+SERIES_RUN = False
 IS_RENDER = False
+SAVE_LOAD = False
 
+EPISODES = 10
+SERIES_STEPS = 1
+EPISODE_STEPS = 200
+BATCH_SIZE = 16
+PENALTY = -10
+
+MODEL_NAME = './model/cartpole-dqn.h5'
 POLICIES = [{'dir': 'initial', 'q': False},
             {'dir': 'qvals', 'q': True}]
 
@@ -52,40 +59,18 @@ POLICIES = [{'dir': 'initial', 'q': False},
 """
 
 
-def play_dqn():
-    env = gym.make(GYM_ENV)
-    state_size = env.observation_space.shape[0]
-    action_size = env.action_space.n
-    agent = AgentDQN(state_size, action_size)
-    # agent.load('./model/cartpole-dqn.h5')
-
-    game_reward = dict()
-    for episode in range(EPISODES):
-        state = env.reset()
-        state = np.reshape(state, [1, state_size])
-        for step in range(MAX_EPISODE_STEPS):
-            if IS_RENDER:
-                env.render()
-            action = agent.act(state)
-            next_state, reward, done, _ = env.step(action)
-            reward = reward if not done else -10
-            next_state = np.reshape(next_state, [1, state_size])
-            agent.remember(state, action, reward, next_state, done)
-            state = next_state
-            if done:
-                print("episode: {}/{}, score: {}, e: {:.2}"
-                      .format(episode, EPISODES, step, agent.epsilon))
-                game_reward[episode] = step + 1
-                break
-            if len(agent.memory) > BATCH_SIZE:
-                agent.replay(BATCH_SIZE)
-            if step == MAX_EPISODE_STEPS - 1:
-                game_reward[episode] = step + 1
-
-        # if episode % 10 == 0:
-        #     agent.save("./model/cartpole-dqn.h5")
-    env.close()
-    return game_reward
+# CartPole parameters
+#     self.masscart = 1.0 **
+#     self.masspole = 0.1
+#     self.length = 0.5  # actually half the pole's length **
+#
+#     self.polemass_length = (self.masspole * self.length)
+#     self.total_mass = (self.masspole + self.masscart)
+#
+#     self.gravity = 9.8
+#     self.force_mag = 10.0
+#     self.tau = 0.02  # seconds between state updates
+#     self.kinematics_integrator = 'euler'
 
 
 def play_policy(policy_info, pert_noise):
@@ -100,7 +85,7 @@ def play_policy(policy_info, pert_noise):
         state, reward, done, _ = env.step(action)
         if done:
             continue
-        for step in range(1, MAX_EPISODE_STEPS):
+        for step in range(1, EPISODE_STEPS):
             # faster with no graphical output
             if IS_RENDER:
                 env.render()
@@ -111,32 +96,115 @@ def play_policy(policy_info, pert_noise):
                 game_reward[episode] = step + 1
                 break
             state, reward, done, _ = env.step(action)
-            if step == MAX_EPISODE_STEPS - 1:
+            if step == EPISODE_STEPS - 1:
                 game_reward[episode] = step + 1
     env.close()
     return game_reward
 
 
+def play_dqn(num_episodes):
+    env = gym.make(GYM_ENV)
+    space_size_state = env.observation_space.shape[0]
+    space_size_action = env.action_space.n
+    agent = AgentDQN(space_size_state, space_size_action)
+    if SAVE_LOAD:
+        agent.load(MODEL_NAME)
+    _game_rewards = dict()
+    for episode in range(1, num_episodes + 1):
+        # returns the initial observation (state)
+        state = env.reset()
+        state = np.reshape(state, [1, space_size_state])
+        for step in range(1, EPISODE_STEPS + 1):
+            if IS_RENDER:
+                env.render()
+            action = agent.act(state)
+            next_state, reward, done, _ = env.step(action)
+            reward = reward if not done else agent.penalty
+            next_state = np.reshape(next_state, [1, space_size_state])
+            agent.remember(state, action, reward, next_state, done)
+            state = next_state
+            if done:
+                print("episode: {0}/{1}, reward: {2}, e: {3:.2}"
+                      .format(episode, num_episodes, step, agent.epsilon))
+                _game_rewards[episode] = step
+                break
+            # Experience Replay
+            agent.replay(BATCH_SIZE)
+            if step == EPISODE_STEPS:
+                print("episode: {0}/{1}, reward: {2}, e: {3:.2}"
+                      .format(episode, num_episodes, step, agent.epsilon))
+                _game_rewards[episode] = step
+        if SAVE_LOAD and episode % 10 == 0:
+            agent.save(MODEL_NAME)
+    env.close()
+    return _game_rewards
+
+
 if __name__ == "__main__":
+    rewards_total = dict()
 
-    perturbation = 1
+    print('*** DQN training...')
+    t_start = time.perf_counter()
+    for series_ep in range(1 if SERIES_RUN else EPISODES, EPISODES + 1, SERIES_STEPS):
+        game_rewards = play_dqn(series_ep)
+        game_reward_total = sum(game_rewards.values())
+        game_reward_avg = game_reward_total / series_ep
+        print("\tAverage reward per episode {:.2f}".format(game_reward_avg))
+        rewards_total[series_ep] = game_reward_total
+    t_finish = timing(t_start)
 
-    total_rewards = [play_policy(p, perturbation) for p in POLICIES]
-    total_rewards.append(play_dqn())
+    sum_rewards_total = sum(rewards_total.values())
+    time_per_step = t_finish / sum_rewards_total
+    print('*** Time per step: {:.4f} second(s)'.format(time_per_step))
+    print('*** Sum of total rewards: {}'.format(sum_rewards_total))
 
-    average_reward = sum(total_rewards.values()) / EPISODES
-    print("Average reward per trial", average_reward)
+    pickle_store(rewards_total, 'rewards-total_1000-episodes')
 
-    x_axis = np.array([i for i in range(EPISODES)])
-    y_axis = np.array([i for i in total_rewards.values()])
+    env = gym.make(GYM_ENV)
 
-    cm = plt.cm.get_cmap('viridis')
-    plt.figure()
-    sns.lineplot(x_axis, y_axis)
-    sns.set()
+    #     self.gravity = 9.8
+    #     self.masscart = 1.0
+    #     self.masspole = 0.1
+    #     self.total_mass = (self.masspole + self.masscart)
+    #     self.length = 0.5  # actually half the pole's length
+    #     self.polemass_length = (self.masspole * self.length)
+    #     self.force_mag = 10.0
+    #     self.tau = 0.02  # seconds between state updates
+    #     self.kinematics_integrator = 'euler'
 
-    plt.title("Reward per episode | {} | eps={} | avg. reward={}"
-              .format(p['dir'], epsilon, average_reward))
-    plt.show()
+    env.masscart = 1.0
+    env.length = 0.5
 
+    # len(rewards)
+    #
+    # average_reward
+    # len(avg_rewards)
+    #
+    # len(x_axis)
+    # len(y_axis)
+    #
+    # x_axis = np.array([i for i in range(0, EPISODES)])
+    # y_axis = np.array(avg_rewards)
+    # x_axis.shape
+    # y_axis.shape
+    #
+    # x_axis = [value for index, value in enumerate(x_axis) if index % 5 == 0]
+    # y_axis = [value for index, value in enumerate(y_axis) if index % 5 == 0]
+    #
+    # plt.figure()
+    # cm = plt.cm.get_cmap('viridis')
+    # sns.lineplot(x_axis, y_axis)
+    # sns.set()
+    #
+    # plt.title('Average rewards per number of episodes')
+    # plt.show()
+    #
+    # len(gym.envs.registry.all())
+    # list(map(lambda x: 'CartPole' in x.id, list(gym.envs.registry.all())))
 
+    # perturbation = 1
+
+    # total_rewards = [play_policy(p, perturbation) for p in POLICIES]
+
+for i in range(10 if False else 3, 10 + 1, 4):
+    print(i)
