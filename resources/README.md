@@ -31,6 +31,9 @@
 * [A funny and slightly awkward introduction to RL](https://www.youtube.com/watch?v=b1a53hE0yQs)
 * [Taking dual of LP](https://www.youtube.com/watch?v=TOHmhRkxhi4)
 
+#### Miscs:
+* [DAWNBench: Deep learning model training cost benchmark](https://dawn.cs.stanford.edu/benchmark/)
+
 #### Code Repositories:
 * [An adversarial example library for constructing attacks, building defenses, and benchmarking both [80+ contributers]](https://github.com/tensorflow/cleverhans)
 
