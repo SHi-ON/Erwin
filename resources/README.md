@@ -3,6 +3,7 @@
 #### Books:
 * [Reinforcement Learning](https://drive.google.com/file/d/1opPSz5AZ_kVa1uWOdOiveNiBFiEOHjkG/view)
 * [Deep Reinforcement Learning](https://arxiv.org/abs/1811.12560)
+* [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook)
 
 #### Papers:
 * [A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Halvorsen 2013](https://content.sciendo.com/view/journals/som/36/1/article-p1.xml)
