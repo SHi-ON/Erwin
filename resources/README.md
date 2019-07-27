@@ -3,6 +3,7 @@
 #### Books:
 * [Reinforcement Learning](https://drive.google.com/file/d/1opPSz5AZ_kVa1uWOdOiveNiBFiEOHjkG/view)
 * [Deep Reinforcement Learning](https://arxiv.org/abs/1811.12560)
+* [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook)
 
 #### Papers:
 * [A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Halvorsen 2013](https://content.sciendo.com/view/journals/som/36/1/article-p1.xml)
@@ -31,5 +32,11 @@
 * [A funny and slightly awkward introduction to RL](https://www.youtube.com/watch?v=b1a53hE0yQs)
 * [Taking dual of LP](https://www.youtube.com/watch?v=TOHmhRkxhi4)
 
+#### Miscs:
+* [DAWNBench: Deep learning model training cost benchmark](https://dawn.cs.stanford.edu/benchmark/)
+
 #### Code Repositories:
 * [An adversarial example library for constructing attacks, building defenses, and benchmarking both [80+ contributers]](https://github.com/tensorflow/cleverhans)
+
+### External Collections:
+* [AI and ML resources around the web](https://medium.com/machine-learning-in-practice/my-curated-list-of-ai-and-machine-learning-resources-from-around-the-web-9a97823b8524)
