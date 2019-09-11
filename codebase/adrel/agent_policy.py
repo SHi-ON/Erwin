@@ -23,7 +23,8 @@ class AgentPolicy:
             print('Deterministic policy loaded')
             self.probabilities = None
 
-    def load_policy(self, directory, is_q):
+    @staticmethod
+    def load_policy(directory, is_q):
         policy = pd.read_csv(directory + FILES_NAME['policy'])
         scale = pd.read_csv(directory + FILES_NAME['scale']).values
         q_values = pd.read_csv(directory + FILES_NAME['q_values']) if is_q else None

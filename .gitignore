@@ -397,3 +397,4 @@ dmypy.json
 .venv/
 
 ### End of Python ###
+.Rproj.user
