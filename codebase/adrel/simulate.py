@@ -64,32 +64,32 @@ from util import timing, pickle_store
 # gym/envs/__init__.py'
 # different max_episode_steps 'CartPole-v0' and 'CartPole-v1'
 GYM_ENV = 'CartPole-v1'
-CONTROL_ALG = 'DQN'
 
 SEQ_RUN = True
 IS_LOAD = False
 IS_RENDER = False
 
-EPISODES = 1000
-SEQ_STEPS = 25
+EPISODES = 10
+SEQ_STEPS = 1
 PHYS_EPISODES = 300
 PHYS_SEQ_STEPS = 25
 
 EPISODE_STEPS = 200
-BATCH_SIZE = 32
+BATCH_SIZE = 16
 PENALTY = -10
 
 POLICIES = [{'dir': 'initial', 'q': False},
             {'dir': 'qvals', 'q': True}]
 
 
-def play_policy(policy_info, pert_noise, num_episodes):
-    env = gym.make(GYM_ENV)
+def play_raam(env, policy_info, num_episodes):
+    space_size_state = env.observation_space.shape[0]
+    space_size_action = env.action_space.n
     agent = AgentPolicy(policy_info)
 
     game_reward = dict()
     for episode in tqdm.trange():
-        env.reset()
+        state = env.reset()
         # take an initial random action and observe the state
         action = env.action_space.sample()
         state, reward, done, _ = env.step(action)
@@ -150,12 +150,23 @@ def play_dqn(env, num_episodes, file_name=None, load=False):
 
 
 if __name__ == "__main__":
-    print('***** DQN training...')
+    #
+    # rewards_total = dict()
+    # control_alg = 'RAAM'
+    # env_stock = gym.make(GYM_ENV)
+    # name_env = env_stock.unwrapped.spec.id
+    # file_name_stock = 'outputs/{0}_{1}_batchsize-{2}_episodes-{3}_step-{4}'.format(control_alg, name_env,
+    #                                                                                BATCH_SIZE, EPISODES,
+    #                                                                                SEQ_STEPS)
+    # t_start = time.perf_counter()
+    # play_raam()
 
-    rewards_total = dict()
+    print('***** DQN training...')
     env_stock = gym.make(GYM_ENV)
     name_env = env_stock.unwrapped.spec.id
-    file_name_stock = 'outputs/{0}_{1}_batchsize-{2}_episodes-{3}_step-{4}'.format(CONTROL_ALG, name_env,
+    control_alg = 'DQN'
+    rewards_total = dict()
+    file_name_stock = 'outputs/{0}_{1}_batchsize-{2}_episodes-{3}_step-{4}'.format(control_alg, name_env,
                                                                                    BATCH_SIZE, EPISODES,
                                                                                    SEQ_STEPS)
     t_start = time.perf_counter()
@@ -198,7 +209,7 @@ if __name__ == "__main__":
 
     env_custom = gym.make(GYM_ENV)
     name_env = env_custom.unwrapped.spec.id
-    file_name_custom = 'outputs/{0}_{1}-custom_batchsize-{2}_episodes-{3}_step-{4}_{5}x{6}'.format(CONTROL_ALG,
+    file_name_custom = 'outputs/{0}_{1}-custom_batchsize-{2}_episodes-{3}_step-{4}_{5}x{6}'.format(control_alg,
                                                                                                    name_env,
                                                                                                    BATCH_SIZE,
                                                                                                    PHYS_EPISODES,
@@ -227,12 +238,3 @@ if __name__ == "__main__":
     plt.ylabel('Cart mass')
     plt.savefig(file_name_custom + '.png')
     plt.show()
-
-    ''' ====================end==================== '''
-    # the whole OpenAI Gym environments
-    len(gym.envs.registry.all())
-    is_EnvSpec = list(map(lambda x: 'CartPole' in x.id, list(gym.envs.registry.all())))
-    any(is_EnvSpec)
-
-    # perturbation = 1
-    # total_rewards = [play_policy(p, perturbation) for p in POLICIES]

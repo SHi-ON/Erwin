@@ -3,10 +3,6 @@ import numpy as np
 import random
 from collections import deque
 
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.optimizers import Adam
-
 
 class AgentDQN:
 
@@ -38,6 +34,10 @@ class AgentDQN:
         """
         Configures the neural network's layers and parameters.
         """
+        from keras.models import Sequential
+        from keras.layers import Dense
+        from keras.optimizers import Adam
+
         model = Sequential()
         # first argument of Dense is dimension of output,
         # that last layer's output dimension makes sense in this case.
