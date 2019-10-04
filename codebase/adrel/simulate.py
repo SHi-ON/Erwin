@@ -1,17 +1,19 @@
 """
 Adversarial RL framework
 
-**Notes:
+**Note:
 
 - ranges all START from 1 to STOP + 1
 """
 import time
+import csv
 
 import numpy as np
 import gym
 import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
 from agent_policy import AgentPolicy
 from agent_dqn import AgentDQN
@@ -71,8 +73,10 @@ IS_RENDER = False
 
 EPISODES = 10
 SEQ_STEPS = 1
-PHYS_EPISODES = 300
-PHYS_SEQ_STEPS = 25
+# PHYS_EPISODES = 300
+PHYS_EPISODES = 0
+# PHYS_SEQ_STEPS = 25
+PHYS_SEQ_STEPS = 0
 
 EPISODE_STEPS = 200
 BATCH_SIZE = 16
@@ -113,40 +117,54 @@ def play_raam(env, policy_info, num_episodes):
 
 
 def play_dqn(env, num_episodes, file_name=None, load=False):
+    # state- and action- space
     space_size_state = env.observation_space.shape[0]
     space_size_action = env.action_space.n
+
+    # DQN agent initialization
     agent = AgentDQN(space_size_state, space_size_action)
-    if (file_name is not None) and (load is not False):
+
+    # load a pre-trained model
+    if (file_name is not None) and load:
         agent.load(file_name + '.h5')
+
     _game_rewards = dict()
+    samples = []
     for episode in range(1, num_episodes + 1):
         # returns the initial observation (state)
         state = env.reset()
         state = np.reshape(state, [1, space_size_state])
+
         for step in range(1, EPISODE_STEPS + 1):
             if IS_RENDER:
                 env.render()
+
             action = agent.act(state)
+
             next_state, reward, done, _ = env.step(action)
+
             reward = reward if not done else agent.penalty
             next_state = np.reshape(next_state, [1, space_size_state])
+
             agent.remember(state, action, reward, next_state, done)
+            samples.append((step - 1,) + tuple(state.reshape(space_size_state)) + (action,) + (reward,))
             state = next_state
-            if done:
+
+            # Experience Replay - network
+            agent.replay(BATCH_SIZE)
+
+            if done or step == EPISODE_STEPS:
                 print("episode: {0}/{1}, reward: {2}, e: {3:.2}"
                       .format(episode, num_episodes, step, agent.epsilon))
                 _game_rewards[episode] = step
                 break
-            # Experience Replay
-            agent.replay(BATCH_SIZE)
-            if step == EPISODE_STEPS:
-                print("episode: {0}/{1}, reward: {2}, e: {3:.2}"
-                      .format(episode, num_episodes, step, agent.epsilon))
-                _game_rewards[episode] = step
+        # store the trained model
         if (file_name is not None) and (episode % 10 == 0):
             agent.save(file_name + '.h5')
+
     env.close()
-    return _game_rewards
+
+    return _game_rewards, samples
 
 
 if __name__ == "__main__":
@@ -161,23 +179,38 @@ if __name__ == "__main__":
     # t_start = time.perf_counter()
     # play_raam()
 
-    print('***** DQN training...')
+    print('======= DQN Training =======')
     env_stock = gym.make(GYM_ENV)
     name_env = env_stock.unwrapped.spec.id
     control_alg = 'DQN'
     rewards_total = dict()
-    file_name_stock = 'outputs/{0}_{1}_batchsize-{2}_episodes-{3}_step-{4}'.format(control_alg, name_env,
-                                                                                   BATCH_SIZE, EPISODES,
-                                                                                   SEQ_STEPS)
+    file_name_stock = 'outputs/{0}_{1}_batchsize-' \
+                      '{2}_episodes-{3}_step-{4}'.format(control_alg, name_env,
+                                                         BATCH_SIZE, EPISODES,
+                                                         SEQ_STEPS)
+    # sequential training
+    # restarts from the first episode for an episode number
     t_start = time.perf_counter()
+    samples_total = []
     for seq_ep in range(SEQ_STEPS if SEQ_RUN else EPISODES, EPISODES + 1, SEQ_STEPS):
-        game_rewards = play_dqn(env_stock, seq_ep, file_name_stock, load=IS_LOAD)
+        game_rewards, ep_sample = play_dqn(env_stock, seq_ep, file_name_stock, load=IS_LOAD)
+        samples_total.extend(ep_sample)
+
+        # episode reward calculations
         game_reward_total = sum(game_rewards.values())
         game_reward_avg = game_reward_total / seq_ep
         print("\t Average reward per episode {:.2f}".format(game_reward_avg))
+
         rewards_total[seq_ep] = game_reward_total
-    print('\n', '-' * 10, 'Summary', '-' * 10)
     t_finish = timing(t_start)
+    print('\n', '-' * 10, 'Summary', '-' * 10)
+
+    with open('samples.csv', mode='w') as samples_handle:
+        csv_writer = csv.writer(samples_handle, delimiter=',')
+
+        csv_writer.writerows(samples_total)
+
+    # total episodes reward calculations
     sum_rewards_total = sum(rewards_total.values())
     avg_rewards_total = sum_rewards_total / sum(rewards_total.keys())
     time_per_step = t_finish / sum_rewards_total
@@ -185,7 +218,8 @@ if __name__ == "__main__":
     print('*** Sum of total rewards: {}'.format(sum_rewards_total))
     print('*** Average total reward: {:.2f}'.format(avg_rewards_total))
 
-    '''--------------------Plotting--------------------'''
+    '''-------Plotting-------'''
+    # axises
     sequence_episode = np.array(list(rewards_total.keys()))
     sequence_reward = np.array(list(rewards_total.values()))
 
@@ -199,40 +233,45 @@ if __name__ == "__main__":
     plt.savefig(file_name_stock + '.png')
     plt.show()
 
-    ''' ====================Physics==================== '''
-    print('\n', '=' * 30, '\n')
-    print('***** Customized physics...')
+    print('''======= Manipulated Physics =======''')
 
     masses_cart = np.array([0.1, 0.5, 1.0, 1.5, 2])
     lengths_pole = np.array([0.05, 0.25, 0.5, 0.75])
-    phys_return = np.zeros((len(masses_cart), len(lengths_pole)))
+    physics_return = np.zeros((len(masses_cart), len(lengths_pole)))
 
     env_custom = gym.make(GYM_ENV)
     name_env = env_custom.unwrapped.spec.id
-    file_name_custom = 'outputs/{0}_{1}-custom_batchsize-{2}_episodes-{3}_step-{4}_{5}x{6}'.format(control_alg,
-                                                                                                   name_env,
-                                                                                                   BATCH_SIZE,
-                                                                                                   PHYS_EPISODES,
-                                                                                                   PHYS_SEQ_STEPS,
-                                                                                                   len(masses_cart),
-                                                                                                   len(lengths_pole))
+    file_name_custom = 'outputs/{0}_{1}-custom_batchsize-' \
+                       '{2}_episodes-{3}_step-{4}_{5}x{6}'.format(control_alg,
+                                                                  name_env,
+                                                                  BATCH_SIZE,
+                                                                  PHYS_EPISODES,
+                                                                  PHYS_SEQ_STEPS,
+                                                                  len(masses_cart),
+                                                                  len(lengths_pole))
+    # for each combination of env physics variations
     t_start = time.perf_counter()
     for i, mc in enumerate(masses_cart):
         for j, lp in enumerate(lengths_pole):
-            print('** \t cart mass:{0} - pole length:{1}'.format(mc, lp))
+            print('\t --- #{0} cart mass:{1} - #{2} pole length:{3}'.format(i, mc, j, lp))
+            # setting the initial physics values
             env_custom.masscart = mc
             env_custom.length = lp
+
             phys_rewards_total = dict()
             for phys_seq_ep in range(PHYS_SEQ_STEPS if SEQ_RUN else PHYS_EPISODES, PHYS_EPISODES + 1, PHYS_SEQ_STEPS):
                 phys_game_rewards = play_dqn(env_custom, phys_seq_ep)
+
+                # reward calculations
                 phys_game_reward_total = sum(phys_game_rewards.values())
                 phys_game_reward_avg = phys_game_reward_total / phys_seq_ep
                 print("\t Average reward per episode {:.2f}".format(phys_game_reward_avg))
-            phys_return[i][j] = round(phys_game_reward_total / phys_seq_ep, ndigits=3)
+
+            physics_return[i][j] = round(phys_game_reward_total / phys_seq_ep, ndigits=3)
     t_finish = timing(t_start)
 
-    '''--------------------Plotting--------------------'''
-    sns.heatmap(phys_return, annot=True, fmt='.2f', xticklabels=lengths_pole, yticklabels=masses_cart)
+    '''-------Plotting-------'''
+    sns.heatmap(physics_return, annot=True, fmt='.2f', xticklabels=lengths_pole, yticklabels=masses_cart)
     plt.title('Average rewards per number of episodes')
     plt.xlabel('Pole length')
     plt.ylabel('Cart mass')

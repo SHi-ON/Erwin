@@ -33,7 +33,7 @@ action.names <- c(0,1)
 code_generate_samples <- "
 import random
 import gym
-env = gym.make('CartPole-v1')
+env = gym.make('CartPole-v0')
 random.seed(2018)
 
 laststate = None
@@ -55,15 +55,26 @@ env.close()
 
 # active paths and environments
 py_config() 
-
 use_condaenv('KerasReady')
+
+# Python code running by reticulate
 res <- py_run_string(code_generate_samples)
+res$samples
+
+# transpose unlisted samples: n_samples * n_features
 samples <- as.data.frame(t(sapply(res$samples, unlist)))
 colnames(samples) <- c("Step", feature.names,"Action","Reward")
 
+#write.csv(samples  1, file = "out1.csv")
+
 
 # alternatively: load samples
-#samples <- read_csv("cartpole.csv")
+#samples_in <- read_csv("samples.csv", col_names = c("Step", feature.names,"Action","Reward"))
+# transpose unlisted samples: n_samples * n_features
+#samples <- as.data.frame(sapply(samples_in, unlist))
+
+#class(samples)
+#(samples_in)
 
 # ------ Prepare samples -----
 
