@@ -1,12 +1,8 @@
 import numpy as np
 
-# import matplotlib.pyplot as
-
 P = np.array([[0.2, 0.3, 0.5],
               [0.1, 0.6, 0.3],
               [0.9, 0.1, 0.0]])
-
-
 
 r = np.array([-10, 7, 3])
 
