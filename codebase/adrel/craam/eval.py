@@ -20,8 +20,6 @@ w = np.linalg.solve(Phi.T @ D @ Phi - gamma * Phi.T @ D @ P @ Phi, Phi.T @ D @ r
 
 # Value function
 print(Phi @ w)
-<<<<<<< HEAD
-=======
 
 ###
 ### Riverswim
@@ -66,4 +64,3 @@ mdp_agg.index = mdp_agg.index + 1
 
 mdp_agg
 
->>>>>>> e9b0163d7bf33400167e67583f2142af1c84ca16
