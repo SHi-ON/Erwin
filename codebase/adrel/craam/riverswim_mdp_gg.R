@@ -21,5 +21,8 @@ mdp_agg <-
 
 mdp_agg %>% group_by(idstatefrom, idaction) %>% summarize(sum(probability))
 
+sol_agg <- solve_mdp(mdp_agg, 0.99)
+
 print(sol)
+print(sol_agg)
   
