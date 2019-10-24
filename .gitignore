@@ -1,6 +1,9 @@
 /codebase/figs
 
 minutia/library.bib
+minutia/*.pdf
+out/*.pdf
+
 codebase/cleverhans
 
 .idea
