@@ -1,0 +1,66 @@
+\documentclass[letterpaper,12pt]{article}
+\usepackage[utf8]{inputenc}
+
+% CSL style files for Mendeley and other referencing tools:
+% https://github.com/citation-style-language/styles
+
+%
+% For alternative styles, see the biblatex manual:
+% http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf
+%
+% The 'verbose' family of styles produces full citations in footnotes, 
+% with and a variety of options for ibidem abbreviations.
+%
+
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage{amsfonts} % \mathbb in equations
+% \usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
+
+\usepackage{cite}
+% \usepackage{natbib}
+
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{array}
+\newcolumntype{L}{>{\centering\arraybackslash}m{3cm}}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+
+\usepackage{amsmath} % \mathbb and \aligned
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+
+\title{State Aggregation in Robust MDPs, A Quick Survey}
+
+% \author{Shayan Amani}
+
+\begin{document}
+\maketitle
+
+As in real world scenarios, handling large state-spaces is a challenge in reinforcement learning. Value functions resulted from such problems could be solved by set of approximation methods to yield the policy. One of those methods is state aggregation which maps states in a vicinity to a certain action. 
+
+\section{Related works}
+
+\subsection{RAAM}
+Give a \textbf{tighter} bound on performance loss by reducing sensitivity to approximation error $\epsilon(.)$.
+
+\subsection{Kernel-based RL in RMDP}
+Robust policy learning in case of problems with massive or continuous state-spaces. By using \textit{kernel averagers} --as a function approximator-- to:
+    \begin{itemize}
+        \item approximate reward function $r$ and/or transition function $P$ based on training state-action samples.
+        \item approximate the value function $\nu$.
+    \end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \bibliographystyle{nips}
+% \bibliography{library}
+
+\end{document}
