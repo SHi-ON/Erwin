@@ -1,7 +1,7 @@
 /codebase/figs
 
 minutia/library.bib
-minutia/*.pdf
+minutia/paper/*.pdf
 out/*.pdf
 
 codebase/cleverhans
