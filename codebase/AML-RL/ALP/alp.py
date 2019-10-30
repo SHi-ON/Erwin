@@ -18,11 +18,11 @@ for i in range(N):
     g[i][0] = i
 # r = LpVariable.dicts("weights", ((i) for i in range(k)), cat="continuous")
 
-
-for c in range(N):
-    for col in range(k):
-        sum = np.transpose(c) - 
-
+#
+# for c in range(N):
+#     for col in range(k):
+#         sum = np.transpose(c) -
+#
 
 
 prob = pulp.LpProblem("ALP", pulp.LpMaximize)
