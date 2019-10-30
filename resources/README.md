@@ -1,6 +1,7 @@
 ### List of beneficial resources
 
 #### Books:
+* [Reinforcement Learning and Optimal Control](https://www.amazon.com/Reinforcement-Learning-Optimal-Control-Bertsekas/dp/1886529396)
 * [Reinforcement Learning](https://drive.google.com/file/d/1opPSz5AZ_kVa1uWOdOiveNiBFiEOHjkG/view)
 * [Deep Reinforcement Learning](https://arxiv.org/abs/1811.12560)
 * [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook)
