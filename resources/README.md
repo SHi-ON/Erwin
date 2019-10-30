@@ -9,6 +9,7 @@
 * [A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling. Halvorsen 2013](https://content.sciendo.com/view/journals/som/36/1/article-p1.xml)
 
 #### Tutorials:
+* [Bertsekas course on RL at ASU](http://web.mit.edu/dimitrib/www/RLbook.html): Aggregation and approximation.
 * [UC Berkeley Deep Reinforcement Learning course](http://rail.eecs.berkeley.edu/deeprlcourse/)
 * [Deep Reinforcement Learning from beginner to expert](https://simoninithomas.github.io/Deep_reinforcement_learning_Course/)
 * [Simple DQN based on DeepMind's paper published in Nature - from the author of Demystifying DRL article](https://github.com/tambetm/simple_dqn)
