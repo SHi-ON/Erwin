@@ -323,7 +323,7 @@ class RiverSwimDomain(Domain):
         return self._state
 
     def apply_action(self, action):
-        """Apply the action to the MDP.
+        """finds the current and state and action in MDP and returns the corresponding sample.
 
            Parameters
            ----------
@@ -341,17 +341,24 @@ class RiverSwimDomain(Domain):
                If the action index is outside of the range [0, num_actions)
 
            """
-        if action < 0 or action > 1:
-            raise ValueError('Action index outside of bounds [0, %d)' %
-                             self.num_actions)
+        if action < 0 or action > self.num_actions - 1:
+            raise ValueError('Action index outside of bounds [0, %d)' % self.num_actions)
 
-        sample = self.mdp[(self.mdp['idstatefrom'] == self._state[0]) & (self.mdp['idaction'] == action)]
+        curr_sa = (self.mdp['idstatefrom'] == self._state.item(0)) & (self.mdp['idaction'] == action)
+        curr_candidates = self.mdp[curr_sa]
 
-        rnd = random()
-        if len(sample) > 1:
-            s = (sample['probability'] - rnd).apply(abs).argmin
-            samp_final = sample.loc[s]
-        return Sample(self._state.copy(), action, np.array(samp_final.idstateto[0]), np.array(samp_final.reward[0]))
+        # select the sample with the closest probability
+        rand = np.random.random()
+        if len(curr_candidates) > 1:
+            curr_sample = curr_candidates.loc[(np.abs(curr_candidates['probability'] - rand)).argmin]
+        else:
+            curr_sample = curr_candidates.copy(deep=True)
+
+        sample = Sample(self._state.copy(), action, np.array([float(curr_sample.reward)]), np.array([float(curr_sample.idstateto)]))
+
+        self._state = np.array([float(curr_sample.idstateto)])
+
+        return sample
 
     def reset(self, initial_state=None):
         if initial_state is None:
@@ -367,4 +374,11 @@ class RiverSwimDomain(Domain):
             self._state = state
 
     def __init_random_state(self):
+        """
+        RiverSwim starts at either state 1 or 2.
+
+        :returns: The starting state
+
+        :raises: The 
+        """
         return np.array([np.random.randint(1, 2 + 1)])

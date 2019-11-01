@@ -2,6 +2,7 @@
 """Abstract Base Class for Basis Function and some common implementations."""
 
 import abc
+from functools import reduce
 
 import numpy as np
 
@@ -290,7 +291,7 @@ class OneDimensionalPolynomialBasis(BasisFunction):
 
         phi = np.zeros((self.size(), ))
 
-        offset = (self.size()/self.num_actions)*action
+        offset = int((self.size()/self.num_actions)*action)
 
         value = state[0]
 
