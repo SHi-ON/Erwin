@@ -7,62 +7,65 @@ from policy import Policy
 from solvers import LSTDQSolver
 from lspi import learn
 
-# os.chdir("/home/sa1149/PycharmProjects/Erwin/codebase/LSPI")
 
-##### ChainWalk
-samples = []
+def chain_walk(n_samples):
+    domain = ChainWalkDomain(num_states=4, reward_location=ChainWalkDomain.RewardLocation.Middle)
 
-domain = ChainWalkDomain(num_states=4, reward_location=ChainWalkDomain.RewardLocation.Middle)
-domain.reset()
+    samples = []
+    init_action = np.random.randint(domain.num_actions)
+    init_sample = domain.apply_action(init_action)
+    samples.append(init_sample)
 
-init_action = np.random.randint(domain.num_actions())
-init_sample = domain.apply_action(init_action)
-samples.append(init_sample)
+    for i in range(1, n_samples):
+        a = samples[-1].action
+        samples.append(domain.apply_action(a))
 
-for i in range(1, 101):
-    a = samples[-1].action
-    samples.append(domain.apply_action(a))
+    basis = FakeBasis(2)
+    # poly_basis = OneDimensionalPolynomialBasis(3, 2)
+    # poly_basis.evaluate(np.array([2]), 1)
+    policy = Policy(basis)
+    print('initial policy weights:', policy.weights)
 
-basis = FakeBasis(2)
-poly_basis = OneDimensionalPolynomialBasis(3, 2)
-poly_basis.evaluate(np.array([2]), 1)
+    solver = LSTDQSolver()
 
-policy = Policy(basis)
-print('initial policy weights:', policy.weights)
+    learned_policy = learn(samples, policy, solver)
+    print('final policy weights:', learned_policy.weights)
 
-solver = LSTDQSolver()
-
-ret = learn(samples, policy, solver, max_iterations=100)
-print('final policy weights:', ret.weights)
-policy.weights
-
-if False: del policy, ret
+    return learned_policy
 
 
-##### RiverSwim
-rs_mdp = pd.read_csv("codebase/adrel/craam/riverswim_mdp.csv")
+def river_swim(n_samples):
+    mdp = pd.read_csv("codebase/adrel/craam/riverswim_mdp.csv")
+    domain = RiverSwimDomain(mdp)
 
-samples = []
+    samples = []
+    init_action = np.random.randint(domain.num_actions)
+    init_sample = domain.apply_action(init_action)
+    samples.append(init_sample)
 
-domain = RiverSwimDomain(rs_mdp)
-domain.reset()
+    for i in range(1, n_samples):
+        a = samples[-1].action
+        samples.append(domain.apply_action(a))
 
-init_action = np.random.randint(domain.num_actions)
-init_sample = domain.apply_action(init_action)
-samples.append(init_sample)
+    basis = FakeBasis(2)
+    # basis = OneDimensionalPolynomialBasis(3, 2)
+    policy = Policy(basis)
+    print('initial policy weights:', policy.weights)
 
-for i in range(1, 101):
-    a = samples[-1].action
-    samples.append(domain.apply_action(a))
+    solver = LSTDQSolver()
 
-# basis = OneDimensionalPolynomialBasis(3, 2)
-basis = FakeBasis(2)
-policy = Policy(basis)
-print('initial policy weights:', policy.weights)
+    learned_policy = learn(samples, policy, solver)
+    print('final policy weights:', learned_policy.weights)
 
-solver = LSTDQSolver()
+    return learned_policy
 
-ret = learn(samples, policy, solver, max_iterations=100)
-print('final policy weights:', ret.weights)
 
-if False: del policy, ret
+def main():
+    sample_size = 100
+    # max_iteration = 10
+    cw_policy = chain_walk(sample_size)
+    rs_policy = river_swim(sample_size)
+
+
+if __name__ == "__main__":
+    main()
