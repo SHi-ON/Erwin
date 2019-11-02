@@ -12,23 +12,10 @@ from sample import Sample
 class Domain(object):
     r"""ABC for domains.
 
-    Minimum interface for a reinforcement learning domain.
+    A minimum interface for a reinforcement learning domain.
     """
 
     __metaclass__ = abc.ABCMeta
-
-    @abc.abstractmethod
-    def num_actions(self):
-        """Return number of possible actions for the given domain.
-
-        Actions are indexed from 0 to num_actions - 1.
-
-        Returns
-        -------
-        int
-            Number of possible actions.
-        """
-        pass  # pragma: no cover
 
     @abc.abstractmethod
     def current_state(self):
@@ -50,7 +37,7 @@ class Domain(object):
         ----------
         action: int
             The action index to apply. This should be a number in the range
-            [0, num_actions())
+            [0, num_actions)
 
         Returns
         -------
@@ -82,7 +69,7 @@ class Domain(object):
         ----------
         action: int
             The action index to apply. This number should be in the range
-            [0, num_actions())
+            [0, num_actions)
 
         Returns
         -------
@@ -136,11 +123,15 @@ class ChainWalkDomain(Domain):
 
         Ends, Middle, HalfMiddles = range(3)
 
+    __num_actions = 2
     __action_names = ['left', 'right']
 
-    def __init__(self, num_states=10,
+    def __init__(self,
+                 num_states=10,
                  reward_location=RewardLocation.Ends,
-                 failure_probability=.1):
+                 failure_probability=.1,
+                 initial_state=None):
+
         """Initialize ChainWalkDomain."""
         if num_states < 4:
             raise ValueError('num_states must be >= 4')
@@ -148,23 +139,12 @@ class ChainWalkDomain(Domain):
             raise ValueError('failure_probability must be in range [0, 1]')
 
         self.num_states = int(num_states)
+        self.num_actions = ChainWalkDomain.__num_actions
+
         self.reward_location = reward_location
         self.failure_probability = failure_probability
 
-        self._state = ChainWalkDomain.__init_random_state(num_states)
-
-    def num_actions(self):
-        """Return number of actions.
-
-        Chain domain has 2 actions.
-
-        Returns
-        -------
-        int
-            Number of actions
-
-        """
-        return 2
+        self.reset(initial_state)
 
     def current_state(self):
         """Return the current state of the domain.
@@ -199,7 +179,7 @@ class ChainWalkDomain(Domain):
         Parameters
         ----------
         action: int
-            Action index. Must be in range [0, num_actions())
+            Action index. Must be in range [0, num_actions)
 
         Returns
         -------
@@ -209,12 +189,12 @@ class ChainWalkDomain(Domain):
         Raises
         ------
         ValueError
-            If the action index is outside of the range [0, num_actions())
+            If the action index is outside of the range [0, num_actions)
 
         """
         if action < 0 or action >= 2:
-            raise ValueError('Action index outside of bounds [0, %d)' %
-                             self.num_actions())
+            raise IndexError('Action index outside of bounds [0, %d)' %
+                             self.num_actions)
 
         action_failed = False
         if random() < self.failure_probability:
@@ -312,12 +292,19 @@ class ChainWalkDomain(Domain):
 
 
 class RiverSwimDomain(Domain):
+    __num_states = 6
+    __num_actions = 2
+    __action_names = ['left', 'right']
 
-    def __init__(self, mdp):
-        self.num_states = 6
-        self.num_actions = 2
+    def __init__(self,
+                 mdp,
+                 initial_state=None):
+
+        self.num_states = RiverSwimDomain.__num_states
+        self.num_actions = RiverSwimDomain.__num_actions
+
         self.mdp = mdp
-        self._state = self.__init_random_state()
+        self.reset(initial_state)
 
     def current_state(self):
         return self._state
@@ -328,7 +315,7 @@ class RiverSwimDomain(Domain):
            Parameters
            ----------
            action: int
-               Action index. Must be in range [0, num_actions())
+               Action index. Must be in range [0, num_actions)
 
            Returns
            -------
@@ -342,25 +329,37 @@ class RiverSwimDomain(Domain):
 
            """
         if action < 0 or action > self.num_actions - 1:
-            raise ValueError('Action index outside of bounds [0, %d)' % self.num_actions)
+            raise IndexError('Action index outside of bounds [0, %d)' % self.num_actions)
 
         curr_sa = (self.mdp['idstatefrom'] == self._state.item(0)) & (self.mdp['idaction'] == action)
         curr_candidates = self.mdp[curr_sa]
 
+        if len(curr_candidates) == 0:
+            print("state: ", self._state, "action:", action)
+            raise KeyError('Couldn\'t find the corresponding sample!')
+
+
         # select the sample with the closest probability
         rand = np.random.random()
-        if len(curr_candidates) > 1:
-            curr_sample = curr_candidates.loc[(np.abs(curr_candidates['probability'] - rand)).argmin]
+        if len(curr_candidates) == 1:
+            curr_sample = curr_candidates.iloc[0]  # get a Series for type consistency
         else:
-            curr_sample = curr_candidates.copy(deep=True)
+            curr_sample = curr_candidates.loc[(np.abs(curr_candidates['probability'] - rand)).argmin]
 
-        sample = Sample(self._state.copy(), action, np.array([float(curr_sample.reward)]), np.array([float(curr_sample.idstateto)]))
+        next_state = np.array([curr_sample.values[2].astype(int)])
+        reward = np.array([curr_sample.values[4].astype(int)])
+        sample = Sample(self._state.copy(), action, reward, next_state)
 
-        self._state = np.array([float(curr_sample.idstateto)])
+        self._state = next_state
 
         return sample
 
     def reset(self, initial_state=None):
+        """
+        reset RiverSwim to start at either state 1 or 2, by the problem definition.
+
+        :param initial_state: the state to begin, either 1 or 2.
+        """
         if initial_state is None:
             self._state = self.__init_random_state()
         else:
@@ -373,6 +372,21 @@ class RiverSwimDomain(Domain):
                                  + '[0, num_states)')
             self._state = state
 
+    def action_name(self, action):
+        """Return string representation of actions.
+
+        0:
+            left
+        1:
+            right
+
+        Returns
+        -------
+        str
+            String representation of action.
+        """
+        return RiverSwimDomain.__action_names[action]
+
     def __init_random_state(self):
         """
         RiverSwim starts at either state 1 or 2.
@@ -381,4 +395,4 @@ class RiverSwimDomain(Domain):
 
         :raises: The 
         """
-        return np.array([np.random.randint(1, 2 + 1)])
+        return np.array([np.random.randint(1, self.num_states + 1)])
