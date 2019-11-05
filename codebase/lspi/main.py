@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from domains import ChainWalkDomain, RiverSwimDomain
+from domains import ChainWalkDomain, RiverSwimDomain, SixArmsDomain
 from basis_functions import FakeBasis, OneDimensionalPolynomialBasis
 from policy import Policy
 from solvers import LSTDQSolver
@@ -20,10 +20,13 @@ def chain_walk(n_samples):
         a = samples[-1].action
         samples.append(domain.apply_action(a))
 
-    basis = FakeBasis(2)
-    # poly_basis = OneDimensionalPolynomialBasis(3, 2)
+    # basis = FakeBasis(2)
+    poly_basis = OneDimensionalPolynomialBasis(3, 2)
+    poly_basis.evaluate(np.array([2]),1)
     # poly_basis.evaluate(np.array([2]), 1)
-    policy = Policy(basis)
+    # policy = Policy(basis)
+    policy = Policy(poly_basis)
+    policy.weights
     print('initial policy weights:', policy.weights)
 
     solver = LSTDQSolver()
@@ -34,9 +37,7 @@ def chain_walk(n_samples):
     return learned_policy
 
 
-def river_swim(n_samples):
-    mdp = pd.read_csv("codebase/adrel/craam/riverswim_mdp.csv")
-    domain = RiverSwimDomain(mdp)
+def mdps(domain, n_samples):
 
     samples = []
     init_action = np.random.randint(domain.num_actions)
@@ -47,8 +48,8 @@ def river_swim(n_samples):
         a = samples[-1].action
         samples.append(domain.apply_action(a))
 
-    basis = FakeBasis(2)
-    # basis = OneDimensionalPolynomialBasis(3, 2)
+    # basis = FakeBasis(2)
+    basis = OneDimensionalPolynomialBasis(3, 2)
     policy = Policy(basis)
     print('initial policy weights:', policy.weights)
 
@@ -63,8 +64,19 @@ def river_swim(n_samples):
 def main():
     sample_size = 100
     # max_iteration = 10
+
+    print(ChainWalkDomain.__name__)
     cw_policy = chain_walk(sample_size)
-    rs_policy = river_swim(sample_size)
+
+    rs_mdp = pd.read_csv("codebase/adrel/craam/riverswim_mdp.csv")
+    rs_domain = RiverSwimDomain(rs_mdp)
+    print(RiverSwimDomain.__name__)
+    rs_policy = mdps(rs_domain, sample_size)
+
+    sa_mdp = pd.read_csv("codebase/adrel/craam/sixarms_mdp.csv")
+    sa_domain = SixArmsDomain(sa_mdp)
+    print(SixArmsDomain.__name__)
+    sa_policy = mdps(sa_domain, sample_size)
 
 
 if __name__ == "__main__":

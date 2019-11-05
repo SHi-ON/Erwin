@@ -62,10 +62,10 @@ def learn(data, initial_policy, solver, epsilon=10**-5, max_iterations=10):
     while distance > epsilon and iteration < max_iterations:
         iteration += 1
         new_weights = solver.solve(data, curr_policy)
+        print(curr_policy.weights)
 
         distance = np.linalg.norm(new_weights - curr_policy.weights)
 
         curr_policy.weights = new_weights
-        print(curr_policy.weights)
 
     return curr_policy

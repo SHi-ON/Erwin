@@ -337,7 +337,6 @@ class RiverSwimDomain(Domain):
             print("state: ", self._state, "action:", action)
             raise KeyError('Couldn\'t find the corresponding sample!')
 
-
         # select the sample with the closest probability
         rand = np.random.random()
         if len(curr_candidates) == 1:
@@ -395,3 +394,106 @@ class RiverSwimDomain(Domain):
         :raises: The 
         """
         return np.array([np.random.randint(1, 2 + 1)])
+
+
+class SixArmsDomain(Domain):
+    __num_states = 7
+    __num_actions = 6
+    __action_names = ['zero', 'one', 'two', 'three', 'four', 'five']
+
+    def __init__(self,
+                 mdp,
+                 initial_state=None):
+
+        self.num_states = SixArmsDomain.__num_states
+        self.num_actions = SixArmsDomain.__num_actions
+
+        self.mdp = mdp
+        self.reset(initial_state)
+
+    def current_state(self):
+        return self._state
+
+    def apply_action(self, action):
+        """finds the current and state and action in MDP and returns the corresponding sample.
+
+           Parameters
+           ----------
+           action: int
+               Action index. Must be in range [0, num_actions)
+
+           Returns
+           -------
+           sample.Sample
+               The sample for the applied action.
+
+           Raises
+           ------
+           ValueError
+               If the action index is outside of the range [0, num_actions)
+
+           """
+        if action < 0 or action > self.num_actions - 1:
+            raise IndexError('Action index outside of bounds [0, %d)' % self.num_actions)
+
+        curr_sa = (self.mdp['idstatefrom'] == self._state.item(0)) & (self.mdp['idaction'] == action)
+        curr_candidates = self.mdp[curr_sa]
+
+        if len(curr_candidates) == 0:
+            print("state: ", self._state, "action:", action)
+            raise KeyError('Couldn\'t find the corresponding sample!')
+
+        # select the sample with the closest probability
+        rand = np.random.random()
+        if len(curr_candidates) == 1:
+            curr_sample = curr_candidates.iloc[0]  # get a Series for type consistency
+        else:
+            curr_sample = curr_candidates.loc[(np.abs(curr_candidates['probability'] - rand)).argmin]
+
+        next_state = np.array([curr_sample.values[2].astype(int)])
+        reward = np.array([curr_sample.values[4].astype(int)])
+        sample = Sample(self._state.copy(), action, reward, next_state)
+
+        self._state = next_state
+
+        return sample
+
+    def reset(self, initial_state=None):
+        """
+        reset SixArms to start at either state 0, by the problem definition.
+
+        :param initial_state: the state to begin at state 0.
+        """
+        if initial_state is None:
+            self._state = self.__init_random_state()
+        else:
+            if initial_state.shape != (1,):
+                raise ValueError('The specified state did not match the '
+                                 + 'current state size')
+            state = initial_state.astype(np.int)
+            self._state = state
+
+    def action_name(self, action):
+        """Return string representation of actions.
+
+        0:
+            left
+        1:
+            right
+
+        Returns
+        -------
+        str
+            String representation of action.
+        """
+        return RiverSwimDomain.__action_names[action]
+
+    def __init_random_state(self):
+        """
+        RiverSwim starts at state 0.
+
+        :returns: The starting state
+
+        :raises: The
+        """
+        return np.array([0])
