@@ -113,7 +113,11 @@ University of New Hampshire \\
     \section{Method}
     For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations
     to the end of this paper. We use model-free LSPI and LSTDQ \citep{Lagoudakis2003} to update and
-    evaluate the policy of actions, respectively. CRAAM, on the other hand, as a exact method tries to
+    evaluate the policy of actions, respectively. CRAAM, on the other hand, as a exact method tries to approximate
+    the value function by dynamic programming optimization.
+
+    We developed an aggregation scheme to lower the state space dimensionality by assigning same action to the state
+    in a neighbourhood, so called nearest neighbour/ piecewise linear aggregation.
 
 
     \subsection{Adversarial attacks}

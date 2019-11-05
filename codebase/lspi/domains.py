@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Contains example domains that LSPI works on."""
 import abc
-from random import randint, random
+from random import random
 
 import numpy as np
-import pandas as pd
 
 from sample import Sample
 
@@ -197,7 +196,7 @@ class ChainWalkDomain(Domain):
                              self.num_actions)
 
         action_failed = False
-        if random() < self.failure_probability:
+        if np.random.random() < self.failure_probability:
             action_failed = True
 
         # this assumes that the state has one and only one occupied location
@@ -288,7 +287,7 @@ class ChainWalkDomain(Domain):
     @staticmethod
     def __init_random_state(num_states):
         """Return randomly initialized state of the specified size."""
-        return np.array([randint(0, num_states - 1)])
+        return np.array([np.random.randint(0, num_states)])
 
 
 class RiverSwimDomain(Domain):
@@ -395,4 +394,4 @@ class RiverSwimDomain(Domain):
 
         :raises: The 
         """
-        return np.array([np.random.randint(1, self.num_states + 1)])
+        return np.array([np.random.randint(1, 2 + 1)])
