@@ -6,6 +6,8 @@ from functools import reduce
 
 import numpy as np
 
+from adrel.util import erwin_log
+
 
 class BasisFunction(object):
 
@@ -284,6 +286,7 @@ class OneDimensionalPolynomialBasis(BasisFunction):
 
         """
         if action < 0 or action >= self.num_actions:
+            erwin_log('action: ' + str(action) + ', state: ' + str(state))
             raise IndexError('Action index out of bounds')
 
         if state.shape != (1, ):

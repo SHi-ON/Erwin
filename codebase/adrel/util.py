@@ -43,3 +43,7 @@ def pickle_load(file_name):
     with open(file_path, 'rb') as in_handle:
         return pickle.load(in_handle)
 
+
+def erwin_log(report):
+    print('ErwinLog: An exception has been caught:\n', report)
+

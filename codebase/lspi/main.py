@@ -22,8 +22,6 @@ def chain_walk(n_samples):
 
     # basis = FakeBasis(2)
     poly_basis = OneDimensionalPolynomialBasis(3, 2)
-    poly_basis.evaluate(np.array([2]),1)
-    # poly_basis.evaluate(np.array([2]), 1)
     # policy = Policy(basis)
     policy = Policy(poly_basis)
     policy.weights
@@ -49,7 +47,7 @@ def mdps(domain, n_samples):
         samples.append(domain.apply_action(a))
 
     # basis = FakeBasis(2)
-    basis = OneDimensionalPolynomialBasis(3, 2)
+    basis = OneDimensionalPolynomialBasis(3, domain.num_actions)
     policy = Policy(basis)
     print('initial policy weights:', policy.weights)
 
