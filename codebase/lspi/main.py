@@ -1,11 +1,15 @@
+import warnings
+
 import numpy as np
 import pandas as pd
 
 from domains import ChainWalkDomain, RiverSwimDomain, SixArmsDomain
-from basis_functions import FakeBasis, OneDimensionalPolynomialBasis
+from basis_functions import FakeBasis, OneDimensionalPolynomialBasis, RadialBasisFunction
 from policy import Policy
 from solvers import LSTDQSolver
 from lspi import learn
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def chain_walk(n_samples):
@@ -36,7 +40,6 @@ def chain_walk(n_samples):
 
 
 def mdps(domain, n_samples):
-
     samples = []
     init_action = np.random.randint(domain.num_actions)
     init_sample = domain.apply_action(init_action)
@@ -47,7 +50,8 @@ def mdps(domain, n_samples):
         samples.append(domain.apply_action(a))
 
     # basis = FakeBasis(2)
-    basis = OneDimensionalPolynomialBasis(3, domain.num_actions)
+    # basis = OneDimensionalPolynomialBasis(3, domain.num_actions)
+    basis = RadialBasisFunction(np.array([np.array([i]) for i in range(4)]), 0.8, domain.num_actions)
     policy = Policy(basis)
     print('initial policy weights:', policy.weights)
 
