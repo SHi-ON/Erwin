@@ -402,7 +402,7 @@ class RadialBasisFunction(BasisFunction):
         Return
         ------
         None or numpy.array
-            None values will propogate through the reduce automatically.
+            None values will propagate through the reduce automatically.
 
         """
         if left is None or right is None:
