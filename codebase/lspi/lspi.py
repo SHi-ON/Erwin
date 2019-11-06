@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Contains main interface to LSPI algorithm."""
+"""Contains main interface to
+ algorithm."""
 
 from copy import copy
 
@@ -65,6 +66,7 @@ def learn(data, initial_policy, solver, epsilon=10**-5, max_iterations=10):
         print(curr_policy.weights)
 
         distance = np.linalg.norm(new_weights - curr_policy.weights)
+        print('distance at %d:' % iteration, distance)
 
         curr_policy.weights = new_weights
 
