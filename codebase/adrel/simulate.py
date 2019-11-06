@@ -13,11 +13,10 @@ import gym
 import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd
 
 from agent_policy import AgentPolicy
 from agent_dqn import AgentDQN
-from util import timing, pickle_store
+from util import timing
 
 """ CartPole-v0:
 

@@ -1,6 +1,5 @@
 import numpy as np
 
-from util import *
 import sample as samp
 
 

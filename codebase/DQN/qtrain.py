@@ -7,7 +7,6 @@ from keras.layers import Dense
 # from keras.optimizers import sgd
 from keras.optimizers import rmsprop
 # from keras.optimizers import adam
-import time
 
 import matplotlib.pyplot as plt
 
