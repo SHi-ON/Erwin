@@ -26,6 +26,14 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 
+% SHi-ON packages
+% argmin argmax begin
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+% argmin argmax end
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}        % norm using amsmath
+
 
 \title{Adversarial State Aggregation}
 
@@ -88,7 +96,7 @@ University of New Hampshire \\
     lesast feasible. These "good" approximators end up with "good" features to represent the projected state space.
 
     Reassuring achievements in the Deep RL in a variety of fields absorb the attention from the community
-    \citep{Mnih2015, Schulman2015TrustOptimization, Lillicrap2015ContinuousDDPG, silver2016a}. The cross
+    \citep{Mnih2015, schulman2015a, Lillicrap2015, silver2016a}. The cross
     fertilization in using approximation techniques by Deep Neural Networks in solving immense state space problems
     in RL is a key. While the newly emerged methods are growing at a staggering pace, a parallel area of research
     has been formed wherein a variety of techniques have been utilized to make these methods contravene their
@@ -140,13 +148,13 @@ University of New Hampshire \\
     The ultimate goal is deceiving the model either in choosing the worst possible action in an RL task or misclassifying an input in a classification task in a way which is not perceptible for unaided eye. In terms of a Markovian RL task we show how minimum set of worst-case actions are needed to result in the minimum final reward. We try to show that the model is not robust to other configuration of each benchmarks with different dynamics.
 
     The main goal of adversarial training and examples can be expressed briefly in form of the following equation:
-    \begin{equation}
-        \begin{aligned}
-            & \underset{\theta}{\min}
-            & & \sum_{x,y \in S} \underset{\delta \in \Delta}{\max}
-            & & & \textbb{Loss}(x + \delta, y; \theta)
-        \end{aligned}
-    \end{equation}
+    %    \begin{equation}
+    %        \begin{aligned}
+    %            & \underset{\theta}{\min}
+    %            & & \sum_{x,y \in S} \underset{\delta \in \Delta}{\max}
+    %            & & & \textbb{Loss}(x + \delta, y; \theta)
+    %        \end{aligned}
+    %    \end{equation}
 
     \section{Devising Adversarial Attacks}
     Neural networks are vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such weakness could possibly result in unrecognizable differences for the unaided eye in the presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}.
@@ -167,7 +175,7 @@ University of New Hampshire \\
     \begin{equation}
         \begin{aligned}
             & \underset{s}{\argmin}
-            & & {\norm{s_\eta - s_c}} = \norm{s . (1 + \eps) - s_c}
+            & & {\norm{s_\eta - s_c}} = \norm{s . (1 + \epsilon) - s_c}
         \end{aligned}
     \end{equation}
     which is the state observation that have the minimum distance between real-world [scaled] observation and the perturbed one.
@@ -177,18 +185,12 @@ University of New Hampshire \\
     \subsection{Reward-Perturbed attacks}
     In an adversarial environment we try to perturb reward to interfere in learning process of the RL agent. We considered this attack also in scenarios with a single reward which we will show the process later.
 
-    \section{Adversarial attacks on different methodologies}
-    Here we review adversarial attacks on a variety of value function based state-of-art algorithms proposed by the community so far. As \cite{Pattanaik2018} pointed out, the concept of achieving a successful adversarial attack is unalike in reinforcement learning tasks compared to image classification tasks. Worst \textit{action} is tangible and feasible but not worst \textit{image}.
-
-    \subsection{Deep Q Learning (DQN)}
-    Utilizing experience replay and the leveraging target network, DQN take advantage of them to gain more stability \cite{Pattanaik2018}.
-
     \section{Experiment}
-    We apply the approach to two MDPs proposed by \cite{Strehl2004AnProcesses}. \textit{RiverSwim} an MDP consists of six states and \textit{SixArms} one with seven states. In \textit{RiverSwim} flow of the river is to left and the swimmer picks probabilistically equal either state 1 or 2 as the start point. All states but two terminal states have zero reward to land at while the right most one rewards substantially higher than the other one. The agent in SixArms selects between six distinct actions which pulls different arms of a multi-armed bandit. By pulling an arm the agent traverses to a new state. Although the agent does not obtain reward by pulling the arms but going to the connected state to that arm is highly rewarding in which the transition probability is in inverse relationship with the reward value.
+    We apply the approach to two MDPs proposed by\cite{Strehl2004}. \textit{RiverSwim} an MDP consists of six states and \textit{SixArms} one with seven states. In \textit{RiverSwim} flow of the river is to left and the swimmer picks probabilistically equal either state 1 or 2 as the start point. All states but two terminal states have zero reward to land at while the right most one rewards substantially higher than the other one. The agent in SixArms selects between six distinct actions which pulls different arms of a multi-armed bandit. By pulling an arm the agent traverses to a new state. Although the agent does not obtain reward by pulling the arms but going to the connected state to that arm is highly rewarding in which the transition probability is in inverse relationship with the reward value.
 
-    As both problems favor keeping the agent in states with lower reward, exploration is paramount to maximize the accumulated reward. This is also confirmed by the authors in \cite{Strehl2004AnProcesses} that the agent will fail to learn when a rudimentary $\epsilon$-greedy algorithm.
+    As both problems favor keeping the agent in states with lower reward, exploration is paramount to maximize the accumulated reward. This is also confirmed by the authors in \cite{Strehl2004} that the agent will fail to learn when a rudimentary $\epsilon$-greedy algorithm.
 
-    Our implementation uses Deep Q-Network (DQN) \cite{Mnih2015} as the policy optimizer. OpenAI Gym \cite{BrockmanOpenAIGym} is the testbed in the benchmarks in this paper. In training phase, models are trained in the environment. Online methods such as DQN learn by interacting directly in the environment, however, CRAAM
+    Our implementation uses Deep Q-Network (DQN)\cite{Mnih2015} as the policy optimizer. OpenAI Gym \cite{Brockman2016} is the testbed in the benchmarks in this paper. In training phase, models are trained in the environment. Online methods such as DQN learn by interacting directly in the environment, however, CRAAM
 
     % \begin{figure}
     %     \centering

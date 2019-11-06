@@ -37,130 +37,130 @@
 \author{Shayan Amani}
 
 \begin{document}
-\maketitle
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \maketitle
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Preliminaries}
+    \section{Preliminaries}
 
-\subsection{Supervised Learning}
-Data bifurcating could be done with 20/80 percents between training set and test set in classic machine learning. Other used names for test set are such as validation set, evaluating set, etc. Model optimization is discussed into two areas, \textit{algorithmic} or \textit{parametric} optimization. In deep learning where in the models heavily depend on \textit{hyperparameters}, test set could be served to "train" hyperparameters prior to optimization. As a side note about logistic regression method, generalized linear model does not minimize square error in y-units (as in linear model it does) but maximizes data likelihood under the chosen model. In order to go further, a generalized additive model which in addition to re-shaping the y distribution uses splines to learn re-shapings of the x-data could be more desired.
+    \subsection{Supervised Learning}
+    Data bifurcating could be done with 20/80 percents between training set and test set in classic machine learning. Other used names for test set are such as validation set, evaluating set, etc. Model optimization is discussed into two areas, \textit{algorithmic} or \textit{parametric} optimization. In deep learning where in the models heavily depend on \textit{hyperparameters}, test set could be served to "train" hyperparameters prior to optimization. As a side note about logistic regression method, generalized linear model does not minimize square error in y-units (as in linear model it does) but maximizes data likelihood under the chosen model. In order to go further, a generalized additive model which in addition to re-shaping the y distribution uses splines to learn re-shapings of the x-data could be more desired.
 
-\subsection{Reinforcement Learning}
-Reinforcement learning as a branch of machine learning concerns about sequential decision-making in order to maximize a perception of cumulative rewards. In reinforcement learning, the model trains from interactions with its environment (reward), instead of labeled data. Reinforcement learning falls in between \textit{supervised learning} and \textit{unsupervised learning} in which you have sparse (possibly) and time-delayed labels, so called \textit{rewards} 
+    \subsection{Reinforcement Learning}
+    Reinforcement learning as a branch of machine learning concerns about sequential decision-making in order to maximize a perception of cumulative rewards. In reinforcement learning, the model trains from interactions with its environment (reward), instead of labeled data. Reinforcement learning falls in between \textit{supervised learning} and \textit{unsupervised learning} in which you have sparse (possibly) and time-delayed labels, so called \textit{rewards}
 
-\subsection{Action}
+    \subsection{Action}
 
-\subsubsection{Exploration vs. Exploitation dilemma}
-Whether an AI should trust on the already learned part of the environment (exploitation) or trying new parts (actions, states, etc.) in hope for getting a higher \textit{reward} (exploration). 
+    \subsubsection{Exploration vs. Exploitation dilemma}
+    Whether an AI should trust on the already learned part of the environment (exploitation) or trying new parts (actions, states, etc.) in hope for getting a higher \textit{reward} (exploration).
 
-\subsubsection{Credit assignment problem}
-This issue discusses which of the previous actions had a major role in bringing the reward and how big it was the share of participation of that specific action in the reward.
+    \subsubsection{Credit assignment problem}
+    This issue discusses which of the previous actions had a major role in bringing the reward and how big it was the share of participation of that specific action in the reward.
 
-\subsection{Reward}
-Reward is nothing more than \textit{time-delayed} labels to help agent interact with the environment through trial and error`. 
-\subsubsection{Immediate and future reward}
-Immediate reward, $r$ is what the agent gets after taking the action $a$ in state $s$ which leads to ending up in state $s'$. On the other side, we estimate immediate + future reward with $Q(s,a)$ function which is the total reward that taking action $a$ in state $s$ will fetch us in future.
-\begin{equation}
-    Q ^ { * } ( s , a ) = \mathbb { E } _ { s ^ { \prime } \sim \mathcal { E } } \left[ r + \gamma \max _ { a ^ { \prime } } Q ^ { * } \left( s ^ { \prime } , a ^ { \prime } \right) | s , a \right]
-\end{equation}
-we can call Q(s,a) is value of an action and V(s,a) function is value of a state. 
+    \subsection{Reward}
+    Reward is nothing more than \textit{time-delayed} labels to help agent interact with the environment through trial and error`.
+    \subsubsection{Immediate and future reward}
+    Immediate reward, $r$ is what the agent gets after taking the action $a$ in state $s$ which leads to ending up in state $s'$. On the other side, we estimate immediate + future reward with $Q(s,a)$ function which is the total reward that taking action $a$ in state $s$ will fetch us in future.
+    \begin{equation}
+        Q ^ { * } ( s , a ) = \mathbb { E } _ { s ^ { \prime } \sim \mathcal { E } } \left[ r + \gamma \max _ { a ^ { \prime } } Q ^ { * } \left( s ^ { \prime } , a ^ { \prime } \right) | s , a \right]
+    \end{equation}
+    we can call Q(s,a) is value of an action and V(s,a) function is value of a state.
 
-\subsection{Policy}
-Number of possible policies is equal to number of actions to the power of the number of states.
+    \subsection{Policy}
+    Number of possible policies is equal to number of actions to the power of the number of states.
 
-\subsection{Prediction \& Control Tasks}
-From the perspective of tasks, one can divide RL tasks into two distinct categories, prediction and control. It is worth to mention that policy iteration includes both prediction and control steps.
+    \subsection{Prediction \& Control Tasks}
+    From the perspective of tasks, one can divide RL tasks into two distinct categories, prediction and control. It is worth to mention that policy iteration includes both prediction and control steps.
 
-\subsubsection{Prediction}
-We are given with the policy $\pi(a|s)$ and we need to \textit{predict} expected cumulative reward from any specified states. As an example of this task, we can mention \textbf{policy evaluation} step in algorithms such as Dynamic Programming.
+    \subsubsection{Prediction}
+    We are given with the policy $\pi(a|s)$ and we need to \textit{predict} expected cumulative reward from any specified states. As an example of this task, we can mention \textbf{policy evaluation} step in algorithms such as Dynamic Programming.
 
-\subsubsection{Control}
-In this type of task we try to find a policy $\pi(a|s)$ which maximizes the expected cumulative reward. As an example of this task, we can mention \textbf{policy improvement} step in algorithms such as Dynamic Programming.
+    \subsubsection{Control}
+    In this type of task we try to find a policy $\pi(a|s)$ which maximizes the expected cumulative reward. As an example of this task, we can mention \textbf{policy improvement} step in algorithms such as Dynamic Programming.
 
-\subsection{On-policy vs. Off-policy}
-Depending on how a method evaluates or improves the policy we can divide policies into two groups, on-policy and off-policy. In addition, there are two types of policy which need to be discussed here, behaviour and target policies. The policy that the algorithm uses to control the current action is behaviour and the policy that is being learned and/or evaluated is target
+    \subsection{On-policy vs. Off-policy}
+    Depending on how a method evaluates or improves the policy we can divide policies into two groups, on-policy and off-policy. In addition, there are two types of policy which need to be discussed here, behaviour and target policies. The policy that the algorithm uses to control the current action is behaviour and the policy that is being learned and/or evaluated is target
 
-\subsubsection{On-policy methods}
-This type of methods try to evaluate or improve the same policy from which the taken action comes. Examples of such methods are as follows:
-\begin{itemize}
-    \item Monte Carlo ES
-    \item SARSA
-\end{itemize}
+    \subsubsection{On-policy methods}
+    This type of methods try to evaluate or improve the same policy from which the taken action comes. Examples of such methods are as follows:
+    \begin{itemize}
+        \item Monte Carlo ES
+        \item SARSA
+    \end{itemize}
 
-\subsubsection{Off-policy methods}
-These methods try to evaluate or improve a different policy than the one that used. Examples of such methods are as follows:
-\begin{itemize}
-    \item Q-learning
-\end{itemize}
+    \subsubsection{Off-policy methods}
+    These methods try to evaluate or improve a different policy than the one that used. Examples of such methods are as follows:
+    \begin{itemize}
+        \item Q-learning
+    \end{itemize}
 
-\subsection{Model-based vs. Model-free}
-\textbf{Model-based} RL tries to enclose mechanics of the system. In that case, dependency on data for sampling would decrease. On the other hand, sampling is the major fact in \textbf{model-free} RL. Cost-wise talking, it is reasonable to probe a model instead of taking samples from a dataset or a simulator until sampling is not an expensive solution anymore. Unnecessary to mention that \textbf{transition probability P is the model} in model-based learning methods and has to be explicitly provided in such algorithms.
+    \subsection{Model-based vs. Model-free}
+    \textbf{Model-based} RL tries to enclose mechanics of the system. In that case, dependency on data for sampling would decrease. On the other hand, sampling is the major fact in \textbf{model-free} RL. Cost-wise talking, it is reasonable to probe a model instead of taking samples from a dataset or a simulator until sampling is not an expensive solution anymore. Unnecessary to mention that \textbf{transition probability P is the model} in model-based learning methods and has to be explicitly provided in such algorithms.
 
-\subsubsection{General models}
-The modeling frameworks can be used to represent the dynamics of the system are as follows:
-\begin{itemize}
-    \item Gaussian process: two similar inputs, yield two similar outputs too.
-    \item Gaussian Mixture Model (GMM)
-    \item Deep networks
-\end{itemize}
+    \subsubsection{General models}
+    The modeling frameworks can be used to represent the dynamics of the system are as follows:
+    \begin{itemize}
+        \item Gaussian process: two similar inputs, yield two similar outputs too.
+        \item Gaussian Mixture Model (GMM)
+        \item Deep networks
+    \end{itemize}
 
-\subsubsection{Model-based algorithms}
-These group of algorithms completely dependent on transition probabilities which should be provided. List of a handful of such algorithms:
-\begin{itemize}
-    \item Dynamic programming
-\end{itemize}
+    \subsubsection{Model-based algorithms}
+    These group of algorithms completely dependent on transition probabilities which should be provided. List of a handful of such algorithms:
+    \begin{itemize}
+        \item Dynamic programming
+    \end{itemize}
 
-\subsubsection{Model-free algorithms}
-Despite of previous category, these algorithms do not need transition probabilities and only rely on trial-and-error to probing their environment. List of a handful of such algorithms:
-\begin{itemize}
-    \item First-visit Monte Carlo
-    \item TD-learning
-    \item Q-learning
-\end{itemize}
+    \subsubsection{Model-free algorithms}
+    Despite of previous category, these algorithms do not need transition probabilities and only rely on trial-and-error to probing their environment. List of a handful of such algorithms:
+    \begin{itemize}
+        \item First-visit Monte Carlo
+        \item TD-learning
+        \item Q-learning
+    \end{itemize}
 
-\subsection{Online vs. Batch RL}
-\begin{itemize}
-    \item Batch algorithms mostly occurred to be more stable.
-    \item Data-wise speaking, batch algorithms can learn more efficient than online algorithms.
-    \item Exploration is not possible when you use a batch algorithm.
-\end{itemize}
+    \subsection{Online vs. Batch RL}
+    \begin{itemize}
+        \item Batch algorithms mostly occurred to be more stable.
+        \item Data-wise speaking, batch algorithms can learn more efficient than online algorithms.
+        \item Exploration is not possible when you use a batch algorithm.
+    \end{itemize}
 
-\subsubsection{Online RL}
-This type of learning picks an action and applies that drawn action to the environment and then observes the consequent state.
+    \subsubsection{Online RL}
+    This type of learning picks an action and applies that drawn action to the environment and then observes the consequent state.
 
-\subsubsection{Batch RL}
-In this learning way, samples are extracted from the given dataset. We may have insufficient information about how and where the data are collected from.
+    \subsubsection{Batch RL}
+    In this learning way, samples are extracted from the given dataset. We may have insufficient information about how and where the data are collected from.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Adversarial Deep Reinforcement Learning}
+    \section{Adversarial Deep Reinforcement Learning}
 
-\subsection{Introduction}
-Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---elevates assurance about method performance and reliability to the foreground. We, in this paper, try to scrutinize state-of-the-art deep RL algorithms from robustness point of view utilizing adversarial attacks in order to coming up with a guarantee that we make sure which definitely works in the claimed criterion.
+    \subsection{Introduction}
+    Deep RL community achievements in past few years has hit many milestones which led to uprising expectations. The promising method similar to other aspects of machine learning has its own uncertainties which need to be addressed before implementation. Robustness---as a property---elevates assurance about method performance and reliability to the foreground. We, in this paper, try to scrutinize state-of-the-art deep RL algorithms from robustness point of view utilizing adversarial attacks in order to coming up with a guarantee that we make sure which definitely works in the claimed criterion.
 
-While the newly emerged methods are growing at a staggering pace, a parallel area of research has been formed where in a variety of techniques have been utilized to make these methods contravene their promised functionality. These efforts would be served to develop robustness in those spectacular models and reduce their susceptibility to data tampering or dynamics of the environment.
+    While the newly emerged methods are growing at a staggering pace, a parallel area of research has been formed where in a variety of techniques have been utilized to make these methods contravene their promised functionality. These efforts would be served to develop robustness in those spectacular models and reduce their susceptibility to data tampering or dynamics of the environment.
 
-\subsection{Related Work}
-\citet{Goodfellow2014} stated and consequently depicted that the root cause of vulnerability to adversarial examples laid behind the piecewise linearity attributes of neural network models.
+    \subsection{Related Work}
+    \citet{Goodfellow2014} stated and consequently depicted that the root cause of vulnerability to adversarial examples laid behind the piecewise linearity attributes of neural network models.
 
-\subsection{Definition}
-For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations to the end of this paper.
+    \subsection{Definition}
+    For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations to the end of this paper.
 
-\subsubsection{Adversarial attacks}
-The designed attack may have different levels of access to the underlying training policy which have motivated the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or \textit{black-box} attacks. White-box attacks illustrating the scenario in which the.... Adversarial attacks fall in either one of the following categories based upon the stage which in the adversary perturbs the model:
-\begin{itemize}
-    \item Train time: Data poisoning.
-    \item Evaluation time: Adversarial examples.
-    \item Deploy time: Black-box attacks.
-\end{itemize}
+    \subsubsection{Adversarial attacks}
+    The designed attack may have different levels of access to the underlying training policy which have motivated the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or \textit{black-box} attacks. White-box attacks illustrating the scenario in which the.... Adversarial attacks fall in either one of the following categories based upon the stage which in the adversary perturbs the model:
+    \begin{itemize}
+        \item Train time: Data poisoning.
+        \item Evaluation time: Adversarial examples.
+        \item Deploy time: Black-box attacks.
+    \end{itemize}
 
 
-\subsection{Devising Adversarial Attacks}
-Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such a weaknesses could possibly results to unrecognizable differences for unaided eye in presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}. 
+    \subsection{Devising Adversarial Attacks}
+    Neural networks have been observed to be vulnerable to adversarial attacks either in supervised learning or reinforcement learning settings \cite{Huang2017}. Such a weaknesses could possibly results to unrecognizable differences for unaided eye in presence of perturbation which leads to misclassification for neural network based model \cite{Szegedy2014, Goodfellow2014}.
 
-\subsubsection{Objective}
-The ultimate goal is deceiving the model either in choosing the worst possible action in an RL task or misclassifying an input in a classification task in a way which is not perceptible for unaided eye.
+    \subsubsection{Objective}
+    The ultimate goal is deceiving the model either in choosing the worst possible action in an RL task or misclassifying an input in a classification task in a way which is not perceptible for unaided eye.
 
 
 
@@ -168,351 +168,359 @@ The ultimate goal is deceiving the model either in choosing the worst possible a
 
 
 
-% Hypothesis function, $h_\theta$ is a map from input to the output $h_\theta : \mathcal{X} \rightarrow \mathbb{R}^k$ where $k$ is the number of classes being predicted; note that like in our model above, the output corresponds to the logit space, so these are real-valued numbers that can be positive or negative.  The $\theta$ vector represents all the parameters defining this model, (i.e., all the convolutional filters, fully-connected layer weight matrices, baises, etc; the $\theta$ parameters are what we typically optimize over when we train a neural network.  And finally, note that this $h_\theta$ corresponds precisely the `model` object in the Python code above.
+    % Hypothesis function, $h_\theta$ is a map from input to the output $h_\theta : \mathcal{X} \rightarrow \mathbb{R}^k$ where $k$ is the number of classes being predicted; note that like in our model above, the output corresponds to the logit space, so these are real-valued numbers that can be positive or negative.  The $\theta$ vector represents all the parameters defining this model, (i.e., all the convolutional filters, fully-connected layer weight matrices, baises, etc; the $\theta$ parameters are what we typically optimize over when we train a neural network.  And finally, note that this $h_\theta$ corresponds precisely the `model` object in the Python code above.
 
-% Second, we define a loss function $\ell: \mathbb{R}^k \times \mathbb{Z}_+ \rightarrow \mathbb{R}_+$ as a mapping from the model predictions and true labels to a non-negative number.  The semantics of this loss function are that the first argument is the model output (logits which can be positive or negative), and the second argument is the _index_ of the true class (that is, a number from 1 to $k$ denoting the index of the true label). Thus, the notation
-% \begin{equation}
-% \ell(h_\theta(x), y)
-% \end{equation}
-% for $x \in \mathcal{X}$ the input and $y \in \mathbb{Z}$ the true class, denotes the loss that the classifier achieves in its predictions on $x$, assuming the true class is $y$.  **By far the most common form of loss used in deep learning is the cross entropy loss (also sometimes called the softmax loss)**, defined as
-% \begin{equation}
-% \ell(h_\theta(x), y) = \log \left ( \sum_{j=1}^k \exp(h_\theta(x)_j) \right ) - h_\theta(x)_y
-% \end{equation}
-% where $h_\theta(x)_j$ denotes the $j$th elements of the vector $h_\theta(x)$.
+    % Second, we define a loss function $\ell: \mathbb{R}^k \times \mathbb{Z}_+ \rightarrow \mathbb{R}_+$ as a mapping from the model predictions and true labels to a non-negative number.  The semantics of this loss function are that the first argument is the model output (logits which can be positive or negative), and the second argument is the _index_ of the true class (that is, a number from 1 to $k$ denoting the index of the true label). Thus, the notation
+    % \begin{equation}
+    % \ell(h_\theta(x), y)
+    % \end{equation}
+    % for $x \in \mathcal{X}$ the input and $y \in \mathbb{Z}$ the true class, denotes the loss that the classifier achieves in its predictions on $x$, assuming the true class is $y$.  **By far the most common form of loss used in deep learning is the cross entropy loss (also sometimes called the softmax loss)**, defined as
+    % \begin{equation}
+    % \ell(h_\theta(x), y) = \log \left ( \sum_{j=1}^k \exp(h_\theta(x)_j) \right ) - h_\theta(x)_y
+    % \end{equation}
+    % where $h_\theta(x)_j$ denotes the $j$th elements of the vector $h_\theta(x)$.
 
-% **Aside:** For those who are unfamiliar with the convention above, note that the form of this loss function comes from the typical softmax activation.  Defining the softmax operator $\sigma : \mathbb{R}^k \rightarrow \mathbb{R}^k$ applied to a vector
-% \begin{equation}
-% \sigma(z)_i = \frac{exp(z_i)}{\sum_{j=1}^{k}\exp(z_{j})}
-% \end{equation}
-% to be a mapping from the class logits returned by $h_\theta$ to a probability distribution.  Then the typical goal of training a network is to maximize the probability of the true class label.  Since probabilities themselves get vanishingly small, it is more common to maximize the _log_ of the probability of the true class label, which is given by
-% \begin{equation}
-% \log \sigma(h_\theta(x))_y = \log \left(\frac{exp(h_\theta(x)_y)}{\sum_{j=1}^{k}\exp(h_\theta(x)_{j})} \right) = h_\theta(x)_y - \log \left (\sum_{j=1}^{k}\exp(h_\theta(x)_{j}) \right ).
-% \end{equation}
-% Since the convention is that we want to _minimize_ loss (rather than maximizing probability), we use the negation of this quantity as our loss function.  We can evaluate this loss in PyTorch using the following command.
+    % **Aside:** For those who are unfamiliar with the convention above, note that the form of this loss function comes from the typical softmax activation.  Defining the softmax operator $\sigma : \mathbb{R}^k \rightarrow \mathbb{R}^k$ applied to a vector
+    % \begin{equation}
+    % \sigma(z)_i = \frac{exp(z_i)}{\sum_{j=1}^{k}\exp(z_{j})}
+    % \end{equation}
+    % to be a mapping from the class logits returned by $h_\theta$ to a probability distribution.  Then the typical goal of training a network is to maximize the probability of the true class label.  Since probabilities themselves get vanishingly small, it is more common to maximize the _log_ of the probability of the true class label, which is given by
+    % \begin{equation}
+    % \log \sigma(h_\theta(x))_y = \log \left(\frac{exp(h_\theta(x)_y)}{\sum_{j=1}^{k}\exp(h_\theta(x)_{j})} \right) = h_\theta(x)_y - \log \left (\sum_{j=1}^{k}\exp(h_\theta(x)_{j}) \right ).
+    % \end{equation}
+    % Since the convention is that we want to _minimize_ loss (rather than maximizing probability), we use the negation of this quantity as our loss function.  We can evaluate this loss in PyTorch using the following command.
 
 
 
 
 
+    \section{Adversarial attacks on different methodologies}
+    Here we review adversarial attacks on a variety of value function based state-of-art algorithms proposed by the community so far. As \cite{Pattanaik2018} pointed out, the concept of achieving a successful adversarial attack is unalike in reinforcement learning tasks compared to image classification tasks. Worst \textit{action} is tangible and feasible but not worst \textit{image}.
 
+    \subsection{Deep Q Learning (DQN)}
+    Utilizing experience replay and the leveraging target network, DQN take advantage of them to gain more stability \cite{Pattanaik2018}.
 
 
 
 
-\subsubsection{Attacks Based upon Fast Gradient Sign Method}
 
 
+    \subsubsection{Attacks Based upon Fast Gradient Sign Method}
 
-The main goal of adversarial training and examples can be expressed briefly in form of the following equation:
-\begin{equation*}
-\begin{aligned}
-& \underset{\theta}{\min}
-& & \sum_{x,y \in S} \underset{\delta \in \Delta}{\max}
-& & & \textbb{Loss}(x + \delta, y; \theta)
-\end{aligned}
-\end{equation*}
-where in we trying to find an adversarial example (inner maximization) in order to adversarially train a robust model (outer minimization).
 
 
-In order to expand the applicability of designed adversarial attacks to an assortment of algorithms [models], we rely on \textit{transferability property} of RL-specific adversarial attacks \cite{Szegedy2014, Papernot2016, Goodfellow2014a}. \citet{Huang2017} clearly assert [or asserts?!] attacks deployabilty to a group of trained RL models aimed at the same task.  
+    The main goal of adversarial training and examples can be expressed briefly in form of the following equation:
+    \begin{equation*}
+        \begin{aligned}
+            & \underset{\theta}{\min}
+            & & \sum_{x,y \in S} \underset{\delta \in \Delta}{\max}
+            & & & \textbb{Loss}(x + \delta, y; \theta)
+        \end{aligned}
+    \end{equation*}
+    where in we trying to find an adversarial example (inner maximization) in order to adversarially train a robust model (outer minimization).
 
-\subsection{Adversarial attacks on different methodologies}
-Here we review adversarial attacks on a variety of value function based state-of-art algorithms proposed by the community so far. As \citet{Pattanaik2018} pointed out, the concept of achieving a successful adversarial attack is unalike in reinforcement learning tasks compared to image classification tasks. Worst \textit{action} is tangible and feasible but not worst \textit{image}.
 
-\subsubsection{Deep Q Learning (DQN)}
-Utilizing experience replay and leveraging target network, DQN take advantage of them to gain more stability \cite{Pattanaik2018}.
+    In order to expand the applicability of designed adversarial attacks to an assortment of algorithms [models], we rely on \textit{transferability property} of RL-specific adversarial attacks \cite{Szegedy2014, Papernot2016, Goodfellow2014a}. \citet{Huang2017} clearly assert [or asserts?!] attacks deployabilty to a group of trained RL models aimed at the same task.
 
-\subsection{Experiment}
-In order to achieve more robustness, we need to omit loosely correlated features in training the model.
+    \subsection{Adversarial attacks on different methodologies}
+    Here we review adversarial attacks on a variety of value function based state-of-art algorithms proposed by the community so far. As \citet{Pattanaik2018} pointed out, the concept of achieving a successful adversarial attack is unalike in reinforcement learning tasks compared to image classification tasks. Worst \textit{action} is tangible and feasible but not worst \textit{image}.
 
-\subsubsection{Benchmarks}
-When it comes to benchmarking, an acute shortage of a comprehensive testbed is felt. Two available evaluation frameworks are as follows:
-\begin{itemize}
-    \item CleverHans \cite{Papernot2016}
-    \item Robust ML 
-\end{itemize}
- 
+    \subsubsection{Deep Q Learning (DQN)}
+    Utilizing experience replay and leveraging target network, DQN take advantage of them to gain more stability \cite{Pattanaik2018}.
 
-\subsection{Future Works}
-We developed the presented approach with having reproducibility in mind. It could be served as a launching pad for the future contributors who wants to surf this newly emerged field deeper.
+    \subsection{Experiment}
+    In order to achieve more robustness, we need to omit loosely correlated features in training the model.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsubsection{Benchmarks}
+    When it comes to benchmarking, an acute shortage of a comprehensive testbed is felt. Two available evaluation frameworks are as follows:
+    \begin{itemize}
+        \item CleverHans \cite{Papernot2016}
+        \item Robust ML
+    \end{itemize}
 
-\section{Bounding}
-We can use available inequalities to bound our solution. We are always interested in finding upper bound for the policies or solution we propose. Hence, by applying those inequalities -based on requirements of each of them- the upper-bound can be found. Confidence intervals come into the problem where the results are bounded with an upper-bound. Moreover, confidence intervals are authentic measures of reliability of a solution.
 
-\subsection{Norms}
-Some of the intrinsic properties of norms are listed here:
-\begin{itemize}
-    \item $\ell_2$: tends to have more mass in a particular region and less spread out. 
-\end{itemize}
+    \subsection{Future Works}
+    We developed the presented approach with having reproducibility in mind. It could be served as a launching pad for the future contributors who wants to surf this newly emerged field deeper.
 
-\subsection{Martingales}
-Sequence of random variable that:
-\begin{equation}
-    \mathbb { E } \left( X _ { n + 1 } | X _ { 1 } , \ldots , X _ { n } \right) = X _ { n }
-\end{equation}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Markov's inequality}
-The most simplistic inequality among the other described here in terms of being relaxed about the constraints and requirements. The only requirement that needs to be satisfied is $X \geq 0$.
-\begin{equation}
-\mathbb {P}(X \geq a ) \leq \frac { \mathbb { E}( X ) } { a }
-\end{equation}
-Note that it should be not confused with Markov brothers' inequality.
+    \section{Bounding}
+    We can use available inequalities to bound our solution. We are always interested in finding upper bound for the policies or solution we propose. Hence, by applying those inequalities -based on requirements of each of them- the upper-bound can be found. Confidence intervals come into the problem where the results are bounded with an upper-bound. Moreover, confidence intervals are authentic measures of reliability of a solution.
 
-\subsection{Chebyshev's inequality}
-\begin{equation}
-\mathbb {P}(|X - \mathbb{E}[X]| \geq a ) \leq \frac { \mathrm { Var}( X ) } { a^2 }
-\end{equation}
+    \subsection{Norms}
+    Some of the intrinsic properties of norms are listed here:
+    \begin{itemize}
+        \item $\ell_2$: tends to have more mass in a particular region and less spread out.
+    \end{itemize}
 
+    \subsection{Martingales}
+    Sequence of random variable that:
+    \begin{equation}
+        \mathbb { E } \left( X _ { n + 1 } | X _ { 1 } , \ldots , X _ { n } \right) = X _ { n }
+    \end{equation}
 
-\subsection{Hoeffding's inequality}
-Using Hoeffding's lemma we can prove this inequality which the definition is as follows:
+    \subsection{Markov's inequality}
+    The most simplistic inequality among the other described here in terms of being relaxed about the constraints and requirements. The only requirement that needs to be satisfied is $X \geq 0$.
+    \begin{equation}
+        \mathbb {P}(X \geq a ) \leq \frac { \mathbb { E}( X ) } { a }
+    \end{equation}
+    Note that it should be not confused with Markov brothers' inequality.
 
-Let $X_i$ be a bounded random variable with $X_i \in [b, d]$:
-\begin{equation}
-    \mathbb {P} \left( \left| \frac{1}{n} \sum_{i=1}^{n} X_i - \mathbb{E}[X_i] \right| \geq a \right) \leq { \exp \left( \frac{-2 n a ^ {2} }{ \left(d-b \right) ^ 2} \right) }
-\end{equation}
+    \subsection{Chebyshev's inequality}
+    \begin{equation}
+        \mathbb {P}(|X - \mathbb{E}[X]| \geq a ) \leq \frac { \mathrm { Var}( X ) } { a^2 }
+    \end{equation}
 
-In order to prove the above inequality we need to use Hoeffding's lemma:
-\begin{equation}
-    \mathbb {E} \left[ \exp \left( {\lambda ( X - \mathbb {E}[X] )} \right)  \right] \leq \exp \left( \frac{\lambda ^ 2 (d-b)^2}{8} \right)
-\end{equation}
 
-As PAC Optimal MDP Planning paper \cite{AlkaeeTaleghan2015a} proposed they replaced Hoeffding-bound with Weissman confidence interval.
+    \subsection{Hoeffding's inequality}
+    Using Hoeffding's lemma we can prove this inequality which the definition is as follows:
 
-\subsection{Bernstein inequalities}
-\begin{equation}
-    \mathbb { P } \left( \left| \frac { 1 } { n } \sum _ { i = 1 } ^ { n } X _ { i } \right| > a \right) \leq 2 \exp \left( \frac {- n a ^ {2} } { 2 \left( 1 + \frac {a} {3} \right) } \right)
-\end{equation}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    Let $X_i$ be a bounded random variable with $X_i \in [b, d]$:
+    \begin{equation}
+        \mathbb {P} \left( \left| \frac{1}{n} \sum_{i=1}^{n} X_i - \mathbb{E}[X_i] \right| \geq a \right) \leq { \exp \left( \frac{-2 n a ^ {2} }{ \left(d-b \right) ^ 2} \right) }
+    \end{equation}
 
-\section{Data Preparation}
+    In order to prove the above inequality we need to use Hoeffding's lemma:
+    \begin{equation}
+        \mathbb {E} \left[ \exp \left( {\lambda ( X - \mathbb {E}[X] )} \right)  \right] \leq \exp \left( \frac{\lambda ^ 2 (d-b)^2}{8} \right)
+    \end{equation}
 
-\subsection{Variance}
-The parameter which explains how much data are spread and is measured for the \textbf{whole data set}.
+    As PAC Optimal MDP Planning paper \cite{AlkaeeTaleghan2015a} proposed they replaced Hoeffding-bound with Weissman confidence interval.
 
-\subsection{Covariance}
-The parameter which expresses the dependency between \textbf{two variables}.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Bernstein inequalities}
+    \begin{equation}
+        \mathbb { P } \left( \left| \frac { 1 } { n } \sum _ { i = 1 } ^ { n } X _ { i } \right| > a \right) \leq 2 \exp \left( \frac {- n a ^ {2} } { 2 \left( 1 + \frac {a} {3} \right) } \right)
+    \end{equation}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Methodologies}
-We are studying a simulator-based MDP problem. transition probabilities and rewards can be generated by the simulator which is a generative model built upon different environmental parameters.
+    \section{Data Preparation}
 
-\subsection{LSTD}
-\begin{itemize}
-    \item Model-based \cite{Boyan1998}
-\end{itemize}
+    \subsection{Variance}
+    The parameter which explains how much data are spread and is measured for the \textbf{whole data set}.
 
-\subsection{LSPI}
-Finds and learns a linear approximation of Q-function. LSPI is a generalization of LSTDQ. This algorithm never diverges or return meaningless answers.
+    \subsection{Covariance}
+    The parameter which expresses the dependency between \textbf{two variables}.
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{itemize}
-    \item Model-free \cite{Lagoudakis2003}
-    \item off-policy
-    \item Batch RL algorithm
-    \item As a downside it ignores the exploration problem.
-\end{itemize}
+    \section{Methodologies}
+    We are studying a simulator-based MDP problem. transition probabilities and rewards can be generated by the simulator which is a generative model built upon different environmental parameters.
 
-\subsection{First-visit Monte Carlo}
-For building a model using repeated \textbf{random sampling} \footnote{For more read on Thompson sampling}. It works only on episodic tasks. Because FVMC updates all the action's value based on the final return, it has no bias at all.
-\begin{itemize}
-    \item model-free
-    \item episodic
-    \item  all steps look ahead (observes rewards for \textbf{all steps} in an episode)
-    \item higher variance than TD: W $\leftarrow$ W $\frac{1}{b(A|S)}$ b is probability and if it becomes very small so W becomes so big.
-    \item no bias
-\end{itemize}
+    \subsection{LSTD}
+    \begin{itemize}
+        \item Model-based \cite{Boyan1998}
+    \end{itemize}
 
-\subsection{TD(0)}
-TD-learning has lower \textit{variance} (than FVMC) because it depends on less factors. This algorithm only updates previous action's value based on the current action's value. TD captures recent trends. TD has some bias (again compared to FVMC) as values are updated towards the prediction.
-\begin{itemize}
-    \item model-based
-    \item one step look ahead
-    \item lower variance
-    \item some biases
-\end{itemize}
+    \subsection{LSPI}
+    Finds and learns a linear approximation of Q-function. LSPI is a generalization of LSTDQ. This algorithm never diverges or return meaningless answers.
 
-\subsection{Q-learning}
-A variation of TD-learning which calculates and (then iteratively updates) Q function -which represents (predicts) maximum cumulative discounted reward with performing action $a$ in state $s$- using Bellman equation. This method is a table-based (tabular) algorithm and we use Q-table as a table with the dimensions of states $\times$ actions.
+    \begin{itemize}
+        \item Model-free \cite{Lagoudakis2003}
+        \item off-policy
+        \item Batch RL algorithm
+        \item As a downside it ignores the exploration problem.
+    \end{itemize}
 
-\subsection{$\epsilon$-greedy}
-Popular in Deep Reinforcement Learning (DRL) which makes a good trade-off in terms of exploration and exploitation.
+    \subsection{First-visit Monte Carlo}
+    For building a model using repeated \textbf{random sampling} \footnote{For more read on Thompson sampling}. It works only on episodic tasks. Because FVMC updates all the action's value based on the final return, it has no bias at all.
+    \begin{itemize}
+        \item model-free
+        \item episodic
+        \item  all steps look ahead (observes rewards for \textbf{all steps} in an episode)
+        \item higher variance than TD: W $\leftarrow$ W $\frac{1}{b(A|S)}$ b is probability and if it becomes very small so W becomes so big.
+        \item no bias
+    \end{itemize}
 
+    \subsection{TD(0)}
+    TD-learning has lower \textit{variance} (than FVMC) because it depends on less factors. This algorithm only updates previous action's value based on the current action's value. TD captures recent trends. TD has some bias (again compared to FVMC) as values are updated towards the prediction.
+    \begin{itemize}
+        \item model-based
+        \item one step look ahead
+        \item lower variance
+        \item some biases
+    \end{itemize}
 
-\section{Deep Learning}
-\subsection{Model configuration}
-Several configuration has been proposed in the literature which have their own use cases based on the purpose. Convolutional neural network as a successful type of these networks has demonstrated substantial performance so far which outperformed other runner-ups in visual recognition competitions \cite{lecun1998gradient, krizhevsky2012a, zeiler2013, szegedy2014going, he2016a}. The architecture for a deep learning network commonly consists of a set of convolutional modules which carry out feature extraction task. Each module encapsulate a convolutional layer followed by a pooling layer. Terminal layers are usually dense (fully-connected) to take part in classification part. In the last dense layer, there are a node with softmax activation function to produce a probability for each classes that the model can predict.
+    \subsection{Q-learning}
+    A variation of TD-learning which calculates and (then iteratively updates) Q function -which represents (predicts) maximum cumulative discounted reward with performing action $a$ in state $s$- using Bellman equation. This method is a table-based (tabular) algorithm and we use Q-table as a table with the dimensions of states $\times$ actions.
 
-\section{Deep Reinforcement Learning}
-The combination of deep learning and reinforcement learning methods which in intrinsic to supervised learning methods, training is always time consuming and from a specific stage and on it becomes little-to-no improvement so the reasonable choice is switching to Reinforcement Learning framework. This newly emerged framework has yielded promising results in application to high dimensional state-space problems \cite{Francois-Lavet2018}. \textcolor{red}{ Analogy-wise this approach turns regular banana (chocolate) pudding to calorie-free pudding as it preserves strength of RL with diminishing its weaknesses by adding DL as an instrument.}
+    \subsection{$\epsilon$-greedy}
+    Popular in Deep Reinforcement Learning (DRL) which makes a good trade-off in terms of exploration and exploitation.
 
-\subsection{Layers}
-Two types of layers are commonly used within the community of deep RL:
 
-\subsubsection{Convolutional layers}
-Form of a feedforward layer with majority of unlearnable weights(zero-valued) and other shared wights (non-zero-valued) \cite{Francois-Lavet2018}. Keeping in mind the main attribute of layers of this type, namely \textit{translation invariance}, makes them a decent candidate for image classification and sequential data. \cite{lecun1995a, Francois-Lavet2018}.
+    \section{Deep Learning}
+    \subsection{Model configuration}
+    Several configuration has been proposed in the literature which have their own use cases based on the purpose. Convolutional neural network as a successful type of these networks has demonstrated substantial performance so far which outperformed other runner-ups in visual recognition competitions \cite{lecun1998gradient, krizhevsky2012a, zeiler2013, szegedy2014going, he2016a}. The architecture for a deep learning network commonly consists of a set of convolutional modules which carry out feature extraction task. Each module encapsulate a convolutional layer followed by a pooling layer. Terminal layers are usually dense (fully-connected) to take part in classification part. In the last dense layer, there are a node with softmax activation function to produce a probability for each classes that the model can predict.
 
-\subsubsection{Recurrent layers}
-Renowned in such a way that makes them to be a good candidate for sequential data.
+    \section{Deep Reinforcement Learning}
+    The combination of deep learning and reinforcement learning methods which in intrinsic to supervised learning methods, training is always time consuming and from a specific stage and on it becomes little-to-no improvement so the reasonable choice is switching to Reinforcement Learning framework. This newly emerged framework has yielded promising results in application to high dimensional state-space problems \cite{Francois-Lavet2018}. \textcolor{red}{ Analogy-wise this approach turns regular banana (chocolate) pudding to calorie-free pudding as it preserves strength of RL with diminishing its weaknesses by adding DL as an instrument.}
 
-\subsection{Loss}
-By far deep learning community has mostly tended toward using cross entropy loss (a.k.a. softmax loss).
+    \subsection{Layers}
+    Two types of layers are commonly used within the community of deep RL:
 
-\subsection{Deep Q-Network (DQN)}
-Renowned for solving higher dimensional problems like Atari games. All of the steps are explained in Algorithm~\ref{alg:DQN}.
+    \subsubsection{Convolutional layers}
+    Form of a feedforward layer with majority of unlearnable weights(zero-valued) and other shared wights (non-zero-valued) \cite{Francois-Lavet2018}. Keeping in mind the main attribute of layers of this type, namely \textit{translation invariance}, makes them a decent candidate for image classification and sequential data. \cite{lecun1995a, Francois-Lavet2018}.
 
-\begin{itemize}
-    \item batch RL algorithm
-    \item \textcolor{red}{reward clipping is almost a must to limit scale of error derivatives} \cite{Francois-Lavet2018}
-    \item off-policy method \cite{Huang2017}: $\epsilon$-greedy exploration.
-    \item $Q^{*}(s,a)$: expected cumulative discounted reward.
+    \subsubsection{Recurrent layers}
+    Renowned in such a way that makes them to be a good candidate for sequential data.
 
-\end{itemize}
+    \subsection{Loss}
+    By far deep learning community has mostly tended toward using cross entropy loss (a.k.a. softmax loss).
 
-\begin{algorithm}[H]
-\caption{DQN algorithm in batch mode}
-\label{alg:DQN}
-\begin{algorithmic}[1]
-    \State Init D \Comment{\textcolor{BlueViolet}{replay memory}}
-    \State Init Q \Comment{\textcolor{BlueViolet}{Q-table w/ random weights}}
-    \State \textcolor{OrangeRed}{Get} or Observe $s_0$ \Comment{\textcolor{BlueViolet}{the initial state}}
-    \For{each episode}
-        \For{samples in each episode}
+    \subsection{Deep Q-Network (DQN)}
+    Renowned for solving higher dimensional problems like Atari games. All of the steps are explained in Algorithm~\ref{alg:DQN}.
+
+    \begin{itemize}
+        \item batch RL algorithm
+        \item \textcolor{red}{reward clipping is almost a must to limit scale of error derivatives} \cite{Francois-Lavet2018}
+        \item off-policy method \cite{Huang2017}: $\epsilon$-greedy exploration.
+        \item $Q^{*}(s,a)$: expected cumulative discounted reward.
+
+    \end{itemize}
+
+    \begin{algorithm}[H]
+        \caption{DQN algorithm in batch mode}
+        \label{alg:DQN}
+        \begin{algorithmic}[1]
+            \State Init D \Comment{\textcolor{BlueViolet}{replay memory}}
+            \State Init Q \Comment{\textcolor{BlueViolet}{Q-table w/ random weights}}
+            \State \textcolor{OrangeRed}{Get} or Observe $s_0$ \Comment{\textcolor{BlueViolet}{the initial state}}
+            \For{each episode}
+            \For{samples in each episode}
             \State \textit{\textcolor{OrangeRed}{- skip $\epsilon$-greedy exploration}}
             \State $a = argmax_a Q(s,a)$
             \State \textit{\textcolor{OrangeRed}{- skip applying action $a$ to the environment}}
-            \rlap{\smash{$\left.\begin{array}{@{}c@{}}\\{}\\{}\end{array}\color{BlueViolet}\right\}%
-              \color{BlueViolet} experience$}}
+            \rlap{\smash{$\left.\begin{array}{@{}c@{}}
+                                    \\{}\\{}
+            \end{array}\color{BlueViolet}\right\}%
+            \color{BlueViolet} experience$}}
             \State \textcolor{OrangeRed}{Get} or Observe $r, s'$
             \State Store the \textbf{experience} $<s, a, r, s'>$ in replay memory $D$
             \State \textit{Random} \textbf{sampling} from $D$ $<ss, aa, rr, ss'>$  \Comment{\textcolor{BlueViolet}{[mini]-batch}}
             \If{$ss' \neq $ terminal state} \Comment{\textcolor{BlueViolet}{target for each mini-batch}}
-                \State $tt = rr + \gamma max_{aa'} Q(ss', aa')$
+            \State $tt = rr + \gamma max_{aa'} Q(ss', aa')$
             \Else
-                \State $tt = rr$
+            \State $tt = rr$
             \EndIf
             \State Train the network
-        \EndFor    
-    \EndFor
-\end{algorithmic}
-\end{algorithm}
+            \EndFor
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
 
-% \algnewcommand{\algorithmicgoto}{\textbf{go to}}%
-% \algnewcommand{\Goto}[1]{\algorithmicgoto~\ref{#1}}%
-% \begin{algorithm}
-%   \caption{Euclid’s algorithm}\label{euclid}
-%   \begin{algorithmic}[1]
-%     \Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
-%     \State $r\gets a\bmod b$
-%     \While{$r\not=0$} \Comment{We have the answer if r is 0}\label{marker}
-%       \State $a\gets b$
-%       \State $b\gets r$\hspace*{4em}%
-%         \rlap{\smash{$\left.\begin{array}{@{}c@{}}\\{}\\{}\\{}\\{}\end{array}\color{red}\right\}%
-%           \color{red}\begin{tabular}{l}We loop here\\until $r=0$.\end{tabular}$}}
-%       \State $r\gets a\bmod b$
-%     \EndWhile
-%     \State \textbf{return} $b$\Comment{The gcd is b}
-%     \State \Goto{marker}
-%   \EndProcedure
-% \end{algorithmic}
-% \end{algorithm}
+    % \algnewcommand{\algorithmicgoto}{\textbf{go to}}%
+    % \algnewcommand{\Goto}[1]{\algorithmicgoto~\ref{#1}}%
+    % \begin{algorithm}
+    %   \caption{Euclid’s algorithm}\label{euclid}
+    %   \begin{algorithmic}[1]
+    %     \Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
+    %     \State $r\gets a\bmod b$
+    %     \While{$r\not=0$} \Comment{We have the answer if r is 0}\label{marker}
+    %       \State $a\gets b$
+    %       \State $b\gets r$\hspace*{4em}%
+    %         \rlap{\smash{$\left.\begin{array}{@{}c@{}}\\{}\\{}\\{}\\{}\end{array}\color{red}\right\}%
+    %           \color{red}\begin{tabular}{l}We loop here\\until $r=0$.\end{tabular}$}}
+    %       \State $r\gets a\bmod b$
+    %     \EndWhile
+    %     \State \textbf{return} $b$\Comment{The gcd is b}
+    %     \State \Goto{marker}
+    %   \EndProcedure
+    % \end{algorithmic}
+    % \end{algorithm}
 
 
-\subsubsection{Experience Replay}
-DQN is mostly relied on a stabilization technique with neural networks, called Experience replay. The method utilizes this procedure to lower the variance of each Q updates \cite{Mnih2015}.
+    \subsubsection{Experience Replay}
+    DQN is mostly relied on a stabilization technique with neural networks, called Experience replay. The method utilizes this procedure to lower the variance of each Q updates \cite{Mnih2015}.
 
-\subsection{Asynchronous Advantage Actor-Critic (A3C)}
-Based on the actor-critic concept, a neural network policy $\pi(a|s;\theta)$ is the actor and an estimation of value function $V(s;\theta_v)$ has the critic role \cite{Mnih2016b}. 
+    \subsection{Asynchronous Advantage Actor-Critic (A3C)}
+    Based on the actor-critic concept, a neural network policy $\pi(a|s;\theta)$ is the actor and an estimation of value function $V(s;\theta_v)$ has the critic role \cite{Mnih2016b}.
 
-\subsection{Deep Deterministic Policy Gradient (DDPG)}
-Good choice for continuous action space such as real-world control tasks.
+    \subsection{Deep Deterministic Policy Gradient (DDPG)}
+    Good choice for continuous action space such as real-world control tasks.
 
-\begin{table}
-    \centering
-    \begin{tabular}{|c|L|L|L|L|}
+    \begin{table}
+        \centering
+        \begin{tabular}{|c|L|L|L|L|}
+            \hline
+            \textbf{Method}  &    \textbf{Model Dependence}    &   \textbf{Policy Dependence}   &   \textbf{Action Continuity}  & \textbf{Parent Algorithm(s)}\\
+            \hline
+            \hline
+            DQN & model-free & off-policy \cite{Huang2017}   & discrete & Q-learning, DL\\
+            \hline
+            A3C & - & on-policy \cite{Huang2017}  & - & -   \\
+            \hline
+            DDPG & model-free & on-policy & continuous & Actor-critic\\
+            \hline
+            TRPO & - & on-policy \cite{Huang2017}  & - & -   \\
+            \hline
+        \end{tabular}
+        \caption{DRL methods comparison chart}
+        \label{tab:dqn vs. ddpg}
+    \end{table}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \section{Bayesian Settings}
+    Sampling using a logistic regression (or any other methods) we can generate some distributions for our features (bio10 and bio5 REVIEW and alpha) then we are able to feed these to a linear program to calculate weights (L1 norm or any other distance metrics) and then we can build our ambiguity set based on what we get as weights.
+    \subsection{Dirichlet Distribution}
+    In Bayesian analysis, this type of distribution is widely used as prior distribution.
+
+    \subsection{Pareto Distribution}
+    People usually use this distribution as a tool to model the tail region of another distribution.
+    % \includegraphics[width=1\columnwidth]{elements.png}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \section{Multi-armed Bandit Problem vs. A/B Test}
+    In a multi-armed bandit problem agent choose and pull one of the arms randomly at the beginning. The pulled arm bandit generates a distribution with specific values of mean $\mu_i$ and variance. The distribution is stationary but still unknown before pulling \cite{Strehl2008}.
+
+    \begin{tabular}{|c|c|}
         \hline
-        \textbf{Method}  &    \textbf{Model Dependence}    &   \textbf{Policy Dependence}   &   \textbf{Action Continuity}  & \textbf{Parent Algorithm(s)}\\
+        \textbf{A/B test}    &   \textbf{Multi-armed bandit}  \\
         \hline
         \hline
-        DQN &   model-free  &   off-policy \cite{Huang2017}   &   discrete    &   Q-learning, DL\\
+        pure exploration & exploration along with exploitation \\
         \hline
-        A3C &   -   &   on-policy \cite{Huang2017}  &   -   &   -   \\
+        return after completion & immediate return while running \\
         \hline
-        DDPG    &   model-free  &   on-policy   &   continuous  &   Actor-critic\\
-        \hline
-        TRPO    &   -   &   on-policy \cite{Huang2017}  &   -   &   -   \\
+        expensive & cost-efficient \\
         \hline
     \end{tabular}
-    \caption{DRL methods comparison chart}
-    \label{tab:dqn vs. ddpg}
-\end{table}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsubsection{Upper Confidence Bound Algorithm}
+    Upper confidence interval includes true expected value and it gets narrow down (becomes smaller) after each iteration of the algorithm. In other words, the agent becomes more assured about the return value as it runs through each iterations. The agent picks the next upper confidence interval to exploit and continue with that until it finds a new higher value. Unneeded to mention that the two main actor in this algorithm are as follows:
+    \begin{itemize}
+        \item Confidence interval becomes tighter along with iterations
+        \item Return value along iterations converges to the expected true value.
+    \end{itemize}
 
-\section{Bayesian Settings}
-Sampling using a logistic regression (or any other methods) we can generate some distributions for our features (bio10 and bio5 REVIEW and alpha) then we are able to feed these to a linear program to calculate weights (L1 norm or any other distance metrics) and then we can build our ambiguity set based on what we get as weights.
-\subsection{Dirichlet Distribution}
-    In Bayesian analysis, this type of distribution is widely used as prior distribution.
-    
-\subsection{Pareto Distribution}
-    People usually use this distribution as a tool to model the tail region of another distribution.
-% \includegraphics[width=1\columnwidth]{elements.png}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \section{Case Study}
+    The current case is a study on an invasive plant (non-native to the ecosystem) in New England area, namely glossy buckthorn [capitalization?].
 
-\section{Multi-armed Bandit Problem vs. A/B Test}
-In a multi-armed bandit problem agent choose and pull one of the arms randomly at the beginning. The pulled arm bandit generates a distribution with specific values of mean $\mu_i$ and variance. The distribution is stationary but still unknown before pulling \cite{Strehl2008}.
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{tabular}{|c|c|}
-    \hline
-    \textbf{A/B test}    &   \textbf{Multi-armed bandit}  \\
-    \hline
-    \hline
-    pure exploration    &   exploration along with exploitation \\
-    \hline
-    return after completion &   immediate return while running \\
-    \hline
-    expensive   &   cost-efficient \\
-    \hline
-\end{tabular}
-
-\subsubsection{Upper Confidence Bound Algorithm}
-Upper confidence interval includes true expected value and it gets narrow down (becomes smaller) after each iteration of the algorithm. In other words, the agent becomes more assured about the return value as it runs through each iterations. The agent picks the next upper confidence interval to exploit and continue with that until it finds a new higher value. Unneeded to mention that the two main actor in this algorithm are as follows:
-\begin{itemize}
-    \item Confidence interval becomes tighter along with iterations
-    \item Return value along iterations converges to the expected true value.
-\end{itemize}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Case Study}
-The current case is a study on an invasive plant (non-native to the ecosystem) in New England area, namely glossy buckthorn [capitalization?].
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section {Future Review}
-\begin{itemize}
-    \item Interval Estimation approach relationship with multi-armed bandit.
-    \item Thompson sampling
-    \item Bernstein inequalities
-    \item DRL approach to invasive species management
-\end{itemize}
+    \section {Future Review}
+    \begin{itemize}
+        \item Interval Estimation approach relationship with multi-armed bandit.
+        \item Thompson sampling
+        \item Bernstein inequalities
+        \item DRL approach to invasive species management
+    \end{itemize}
 
 
-% This is an example citation \autocite{ginsberg}.
-% \lipsum[1] % dummy text
+    % This is an example citation \autocite{ginsberg}.
+    % \lipsum[1] % dummy text
 
-% This is another example citation \autocite{brassard}.
-% \lipsum[2] % dummy text
+    % This is another example citation \autocite{brassard}.
+    % \lipsum[2] % dummy text
 
-% This is a repeated citation \autocite{brassard}.
-% \lipsum[3] % dummy text
+    % This is a repeated citation \autocite{brassard}.
+    % \lipsum[3] % dummy text
 
-% This is another example citation \autocite{adorf}.
-% \lipsum[4] % dummy text 
+    % This is another example citation \autocite{adorf}.
+    % \lipsum[4] % dummy text
 
-\bibliographystyle{nips}
-\bibliography{library}
+    \bibliographystyle{nips}
+    \bibliography{library}
 
 \end{document}
