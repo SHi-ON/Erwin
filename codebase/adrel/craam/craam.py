@@ -1,8 +1,23 @@
-library(rcraam)
-library(dplyr)
-library(readr)
+import os
 
-setwd("/home/sa1149/PycharmProjects/Erwin/codebase/adrel/craam")
+import numpy as np
+import pandas as pd
+import rpy2.robjects as robjects
+from rpy2.robjects.packages import importr
+import rpy2
+
+os.chdir('codebase/adrel/craam')
+
+rcraam = importr('rcraam')
+base = importr('base')
+dplyr = importr('dplyr')
+reader = importr('readr')
+
+print(base.R_home())
+
+rpy2.__path__
+os.environ['R_HOME']
+robjects.r('''
 
 mdp <- read_csv("riverswim_mdp.csv")
 
@@ -27,3 +42,8 @@ sol_agg <- solve_mdp(mdp_agg, 0.99)
 
 print(sol)
 print(sol_agg)
+  
+''')
+len(robjects.r['sol'])
+robjects.r('sol$valuefunction$idstate')
+robjects.r('sol$valuefunction')
