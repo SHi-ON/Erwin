@@ -7,7 +7,7 @@ os.chdir('/Volumes/DevCamp/PyCharmProjects/Erwin/')
 
 seed = 27
 
-raw_data = pd.read_csv("codebase/datasets/mnist/train.csv")
+raw_data = pd.read_csv("codebase/dataset/mnist/train.csv")
 raw_data.count()
 raw_data['label'].count()
 raw_data['pixel9'].count()

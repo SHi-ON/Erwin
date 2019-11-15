@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 
 import pystan
 
-df = pd.read_csv("../datasets/barberry_sim_NewEngland.csv")
+df = pd.read_csv("../dataset/barberry_sim_NewEngland.csv")
 num_sub_samples = 200
 sub_samples = df.sample(n=num_sub_samples)
 

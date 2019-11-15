@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # %precision 4
 plt.style.use('ggplot')
 
-df = pd.read_csv('../datasets/HtWt.csv')
+df = pd.read_csv('../dataset/HtWt.csv')
 df.head()  # printing first 5 rows
 
 log_reg_code = """

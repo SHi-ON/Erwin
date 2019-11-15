@@ -45,7 +45,7 @@ policy_col_names = ['V1', 'pop_1', 'pop_2', 'pop_3', 'pop_4', 'pop_5', 'pop_6',
 
 
 def dataset_import():
-    _df = pd.read_csv("./datasets/" + samples_name + ".csv", names=col_names, header=0)
+    _df = pd.read_csv("./dataset/" + samples_name + ".csv", names=col_names, header=0)
     print(_df.head())
     _df.isnull().any()
     return _df
@@ -71,7 +71,7 @@ def policy_export(df, plc):
     plc_df = pd.DataFrame(plc)
     new_df = pd.concat([df, plc_df], axis=1, sort=False)
     new_df.columns = policy_col_names
-    new_df.to_csv("./datasets/" + policy_name + samples_name + ".csv", sep=",")
+    new_df.to_csv("./dataset/" + policy_name + samples_name + ".csv", sep=",")
 
 
 def pick_action(q):

@@ -128,7 +128,7 @@ class ExperienceReplay(object):
 
 
 def main():
-    df = pd.read_csv("./datasets/project_sample1.csv")
+    df = pd.read_csv("./dataset/project_sample1.csv")
     print(df.head())
 
     df = df.values
