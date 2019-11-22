@@ -1,6 +1,6 @@
 /codebase/figs
 
-minutia/library.bib
+minutia/paper/library.bib
 minutia/paper/*.pdf
 out/*.pdf
 
