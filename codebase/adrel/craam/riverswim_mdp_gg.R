@@ -2,6 +2,8 @@ library(rcraam)
 library(dplyr)
 library(readr)
 
+setwd('/Volumes/DevCamp/PyCharmProjects/Erwin/codebase/adrel/craam/')
+
 mdp <- read_csv("riverswim_mdp.csv")
 
 sol <- solve_mdp(mdp, 0.99)
