@@ -88,34 +88,30 @@ University of New Hampshire \\
 
 
     \section{Introduction}
-    Although state aggregation may not generalize as well as methods based on neural networks, the techniques has
-    both analytical and practical advantages. In camparison, state aggregation takes less computation power to
-    compute representative features. Moreover, analysis and troubleshooting in a state aggregation process is more
-    obvious than a black-box neural network. Approximation is a corner stone in all successfull RL methods to hold a
-    "good" mapping between a large state space to a much smaller one where in value function is computable or at
-    lesast feasible. These "good" approximators end up with "good" features to represent the projected state space.
+    Real-world problems embody high-dimensional state spaces where in computational issues
+    arise.
+    Various approximation methods are proposed in the literature to reduce the resulted value function
+    dimensionality \cite{Sutton1998, Francois-Lavet2018}.
+    State aggregation is one of the simplest and most analytically transparent state representation approximation.
 
-    Reassuring achievements in the Deep RL in a variety of fields absorb the attention from the community
-    \citep{Mnih2015, schulman2015a, Lillicrap2015, silver2016a}. The cross
-    fertilization in using approximation techniques by Deep Neural Networks in solving immense state space problems
-    in RL is a key. While the newly emerged methods are growing at a staggering pace, a parallel area of research
-    has been formed wherein a variety of techniques have been utilized to make these methods contravene their
-    promised functionality. These efforts would be served to develop robustness in those spectacular models and
-    reduce their susceptibility to data tampering or dynamics of the environment. Robustness ---as a property in
-    machine learning--- elevates assurance about methods performance and their reliability to the foreground. In a
-    few studies \cite{Goodfellow2014}  vulnerabilities of DNN's to adversarially-manipulated inputs are revealed.
-    Therefore, robust algorithms, have to be of paramount importance in applying deep RL to real world scenarios to
-    mitigate risks of implementation. Adversarial attacks as a way to perturbing these algorithms, are introduced in
-    recent works \cite{Huang2017, Kos2017} from different aspects to degrade algorithms' performance. One of such
-    potentials are changes in the environment dynamics.
+    Although state aggregation may not generalize as well as neural network-based methods, the techniques has both
+    analytical and practical advantages \cite{Lagoudakis2003}.
+    In comparison, state aggregation takes less computation power to calculate representative features.
+    Moreover, analysis and troubleshooting in a state aggregation process is more obvious than a black-box neural
+    network.
+    Approximation is a corner stone in all successful RL methods to hold a "good" mapping between a large state
+    space to a much smaller one where in value function is computable or at least feasible.
+    These "good" approximators can end up with "good" features to represent the projected state space.
+
+    The cross-fertilization in using state aggregation and deep neural networks in solving immense state
+    space problems in RL is also profound.
+    While the newly emerged methods are growing at a staggering pace, a parallel area of research has been formed
+    wherein a variety of techniques have been utilized to make these methods contravene their promised functionality.
+    These efforts would be served to develop robustness in those spectacular models and reduce their
+    susceptibility to data tampering or dynamics of the environment.
 
     In this work, we scrutinize state-of-the-art deep RL algorithms resiliency to environment parameters alterations
     and then introduced our approach to overcome those. Then a guarantee of performance to these attacks is introduced.
-
-
-    \section{Related Work}
-    \cite{Goodfellow2014} stated and consequently depicted that the root cause of vulnerability to adversarial
-    examples laid behind the piecewise linearity attributes of neural network models.
 
 
     \section{Method}
@@ -132,7 +128,7 @@ University of New Hampshire \\
     The designed attack may have different levels of access to the underlying training policy which have motivated
     the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or
     \textit{black-box} attacks. White-box attacks illustrating the scenario in which the... Adversarial attacks fall
-    in either one of the following categories based upon the stage which in the adversary perturbs the model:
+    in either one of the following categories based upon the stage, which in the adversary perturbs the model:
     \begin{itemize}
         \item Train time: Data poisoning.
         \item Evaluation time: Adversarial examples.

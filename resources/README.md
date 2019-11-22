@@ -38,6 +38,8 @@
 * [DAWNBench: Deep learning model training cost benchmark](https://dawn.cs.stanford.edu/benchmark/)
 
 #### Code Repositories:
+* [MDP toolbox for Python - MDP solvers implementations](https://github.com/sawcordwell/pymdptoolbox)
+* [Make MDPs compatible with OpenAI Gym](https://github.com/BlackHC/mdp)
 * [An adversarial example library for constructing attacks, building defenses, and benchmarking both [80+ contributers]](https://github.com/tensorflow/cleverhans)
 
 ### External Collections:

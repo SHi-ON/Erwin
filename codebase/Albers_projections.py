@@ -17,7 +17,7 @@ OFFSET_LON = -96
 
 
 def data_prep():
-    df = pd.read_csv("./datasets/barberry_sim_NewEngland.csv")
+    df = pd.read_csv("./dataset/barberry_sim_NewEngland.csv")
     num_sub_samples = 600
     # Pick random sub-samples
     sub_samples = df.sample(n=num_sub_samples)
