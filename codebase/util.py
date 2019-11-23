@@ -16,8 +16,8 @@ def  timing(t):
     :param t: the initial time
     """
     t2 = time.perf_counter()
-    elapsed_time = round((t2 - t), ndigits=2)
-    print('*** Elapsed time:', elapsed_time, 'second(s)')
+    elapsed_time = round((t2 - t), ndigits=3)
+    print('*** Elapsed time: {0:.3f} second(s)'.format(elapsed_time))
     return elapsed_time
 
 
