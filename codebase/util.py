@@ -8,14 +8,15 @@ import pickle
 OUTPUT_DIR = 'outputs'
 
 
-def timing(t):
+def  timing(t):
     """
     Prints the elapsed time since
     the passed time t to the standard output.
 
     :param t: the initial time
     """
-    elapsed_time = round((time.perf_counter() - t), ndigits=2)
+    t2 = time.perf_counter()
+    elapsed_time = round((t2 - t), ndigits=2)
     print('*** Elapsed time:', elapsed_time, 'second(s)')
     return elapsed_time
 
