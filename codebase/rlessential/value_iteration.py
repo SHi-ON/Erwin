@@ -15,29 +15,19 @@ epsilon = 0.01
 
 threshold = (epsilon * (1 - discount)) / (2 * discount)
 
-
-mdp = pd.read_csv('../dataset/mdp/twostate_mdp.csv')
+mdp = pd.read_csv('../dataset/mdp/twostate_mdp_3-1-1.csv')
 
 two_state = TwoStateMDP(mdp)
 num_s = two_state.num_states
 num_a = two_state.num_actions
 
+r = two_state.get_rewards()
+p = two_state.get_probabilities()
+
 
 def value_iteration():
-
     v_curr = np.zeros((num_s, 1))
     v_next = np.full((num_s, 1), np.inf)
-
-    r = np.full((num_s * num_a, 1), -np.inf)
-    p = np.zeros((num_s * num_a, num_s))
-
-    for index, row in mdp.iterrows():
-        s = row['idstatefrom'].astype(int)
-        a = row['idaction'].astype(int)
-        sp = row['idstateto'].astype(int)
-
-        r[s * num_a + a] = row['reward']
-        p[s * num_a + a][sp] = row['probability']
 
     i = 0
     values = []
@@ -61,6 +51,7 @@ def value_iteration():
     print("threshold: ", threshold)
     timing(t)
 
+    # policy calculation
     last_v = r + discount * p @ v_curr
     split_last_values = np.split(last_v, num_s)
 
@@ -69,9 +60,32 @@ def value_iteration():
     print('the policy: \n', policy)
     timing(t)
 
+    return values
+
 
 def main():
     value_iteration()
+
+i = 0
+v_curr = np.zeros((num_s, 1))
+a_mat = np.eye(num_s * num_a, num_a)
+
+
+values = []
+t = time.perf_counter()
+while np.linalg.norm(v_next - v_curr, ord=np.inf) >= threshold:
+    if i == 0:
+        values.append((i, v_curr.reshape(num_s)))
+        i += 1
+    else:
+        v_curr = v_next
+    v = r + discount * p @ v_curr
+    split_values = np.split(v, num_s)
+
+    v_next = np.array(list(map(np.max, split_values)))
+    v_next = v_next.reshape(num_s, 1)
+    values.append((i, v_next.reshape(num_s), np.linalg.norm(v_next - v_curr, ord=np.inf)))
+    i += 1
 
 
 if __name__ == '__main__':
