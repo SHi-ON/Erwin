@@ -6,7 +6,7 @@ from functools import reduce
 
 import numpy as np
 
-from adrel.util import erwin_log
+from util import erwin_log
 
 
 class BasisFunction(object):
