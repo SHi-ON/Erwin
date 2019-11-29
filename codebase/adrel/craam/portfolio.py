@@ -48,6 +48,10 @@ m.setObjective(portfolio_risk, GRB.MINIMIZE)
 # Fix budget with a constraint
 m.addConstr(vars.sum() == 1, 'budget')
 
+# SHi-ON
+m.getVars()
+m.getConstrs()
+
 # Optimize model to find the minimum risk portfolio
 m.setParam('OutputFlag', 0)
 m.optimize()
@@ -74,6 +78,9 @@ for r in np.linspace(stock_return.min(), stock_return.max(), 100):
     target.rhs = r
     m.optimize()
     frontier.loc[sqrt(portfolio_risk.getValue())] = r
+
+
+np.linspace(stock_return.min(), stock_return.max(), 100).shape
 
 # Plot volatility versus expected return for individual stocks
 ax = plt.gca()
