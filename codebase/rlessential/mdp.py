@@ -66,6 +66,7 @@ class TwoStateMDP:
         for index, row in self.mdp.iterrows():
             s = row['idstatefrom'].astype(int)
             a = row['idaction'].astype(int)
+            # any float value, no type casting
             rewards[s * self.num_actions + a] = row['reward']
         return rewards
 
@@ -75,34 +76,56 @@ class TwoStateMDP:
             s = row['idstatefrom'].astype(int)
             a = row['idaction'].astype(int)
             sp = row['idstateto'].astype(int)
+            # any float value, no type casting
             probs[s * self.num_actions + a][sp] = row['probability']
         return probs
 
 
 class TwoStateParametricMDP:
-    __num_states = 2
-    __num_actions = 2
 
-    def __init__(self, param):
-        self.num_states = TwoStateParametricMDP.__num_states
-        self.num_actions = TwoStateParametricMDP.__num_actions
+    def __init__(self, mdp, param):
+        self.mdp = mdp
         self.param = param
+        self.num_states = self.state_count()
+        self.num_actions = self.action_count()
+        self.rewards = TwoStateParametricMDP.parametrize_rewards(param)
+        self.probabilities = TwoStateParametricMDP.parametrize_probabilities(param)
+
 
     def state_count(self):
-        return self.num_states
+        unique_from = self.mdp['idstatefrom'].nunique()
+        unique_to = self.mdp['idstateto'].nunique()
+        return max(unique_from, unique_to)
 
     def action_count(self):
-        return self.num_actions
+        unique_action = self.mdp['idaction'].nunique()
+        return unique_action
 
     def get_rewards(self):
-        rewards = np.array([-self.param ** 2, -np.inf, -np.inf, -0.5])
-        rewards = rewards.reshape(self.num_states * self.num_actions, 1)
+        rewards = np.full((self.num_states * self.num_actions, 1), -np.inf)
+        for index, row in self.mdp.iterrows():
+            s = row['idstatefrom'].astype(int)
+            a = row['idaction'].astype(int)
+            # any float value, no type casting
+            reward_index = row['reward']
+            rewards[s * self.num_actions + a] = self.rewards[reward_index]
         return rewards
 
     def get_probabilities(self):
-        probs = np.array([[self.param / 2, 1 - (self.param / 2)],
-                          [0, 0],
-                          [0, 0],
-                          [0, 1]])
-        probs = probs.reshape(self.num_states * self.num_actions, self.num_states)
+        probs = np.zeros((self.num_states * self.num_actions, self.num_states))
+        for index, row in self.mdp.iterrows():
+            s = row['idstatefrom'].astype(int)
+            a = row['idaction'].astype(int)
+            sp = row['idstateto'].astype(int)
+            # any float value, no type casting
+            prob_index = row['probability']
+            probs[s * self.num_states + a][sp] = self.probabilities[prob_index]
         return probs
+
+    @staticmethod
+    def parametrize_rewards(a):
+        return [- a ** 2, -0.5]
+
+    @staticmethod
+    def parametrize_probabilities(a):
+        return [a / 2, 1 - a / 2, 1]
