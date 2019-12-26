@@ -113,6 +113,18 @@ University of New Hampshire \\
     In this work, we scrutinize state-of-the-art deep RL algorithms resiliency to environment parameters alterations
     and then introduced our approach to overcome those. Then a guarantee of performance to these attacks is introduced.
 
+    \section{Markov Decision Processes}
+    Reinforcement learning problems can be formulated as an Markov decision process (MDP)\cite{Puterman1994}.
+    Discrete discounted reward criterion is the center of focus for ease of exposition in this paper.
+    For an environment and a decision maker, state space $S$ and action space $A$ are defined, respectively.
+    The transition probabilities $T$ describe how likely is the next state $s'$ by taking a specific action $a$ by
+    the agent in a certain state $s$ which will receive $r$ as reward.
+    For a taken action $a_i$ in the state $s_i$, the decision maker will be ended up in state $s_{i+1}$ by the
+    transition probabilities $P : S \times A \times S \rightarrow [0, 1]$ and wil receive reward $r_{i+1}$ from the
+    rewards $R : S \times A \rightarrow \mathbb{R}$: \\
+    \center $s_{i+1} = T(s_{i+1}|s_i, a_i)$ \\
+    \center $r_{i+1} = R(s_i, a_i)$ \\
+
 
     \section{Method}
     For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations
