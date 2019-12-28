@@ -122,8 +122,42 @@ University of New Hampshire \\
     For a taken action $a_i$ in the state $s_i$, the decision maker will be ended up in state $s_{i+1}$ by the
     transition probabilities $P : S \times A \times S \rightarrow [0, 1]$ and wil receive reward $r_{i+1}$ from the
     rewards $R : S \times A \rightarrow \mathbb{R}$: \\
-    \center $s_{i+1} = T(s_{i+1}|s_i, a_i)$ \\
-    \center $r_{i+1} = R(s_i, a_i)$ \\
+    \begin{equation}
+        s_{i+1} = T(s_{i+1}|s_i, a_i)
+    \end{equation}
+
+    \begin{equation}
+        r_{i+1} = R(s_i, a_i)
+    \end{equation}
+
+
+    \section{State Aggregation}
+    State aggregation is an approximation approach to make a problem more tractable by a reduction in dimensionality in
+    state space \footnote{aggregation in action space although is possible, has less significance comparatively.}.
+    State aggregation, in particular, is a parametric feature-based approximation where the features are membership
+    functions of 0-1 form.
+    Aggregation groups similar states together, so called representative states, which lets the \textit{aggregate}
+    problem to be
+    solved by an exact
+    method.
+    The computed value function from the exact solution of the aggregate problem can be then used in the original
+    problem.
+
+
+    Now we formulate the aggregated problem by introducing the dynamics of the aggregate problem.
+    The transition probabilities between two representative states:
+
+    \begin{equation}
+        \hat{p}_{x y}(u)=\sum_{j=1}^{n} p_{x j}(u) \phi_{j y},
+    \end{equation}
+
+    where $p_ {x j}$ is the transition probabilities from a representative state, $x$, to an original state, $j$
+    and $\phi_{j y}$ is the aggregation probabilities from an original state, $j$, to a representative state, $y$.
+    The rewards are defined as:
+
+    \begin{equation}
+        \hat{g}(x, u)=\sum_{j=1}^{n} p_{x j}(u) g(x, u, j)
+    \end{equation}
 
 
     \section{Method}
