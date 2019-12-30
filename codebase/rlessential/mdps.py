@@ -45,7 +45,7 @@ class MDP(object):
         pass  # pragma: no cover
 
 
-class TwoStateMDP:
+class TwoStateMDP(MDP):
 
     def __init__(self, mdp):
         self.mdp = mdp
@@ -81,7 +81,7 @@ class TwoStateMDP:
         return probs
 
 
-class TwoStateParametricMDP:
+class TwoStateParametricMDP(MDP):
 
     def __init__(self, mdp, param):
         self.mdp = mdp
