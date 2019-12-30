@@ -4,6 +4,7 @@ import numpy as np
 
 
 class MDP(object):
+    __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def state_count(self):
@@ -90,7 +91,6 @@ class TwoStateParametricMDP(MDP):
         self.num_actions = self.action_count()
         self.rewards = TwoStateParametricMDP.parametrize_rewards(param)
         self.probabilities = TwoStateParametricMDP.parametrize_probabilities(param)
-
 
     def state_count(self):
         unique_from = self.mdp['idstatefrom'].nunique()
