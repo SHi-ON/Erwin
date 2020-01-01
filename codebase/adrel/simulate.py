@@ -14,8 +14,8 @@ import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from agent_policy import AgentPolicy
-from agent_dqn import AgentDQN
+from agent_policy import PolicyAgent
+from agent_dqn import DQNAgent
 from util import timing
 
 """ CartPole-v0:
@@ -88,7 +88,7 @@ POLICIES = [{'dir': 'initial', 'q': False},
 def play_raam(env, policy_info, num_episodes):
     space_size_state = env.observation_space.shape[0]
     space_size_action = env.action_space.n
-    agent = AgentPolicy(policy_info)
+    agent = PolicyAgent(policy_info)
 
     game_reward = dict()
     for episode in tqdm.trange():
@@ -121,7 +121,7 @@ def play_dqn(env, num_episodes, file_name=None, load=False):
     space_size_action = env.action_space.n
 
     # DQN agent initialization
-    agent = AgentDQN(space_size_state, space_size_action)
+    agent = DQNAgent(space_size_state, space_size_action)
 
     # load a pre-trained model
     if (file_name is not None) and load:

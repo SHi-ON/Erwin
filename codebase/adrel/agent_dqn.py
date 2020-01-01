@@ -4,7 +4,7 @@ import random
 from collections import deque
 
 
-class AgentDQN:
+class DQNAgent:
 
     def __init__(self, space_state, space_action):
         self.space_state = space_state
