@@ -31,11 +31,16 @@ class Agent(object):
 
 
 class QLearningCartPoleAgent(Agent):
+    """
+    Q-learning in OpenAI Gym CartPole environment.
+    The default is an undiscounted problem.
+    Initialized the agent with the desired discount parameter.
+    """
 
     def __init__(self,
                  num_buckets=(1, 1, 6, 12),
-                 num_episodes=10000,
-                 discount=0.99,
+                 num_episodes=1000,
+                 discount=1.0,
                  min_explore=0.1,
                  min_learning=0.1,
                  decay=25):
