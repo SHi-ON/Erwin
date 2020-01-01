@@ -34,8 +34,8 @@ class QLearningCartPoleAgent(Agent):
 
     def __init__(self,
                  num_buckets=(1, 1, 6, 12),
-                 num_episodes=1000,
-                 discount=0.9,
+                 num_episodes=10000,
+                 discount=0.99,
                  min_explore=0.1,
                  min_learning=0.1,
                  decay=25):
@@ -85,13 +85,12 @@ class QLearningCartPoleAgent(Agent):
         return max(self.min_explore, min(1, 1 - np.log10((t + 1) / self.decay)))
 
     def update_q(self, state, action, reward, next_state):
-        self.q_table[state, action] = self.q_table[state, action] + \
-                                      self.explore * (reward +
-                                                      self.discount * np.max(self.q_table[next_state]) -
-                                                      self.q_table[state, action])
+        self.q_table[state + (action,)] += self.learning * (reward +
+                                                            self.discount * np.max(self.q_table[next_state]) -
+                                                            self.q_table[state + (action,)])
 
     def train(self):
-        print('Training started')
+        print('\nTraining started ...')
 
         for e in range(self.num_episodes):
             current_state = self.env.reset()
@@ -112,4 +111,20 @@ class QLearningCartPoleAgent(Agent):
         print('Training finished!')
 
     def run(self):
-        pass
+        while True:
+            current_state = self.env.reset()
+            current_state = self.aggregate_state(current_state)
+
+            done = False
+            while not done:
+                self.env.render()
+                action = np.argmax(self.q_table[current_state])
+                observation, reward, done, _ = self.env.step(action)
+                next_state = self.aggregate_state(observation)
+                current_state = next_state
+
+
+if __name__ == '__main__':
+    agent = QLearningCartPoleAgent()
+    agent.train()
+    agent.run()
