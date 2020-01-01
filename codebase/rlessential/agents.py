@@ -13,7 +13,7 @@ class Agent(object):
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
-    def choose_action(self):
+    def choose_action(self, state):
         """
         Action selection by following exploration-exploitation trade-off.
 
@@ -91,7 +91,25 @@ class QLearningCartPoleAgent(Agent):
                                                       self.q_table[state, action])
 
     def train(self):
-        pass
+        print('Training started')
+
+        for e in range(self.num_episodes):
+            current_state = self.env.reset()
+            current_state = self.aggregate_state(current_state)
+
+            self.explore = self.get_explore(e)
+            self.learning = self.get_learning(e)
+
+            done = False
+
+            while not done:
+                action = self.choose_action(current_state)
+                observation, reward, done, _ = self.env.step(action)
+                next_state = self.aggregate_state(observation)
+                self.update_q(current_state, action, reward, next_state)
+                current_state = next_state
+
+        print('Training finished!')
 
     def run(self):
         pass
