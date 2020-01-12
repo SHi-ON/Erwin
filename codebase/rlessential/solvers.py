@@ -112,10 +112,10 @@ def main():
     epsilon = 0.01
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
 
-    # mdp_data = pd.read_csv('../dataset/mdp/twostate_mdp_6-4-2.csv')
+    # mdp_data = pd.read_csv('../dataset/mdp/twostate_parametric_mdp.csv')
     # mdp = TwoStateParametricMDP(mdp_data, 0)
     # init_v = np.array([-4.5, -5])
-    mdp_data = pd.read_csv('../dataset/mdp/twostate_mdp_3-1-1.csv')
+    mdp_data = pd.read_csv('../dataset/mdp/twostate_mdp.csv')
     mdp = TwoStateMDP(mdp_data)
 
     # value_iteration(mdp, threshold=tau, discount=gamma, initial_values=init_v)
