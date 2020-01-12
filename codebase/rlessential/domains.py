@@ -47,6 +47,15 @@ class MDP(object):
 
 
 class TwoStateMDP(MDP):
+    """
+    MDP from Figure 3.1.1 in Putterman's MDP book, page 34.
+
+    **Details**:
+
+    2 states: {s1, s2} -> {0, 1}
+
+    3 actions: {a11, a12, a21} -> {0, 1, 2}
+    """
 
     def __init__(self, mdp):
         self.mdp = mdp
@@ -83,6 +92,19 @@ class TwoStateMDP(MDP):
 
 
 class TwoStateParametricMDP(MDP):
+    """
+    MDP from example 6.4.2 in Putterman's MDP book, page 182.
+
+    **Details**:
+
+    2 states: {s1, s2} -> {0, 1}
+
+    2 actions: {a, a2,1} -> {0, 1}
+
+    2 rewards: {:math:`-a^2`, -0.5} -> {0, 1}
+
+    3 probabilities: {a/2, 1-a/2, 1} -> {0, 1, 2}
+    """
 
     def __init__(self, mdp, param):
         self.mdp = mdp
@@ -129,3 +151,51 @@ class TwoStateParametricMDP(MDP):
     @staticmethod
     def parametrize_probabilities(a):
         return [a / 2, 1 - a / 2, 1]
+
+
+class RAAMMDP(MDP):
+    """
+    Three-state deterministic MDP in the `RAAM Paper <http://www.cs.unh.edu/~mpetrik/pub/Petrik2014_appendix.pdf>`_.
+
+    **Details**:
+
+    3 states: {s1, s2, s3} -> {0, 1, 2}
+
+    3 actions: {a1, a2, 0} -> {0, 1, 2}
+
+    3 rewards: {0, 1, :math:`\epsilon`} -> {0, 1, 2}
+
+    3 probabilities: deterministic (all ones)
+
+    """
+
+    def __init__(self, mdp):
+        self.mdp = mdp
+        self.num_states = self.state_count()
+        self.num_actions = self.action_count()
+
+    def state_count(self):
+        unique_from = self.mdp['idstatefrom'].nunique()
+        unique_to = self.mdp['idstateto'].nunique()
+        return max(unique_from, unique_to)
+
+    def action_count(self):
+        unique_action = self.mdp['idaction'].nunique()
+        return unique_action
+
+    def get_rewards(self):
+        rewards = np.full((self.num_states * self.num_actions, 1), -np.inf)
+        for index, row in self.mdp.iterrows():
+            s = row['idstatefrom'].astype(int)
+            a = row['idaction'].astype(int)
+            rewards[s * self.num_actions + a] = row['reward']
+        return rewards
+
+    def get_probabilities(self):
+        probs = np.zeros((self.num_states * self.num_actions, self.num_states))
+        for index, row in self.mdp.iterrows():
+            s = row['idstatefrom'].astype(int)
+            a = row['idaction'].astype(int)
+            sp = row['idstateto'].astype(int)
+            probs[s * self.num_actions + a][sp] = row['probability']
+        return probs
