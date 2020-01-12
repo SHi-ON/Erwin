@@ -6,7 +6,7 @@ import gym
 
 class Agent(object):
     """
-    Agents prototype
+    Agents prototype.
 
     The agent has the environment embedded in itself for consistency reasons.
     """
@@ -30,42 +30,11 @@ class Agent(object):
         pass  # pragma: no cover
 
 
-class QLearningCartPoleAgent(Agent):
+class QLearningAgent(Agent):
     """
-    Q-learning in OpenAI Gym CartPole environment.
-    The default is an undiscounted problem.
-    Initialized the agent with the desired discount parameter.
+    Q-Learning agent prototype with state aggregation based on OpenAI Gym environments.
+
     """
-
-    def __init__(self,
-                 num_buckets=(1, 1, 6, 12),
-                 num_episodes=1000,
-                 discount=1.0,
-                 min_explore=0.1,
-                 min_learning=0.1,
-                 decay=25):
-        self.num_buckets = num_buckets
-        self.num_episodes = num_episodes
-        self.discount = discount
-        self.min_explore = min_explore
-        self.min_learning = min_learning
-        self.decay = decay
-
-        self.env = gym.make('CartPole-v1')
-
-        self.explore = self.get_explore(0)
-        self.learning = self.get_learning(0)
-
-        self.upper_bounds = [self.env.observation_space.high[0],
-                             0.5,
-                             self.env.observation_space.high[2],
-                             np.radians(50) / 1]
-        self.lower_bounds = [self.env.observation_space.low[0],
-                             -0.5,
-                             self.env.observation_space.low[2],
-                             -np.radians(50) / 1]
-
-        self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
 
     def aggregate_state(self, obs):
         aggregate = list()
@@ -129,6 +98,80 @@ class QLearningCartPoleAgent(Agent):
                 current_state = next_state
 
 
+class QLearningCartPoleAgent(QLearningAgent):
+    """
+        Q-learning in OpenAI Gym CartPole environment.
+        The default is an undiscounted problem.
+        Initialize the agent with the desired discount parameter.
+    """
+
+    def __init__(self,
+                 num_buckets=(1, 1, 6, 12),
+                 num_episodes=1000,
+                 discount=1.0,
+                 min_explore=0.1,
+                 min_learning=0.1,
+                 decay=25):
+        self.num_buckets = num_buckets
+        self.num_episodes = num_episodes
+        self.discount = discount
+        self.min_explore = min_explore
+        self.min_learning = min_learning
+        self.decay = decay
+
+        self.env = gym.make('CartPole-v1')
+
+        self.explore = self.get_explore(0)
+        self.learning = self.get_learning(0)
+
+        self.upper_bounds = [self.env.observation_space.high[0],
+                             0.5,
+                             self.env.observation_space.high[2],
+                             np.radians(50) / 1]
+        self.lower_bounds = [self.env.observation_space.low[0],
+                             -0.5,
+                             self.env.observation_space.low[2],
+                             -np.radians(50) / 1]
+
+        self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
+
+
+class QLearningMountainCarAgent(QLearningAgent):
+    """
+        Q-learning in OpenAI Gym MountainCar environment.
+        The default is an undiscounted problem.
+        Initialize the agent with the desired discount parameter.
+    """
+
+    def __init__(self,
+                 num_buckets=(6, 12),
+                 num_episodes=1000,
+                 discount=1.0,
+                 min_explore=0.1,
+                 min_learning=0.1,
+                 decay=25):
+        self.num_buckets = num_buckets
+        self.num_episodes = num_episodes
+        self.discount = discount
+        self.min_explore = min_explore
+        self.min_learning = min_learning
+        self.decay = decay
+
+        self.env = gym.make('MountainCar-v0')
+
+        self.explore = self.get_explore(0)
+        self.learning = self.get_learning(0)
+
+        self.upper_bounds = [self.env.observation_space.high[0],
+                             self.env.observation_space.high[1]]
+
+        self.lower_bounds = [self.env.observation_space.low[0],
+                             self.env.observation_space.low[1]]
+
+        self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
+
+
+# showcase the agent performance
 if __name__ == '__main__':
     agent = QLearningCartPoleAgent()
     agent.train()

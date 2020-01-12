@@ -3,8 +3,9 @@ import time
 
 import numpy as np
 import pandas as pd
+import gym
 
-from rlessential.mdp import TwoStateMDP, TwoStateParametricMDP
+from rlessential.domains import TwoStateMDP, TwoStateParametricMDP
 from util import timing
 
 os.getcwd()
