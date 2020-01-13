@@ -2,6 +2,7 @@ import abc
 
 import numpy as np
 import gym
+import tqdm
 
 
 class Agent(object):
@@ -36,12 +37,12 @@ class QLearningAgent(Agent):
 
     """
 
-    def aggregate_state(self, obs):
+    def aggregate(self, obs):
         aggregate = list()
         for i in range(len(obs)):
-            scale = (obs[i] + abs(self.lower_bounds[i])) / (self.upper_bounds[i] - self.lower_bounds[i])
+            scale = (obs[i] - self.lower_bounds[i]) / (self.upper_bounds[i] - self.lower_bounds[i])
             scaled_obs = int(np.round((self.num_buckets[i] - 1) * scale))
-            # fit the scaled observation within the first and last bucket
+            # exception management: fit the scaled observation within the first and last bucket
             scaled_obs = min(self.num_buckets[i] - 1,
                              max(0, scaled_obs))
             aggregate.append(scaled_obs)
@@ -66,9 +67,9 @@ class QLearningAgent(Agent):
     def train(self):
         print('\nTraining started ...')
 
-        for e in range(self.num_episodes):
-            current_state = self.env.reset()
-            current_state = self.aggregate_state(current_state)
+        for e in tqdm.trange(self.num_episodes):
+            observation = self.env.reset()
+            current_state = self.aggregate(observation)
 
             self.explore = self.get_explore(e)
             self.learning = self.get_learning(e)
@@ -78,7 +79,7 @@ class QLearningAgent(Agent):
             while not done:
                 action = self.choose_action(current_state)
                 observation, reward, done, _ = self.env.step(action)
-                next_state = self.aggregate_state(observation)
+                next_state = self.aggregate(observation)
                 self.update_q(current_state, action, reward, next_state)
                 current_state = next_state
 
@@ -87,15 +88,51 @@ class QLearningAgent(Agent):
     def run(self):
         while True:
             current_state = self.env.reset()
-            current_state = self.aggregate_state(current_state)
+            current_state = self.aggregate(current_state)
 
             done = False
             while not done:
                 self.env.render()
                 action = np.argmax(self.q_table[current_state])
                 observation, reward, done, _ = self.env.step(action)
-                next_state = self.aggregate_state(observation)
+                next_state = self.aggregate(observation)
                 current_state = next_state
+
+
+class CartPoleAgent(Agent):
+    """
+    CartPole agent solely for sample collection.
+
+    Agent samples trajectories on by taking random actions.
+
+    """
+
+    def __init__(self, num_episodes=1000):
+        self.env = gym.make('CartPole-v1')
+        self.num_episodes = num_episodes
+        self.samples = list()
+
+    def choose_action(self, state):
+        pass
+
+    def train(self):
+        pass
+
+    def run(self):
+        """
+        Collects samples in a tuple of (s, a, r, s').
+
+        :return:
+        """
+        for e in tqdm.trange(self.num_episodes):
+            observation = self.env.reset()
+            done = False
+            while not done:
+                action = self.env.action_space.sample()
+                next_observation, reward, done, _ = self.env.step(action)
+                sample = (observation, action, reward, next_observation)
+                self.samples.append(sample)
+                observation = next_observation
 
 
 class QLearningCartPoleAgent(QLearningAgent):
@@ -169,6 +206,48 @@ class QLearningMountainCarAgent(QLearningAgent):
                              self.env.observation_space.low[1]]
 
         self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
+
+
+class RAAMAgent:
+
+    def __init__(self, samples, num_buckets=(1, 40, 40, 40)):
+        self.samples = samples
+        self.num_buckets = num_buckets
+
+        self.upper_bounds = [self.env.observation_space.high[0],
+                             0.5,
+                             self.env.observation_space.high[2],
+                             np.radians(50) / 1]
+        self.lower_bounds = [self.env.observation_space.low[0],
+                             -0.5,
+                             self.env.observation_space.low[2],
+                             -np.radians(50) / 1]
+
+        self.S = list()
+
+    def aggregate(self, obs):
+        aggregate = list()
+        for i in range(len(obs)):
+            scale = (obs[i] - self.lower_bounds[i]) / (self.upper_bounds[i] - self.lower_bounds[i])
+            scaled_obs = int(np.round((self.num_buckets[i] - 1) * scale))
+            # exception management: fit the scaled observation within the first and last bucket
+            scaled_obs = min(self.num_buckets[i] - 1,
+                             max(0, scaled_obs))
+            aggregate.append(scaled_obs)
+        return tuple(aggregate)
+
+    def aggregate_states(self):
+        states = list()
+        for sample in self.samples:
+            current_state = self.aggregate(sample[0])
+            next_state = self.aggregate(sample[3])
+            if current_state not in states:
+                states.append(current_state)
+            if next_state not in states:
+                states.append(next_state)
+        self.S = states
+
+
 
 
 # showcase the agent performance
