@@ -42,6 +42,7 @@
 * [MDP toolbox for Python - MDP solvers implementations](https://github.com/sawcordwell/pymdptoolbox)
 * [Make MDPs compatible with OpenAI Gym](https://github.com/BlackHC/mdp)
 * [An adversarial example library for constructing attacks, building defenses, and benchmarking both [80+ contributers]](https://github.com/tensorflow/cleverhans)
-
+* [Q-learning for OpenAI Gym CartPole with state discretization](https://pythonmachinelearning.pro/an-overview-of-reinforcement-learning-teaching-machines-to-play-games)
+* [Q-learning for OpenAI Gym MountainCar](https://gist.github.com/vblank182/83e29f16755320f82936d211761bfeea) 
 ### External Collections:
 * [AI and ML resources around the web](https://medium.com/machine-learning-in-practice/my-curated-list-of-ai-and-machine-learning-resources-from-around-the-web-9a97823b8524)

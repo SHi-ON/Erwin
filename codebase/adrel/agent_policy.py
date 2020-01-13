@@ -6,7 +6,7 @@ FILES_NAME = {'policy': '/policy_nn.csv',
               'q_values': '/qvalues.csv'}
 
 
-class AgentPolicy:
+class PolicyAgent:
 
     def __init__(self, policy_info):
         self.policy, self.scale, self.q_values = self.load_policy(policy_info['dir'],
