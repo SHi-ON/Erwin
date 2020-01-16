@@ -1,6 +1,6 @@
 import numpy as np
 
-from agents import QLearningCartPoleAgent, QLearningMountainCarAgent, CartPoleAgent
+from agents import QLearningCartPoleAgent, QLearningMountainCarAgent, CartPoleAgent, RAAMAgent
 
 
 def q_learning():
@@ -14,12 +14,19 @@ def q_learning():
 
 
 if __name__ == '__main__':
-    q_learning()
-    # agent = CartPoleAgent()
-    # agent.run()
-    # samples = agent.samples
-    # samples = np.array(samples)
+    # q_learning()
+    agent = CartPoleAgent()
+    agent.run()
+    samples = agent.samples
+    samples = np.array(samples)
+    print(samples.shape)
+    env = agent.env
 
+    raam = RAAMAgent(samples=samples, env=env)
+    raam.aggregate_states()
+    len(raam.S)
+    raam.A.shape
+    raam.B.shape
 
 
 

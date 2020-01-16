@@ -1,4 +1,5 @@
 import abc
+from collections import defaultdict
 
 import numpy as np
 import gym
@@ -210,8 +211,9 @@ class QLearningMountainCarAgent(QLearningAgent):
 
 class RAAMAgent:
 
-    def __init__(self, samples, num_buckets=(1, 40, 40, 40)):
+    def __init__(self, samples, env, num_buckets=(1, 40, 40, 40)):
         self.samples = samples
+        self.env = env
         self.num_buckets = num_buckets
 
         self.upper_bounds = [self.env.observation_space.high[0],
@@ -224,6 +226,8 @@ class RAAMAgent:
                              -np.radians(50) / 1]
 
         self.S = list()
+        self.A = np.zeros(self.num_buckets)
+        self.B = np.zeros(self.num_buckets, dtype=(float, 4))
 
     def aggregate(self, obs):
         aggregate = list()
@@ -237,18 +241,17 @@ class RAAMAgent:
         return tuple(aggregate)
 
     def aggregate_states(self):
-        states = list()
         for sample in self.samples:
             current_state = self.aggregate(sample[0])
             next_state = self.aggregate(sample[3])
-            if current_state not in states:
-                states.append(current_state)
-            if next_state not in states:
-                states.append(next_state)
-        self.S = states
-
-
-
+            if current_state not in self.S:
+                self.S.append(current_state)
+            if next_state not in self.S:
+                self.S.append(next_state)
+            # FIXME: this way each later state falling
+            # in the same bucket will update the action and also outcomes.
+            self.A[current_state] = sample[1]
+            self.B[current_state] = sample[3]
 
 # showcase the agent performance
 if __name__ == '__main__':
