@@ -185,6 +185,14 @@ University of New Hampshire \\
     in a neighbourhood, so called nearest neighbour/ piecewise linear aggregation.
     We then solve directly the lower dimension problem which relatively takes less computation.
 
+    \subsection{Aggregation}
+    Find the best policy then find optimal number of buckets.
+    Train the agent and retrieve the best policy then by running the agent with the best policy \textit{generate}
+    samples.
+    These collected samples are not based on a random policy but the best trained policy (baseline).
+    Then we can test our hypothesis on the collected samples to see how discretization affect another trained agent.
+    One way to measure the effect of discretization is average reward received by the trained agent.
+
 
     \subsection{Adversarial attacks}
     The designed attack may have different levels of access to the underlying training policy which have motivated
