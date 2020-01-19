@@ -86,18 +86,24 @@ class QLearningAgent(Agent):
 
         print('Training finished!')
 
-    def run(self):
-        while True:
+    def run(self, render=True):
+        total_reward = 0
+        for e in tqdm.trange(self.num_episodes):
             current_state = self.env.reset()
             current_state = self.aggregate(current_state)
 
             done = False
             while not done:
-                self.env.render()
+                if render:
+                    self.env.render()
                 action = np.argmax(self.q_table[current_state])
                 observation, reward, done, _ = self.env.step(action)
+                total_reward += reward
                 next_state = self.aggregate(observation)
                 current_state = next_state
+
+        avg_reward = total_reward / self.num_episodes
+        print('Average reward: {0} in {1} episodes'.format(avg_reward, self.num_episodes))
 
 
 class CartPoleAgent(Agent):
@@ -172,6 +178,27 @@ class QLearningCartPoleAgent(QLearningAgent):
                              -np.radians(50) / 1]
 
         self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
+        self.batch = list()
+
+    def simulate(self):
+        for e in range(self.num_episodes):
+            current_observation = self.env.reset()
+            current_state = self.aggregate(current_observation)
+
+            done = False
+            while not done:
+                sample = list()
+                sample.append(current_observation)
+                action = self.choose_action(current_state)
+                sample.append(action)
+                next_observation, reward, done, _ = self.env.step(action)
+                sample.append(reward)
+                sample.append(next_observation)
+                next_state = self.aggregate(next_observation)
+                current_observation = next_observation
+                current_state = next_state
+                self.batch.append(tuple(sample))
+
 
 
 class QLearningMountainCarAgent(QLearningAgent):
@@ -252,6 +279,7 @@ class RAAMAgent:
             # in the same bucket will update the action and also outcomes.
             self.A[current_state] = sample[1]
             self.B[current_state] = sample[3]
+
 
 # showcase the agent performance
 if __name__ == '__main__':
