@@ -253,8 +253,8 @@ class RAAMAgent:
                              -np.radians(50) / 1]
 
         self.S = list()
-        self.A = np.zeros(self.num_buckets)
-        self.B = np.zeros(self.num_buckets, dtype=(float, 4))
+        self.A = list()
+        self.B = list()
 
     def aggregate(self, obs):
         aggregate = list()
@@ -269,16 +269,46 @@ class RAAMAgent:
 
     def aggregate_states(self):
         for sample in self.samples:
+            # sample: (s, a, r, s')
             current_state = self.aggregate(sample[0])
+            action = sample[1]
             next_state = self.aggregate(sample[3])
+
+            # FIXME: consider as a set of --unique-- actions and outcomes
             if current_state not in self.S:
                 self.S.append(current_state)
             if next_state not in self.S:
                 self.S.append(next_state)
-            # FIXME: this way each later state falling
-            # in the same bucket will update the action and also outcomes.
-            self.A[current_state] = sample[1]
-            self.B[current_state] = sample[3]
+            if action not in self.A:
+                self.A.append(action)
+            if next_state not in self.B:
+                self.B.append(next_state)
+
+    def compute(self):
+        sample_size = len(self.S)
+        action_size = len(self.A)
+        outcome_size = len(self.B)
+        self.P = np.zeros((action_size, outcome_size, sample_size, sample_size))
+        self.r = np.zeros((action_size, outcome_size, sample_size))
+        for s in self.S:
+            for s_p in self.S:
+                for a in self.A:
+                    for b in self.B:
+                        transition_reward = list()
+                        for sample in self.samples:
+                            if sample[0] == b and sample[1] == a:
+                                transition_reward.append((sample[3], sample[2]))
+                        sum_states = 0
+                        for s_r in transition_reward:
+                            if s_p == s_r[0]:
+                                sum_states += 1
+                        self.P[a, b, s, s_p] = (1 / len(transition_reward)) * sum_states
+                        sum_rewards = 0
+                        for s_r in transition_reward:
+                            sum_rewards += s_r[1]
+                        # TODO: check to be correct
+                        self.r[a,b,s] = (1 / len(transition_reward)) * sum_rewards
+
 
 
 # showcase the agent performance
