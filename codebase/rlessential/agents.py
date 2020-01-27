@@ -87,6 +87,7 @@ class QLearningAgent(Agent):
         print('Training finished!')
 
     def run(self, render=True):
+        print('\nAgent run started ...')
         total_reward = 0
         for e in tqdm.trange(self.num_episodes):
             current_state = self.env.reset()
@@ -104,6 +105,42 @@ class QLearningAgent(Agent):
 
         avg_reward = total_reward / self.num_episodes
         print('Average reward: {0} in {1} episodes'.format(avg_reward, self.num_episodes))
+        print('Agent run finished!')
+
+    def simulate(self):
+        print('\nSimulation started ...')
+
+        for e in tqdm.trange(self.num_episodes):
+            current_observation = self.env.reset()
+            current_state = self.aggregate(current_observation)
+
+            done = False
+            while not done:
+                sample = list()
+                sample.append(current_observation)
+                action = self.choose_action(current_state)
+                sample.append(action)
+                next_observation, reward, done, _ = self.env.step(action)
+                sample.append(reward)
+                sample.append(next_observation)
+                next_state = self.aggregate(next_observation)
+                current_observation = next_observation
+                current_state = next_state
+                self.batch.append(tuple(sample))
+        print('Simulation finished!')
+
+
+class BatchQLearningAgent(Agent):
+
+    def choose_action(self, state):
+        pass
+
+    def train(self):
+        for e in tqdm.trange(self.num_episodes):
+            current_observation = self.env.reset()
+
+    def run(self):
+        pass
 
 
 class CartPoleAgent(Agent):
@@ -179,26 +216,6 @@ class QLearningCartPoleAgent(QLearningAgent):
 
         self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
         self.batch = list()
-
-    def simulate(self):
-        for e in range(self.num_episodes):
-            current_observation = self.env.reset()
-            current_state = self.aggregate(current_observation)
-
-            done = False
-            while not done:
-                sample = list()
-                sample.append(current_observation)
-                action = self.choose_action(current_state)
-                sample.append(action)
-                next_observation, reward, done, _ = self.env.step(action)
-                sample.append(reward)
-                sample.append(next_observation)
-                next_state = self.aggregate(next_observation)
-                current_observation = next_observation
-                current_state = next_state
-                self.batch.append(tuple(sample))
-
 
 
 class QLearningMountainCarAgent(QLearningAgent):
@@ -308,7 +325,6 @@ class RAAMAgent:
                             sum_rewards += s_r[1]
                         # TODO: check to be correct
                         self.r[a,b,s] = (1 / len(transition_reward)) * sum_rewards
-
 
 
 # showcase the agent performance
