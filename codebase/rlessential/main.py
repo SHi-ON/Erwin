@@ -49,14 +49,20 @@ if __name__ == '__main__':
 
     # robust_learning()
 
+    print("loading samples")
+
     samples = pickle.load(open('samples.p', 'rb'))
+
+    print("unifying samples")
 
     ss = []
     for s in samples:
         ss.append(s[0])
-        ss.append(s[3])
+        # ss.append(s[3])
     len(samples)
     len(ss)
+
+    print("stacking")
 
     smp = np.stack(ss, axis=0)
     smp.shape
@@ -74,6 +80,8 @@ if __name__ == '__main__':
     counts = counts.astype(int)
     num_buckets = tuple(counts)
 
+    print("agents")
+
     agent_base = QLearningCartPoleAgent(num_buckets=(1, 2, 6, 12), num_episodes=1000, discount=0.99)
     agent_base.train()
     agent_base.run(False)
@@ -81,6 +89,7 @@ if __name__ == '__main__':
     agent_hist = QLearningCartPoleAgent(num_buckets=num_buckets, num_episodes=1000, discount=0.99)
     agent_hist.train()
     agent_hist.run(False)
+
 
     # training the agent to learn the baseline Q-table
 
