@@ -5,10 +5,10 @@ import numpy as np
 import pandas as pd
 import gym
 
-from rlessential.domains import TwoStateMDP, TwoStateParametricMDP
+from rlessential.domains import TwoStateMDP, TwoStateParametricMDP, MachineReplacementMDP
 from util import timing
 
-os.getcwd()
+# os.getcwd()
 # os.chdir('../..')
 
 
@@ -112,16 +112,21 @@ def main():
     epsilon = 0.01
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
 
+
     # mdp_data = pd.read_csv('../dataset/mdp/twostate_parametric_mdp.csv')
     # mdp = TwoStateParametricMDP(mdp_data, 0)
     # init_v = np.array([-4.5, -5])
-    mdp_data = pd.read_csv('../dataset/mdp/twostate_mdp.csv')
-    mdp = TwoStateMDP(mdp_data)
+
+    # mdp_data = pd.read_csv('../dataset/mdp/twostate_mdp.csv')
+    # mdp = TwoStateMDP(mdp_data)
+
+    mdp_data = pd.read_csv('../dataset/mdp/machine_replacement_mdp.csv')
+    mdp = MachineReplacementMDP(mdp_data)
+
 
     # value_iteration(mdp, threshold=tau, discount=gamma, initial_values=init_v)
     value_iteration(mdp, threshold=tau, discount=gamma)
     policy_iteration(mdp, threshold=tau, discount=gamma)
-
 
 if __name__ == '__main__':
     main()

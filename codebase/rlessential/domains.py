@@ -141,7 +141,7 @@ class TwoStateParametricMDP(MDP):
             sp = row['idstateto'].astype(int)
             # any float value, no type casting
             prob_index = row['probability']
-            probs[s * self.num_states + a][sp] = self.probabilities[prob_index]
+            probs[s * self.num_actions + a][sp] = self.probabilities[prob_index]
         return probs
 
     @staticmethod
@@ -171,19 +171,19 @@ class MachineReplacementMDP(MDP):
 
     def get_rewards(self):
         rewards = np.zeros((self.num_states * self.num_actions, 1))
-        for row in self.mdp.iterrows():
+        for  index, row in self.mdp.iterrows():
             s = row['idstatefrom'].astype(int)
             a = row['idaction'].astype(int)
-            rewards[s * self.num_states + a] = row['reward']
+            rewards[s * self.num_actions + a] = row['reward']
         return rewards
 
     def get_probabilities(self):
         probs = np.zeros((self.num_states * self.num_actions, self.num_states))
-        for row in self.mdp.iterrows():
+        for index, row in self.mdp.iterrows():
             s = row['idstatefrom'].astype(int)
             a = row['idaction'].astype(int)
             sp = row['idstateto'].astype(int)
-            probs[s * self.num_states + a][sp] = row['probability']
+            probs[s * self.num_actions + a][sp] = row['probability']
         return probs
 
 

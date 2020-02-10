@@ -1,5 +1,4 @@
 import abc
-from collections import defaultdict
 
 import numpy as np
 import gym
@@ -130,19 +129,6 @@ class QLearningAgent(Agent):
         print('Simulation finished!')
 
 
-class BatchQLearningAgent(Agent):
-
-    def choose_action(self, state):
-        pass
-
-    def train(self):
-        for e in tqdm.trange(self.num_episodes):
-            current_observation = self.env.reset()
-
-    def run(self):
-        pass
-
-
 class CartPoleAgent(Agent):
     """
     CartPole agent solely for sample collection.
@@ -251,6 +237,21 @@ class QLearningMountainCarAgent(QLearningAgent):
                              self.env.observation_space.low[1]]
 
         self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
+
+
+class MachineReplacementAgent(Agent):
+
+    def __init__(self, domain):
+        self.domain = domain
+
+    def choose_action(self, state):
+        return
+
+    def train(self):
+        pass
+
+    def run(self):
+        pass
 
 
 class RAAMAgent:
