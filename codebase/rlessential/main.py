@@ -44,11 +44,7 @@ def robust_learning():
     raam.B.shape
 
 
-if __name__ == '__main__':
-    # q_learning()
-
-    # robust_learning()
-
+def cartpole_iqr_compare():
     print("loading samples")
 
     samples = pickle.load(open('samples.p', 'rb'))
@@ -69,7 +65,7 @@ if __name__ == '__main__':
 
     n = len(smp)
     iq_range = iqr(smp, axis=0)
-    h = 2 * iq_range * (n ** (-1/3))
+    h = 2 * iq_range * (n ** (-1 / 3))
 
     hi = np.max(smp, axis=0)
     lo = np.min(smp, axis=0)
@@ -91,5 +87,14 @@ if __name__ == '__main__':
     agent_hist.run(False)
 
 
-    # training the agent to learn the baseline Q-table
+if __name__ == '__main__':
+    # q_learning()
+
+    # robust_learning()
+
+    # cartpole_iqr_compare()
+
+    pass
+
+
 

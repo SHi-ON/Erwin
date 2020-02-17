@@ -239,21 +239,6 @@ class QLearningMountainCarAgent(QLearningAgent):
         self.q_table = np.zeros(self.num_buckets + (self.env.action_space.n,))
 
 
-class MachineReplacementAgent(Agent):
-
-    def __init__(self, domain):
-        self.domain = domain
-
-    def choose_action(self, state):
-        return
-
-    def train(self):
-        pass
-
-    def run(self):
-        pass
-
-
 class RAAMAgent:
 
     def __init__(self, samples, env, num_buckets=(1, 40, 40, 40)):
@@ -327,6 +312,20 @@ class RAAMAgent:
                         # TODO: check to be correct
                         self.r[a,b,s] = (1 / len(transition_reward)) * sum_rewards
 
+
+class MachineReplacementAgent(Agent):
+
+    def __init__(self, domain):
+        self.domain = domain
+
+    def choose_action(self, state):
+        return
+
+    def train(self):
+        pass
+
+    def run(self):
+        pass
 
 # showcase the agent performance
 if __name__ == '__main__':

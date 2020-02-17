@@ -153,40 +153,6 @@ class TwoStateParametricMDP(MDP):
         return [a / 2, 1 - a / 2, 1]
 
 
-class MachineReplacementMDP(MDP):
-
-    def __init__(self, mdp):
-        self.mdp = mdp
-        self.num_states = self.state_count()
-        self.num_actions = self.action_count()
-
-    def state_count(self):
-        unique_from = self.mdp['idstatefrom'].nunique()
-        unique_to = self.mdp['idstateto'].nunique()
-        return max(unique_from, unique_to)
-
-    def action_count(self):
-        unique_action = self.mdp['idaction'].nunique()
-        return unique_action
-
-    def get_rewards(self):
-        rewards = np.zeros((self.num_states * self.num_actions, 1))
-        for  index, row in self.mdp.iterrows():
-            s = row['idstatefrom'].astype(int)
-            a = row['idaction'].astype(int)
-            rewards[s * self.num_actions + a] = row['reward']
-        return rewards
-
-    def get_probabilities(self):
-        probs = np.zeros((self.num_states * self.num_actions, self.num_states))
-        for index, row in self.mdp.iterrows():
-            s = row['idstatefrom'].astype(int)
-            a = row['idaction'].astype(int)
-            sp = row['idstateto'].astype(int)
-            probs[s * self.num_actions + a][sp] = row['probability']
-        return probs
-
-
 class RAAMMDP(MDP):
     """
     Three-state deterministic MDP in the `RAAM Paper <http://www.cs.unh.edu/~mpetrik/pub/Petrik2014_appendix.pdf>`_.
@@ -234,3 +200,36 @@ class RAAMMDP(MDP):
             probs[s * self.num_actions + a][sp] = row['probability']
         return probs
 
+
+class MachineReplacementMDP(MDP):
+
+    def __init__(self, mdp):
+        self.mdp = mdp
+        self.num_states = self.state_count()
+        self.num_actions = self.action_count()
+
+    def state_count(self):
+        unique_from = self.mdp['idstatefrom'].nunique()
+        unique_to = self.mdp['idstateto'].nunique()
+        return max(unique_from, unique_to)
+
+    def action_count(self):
+        unique_action = self.mdp['idaction'].nunique()
+        return unique_action
+
+    def get_rewards(self):
+        rewards = np.zeros((self.num_states * self.num_actions, 1))
+        for  index, row in self.mdp.iterrows():
+            s = row['idstatefrom'].astype(int)
+            a = row['idaction'].astype(int)
+            rewards[s * self.num_actions + a] = row['reward']
+        return rewards
+
+    def get_probabilities(self):
+        probs = np.zeros((self.num_states * self.num_actions, self.num_states))
+        for index, row in self.mdp.iterrows():
+            s = row['idstatefrom'].astype(int)
+            a = row['idaction'].astype(int)
+            sp = row['idstateto'].astype(int)
+            probs[s * self.num_actions + a][sp] = row['probability']
+        return probs
