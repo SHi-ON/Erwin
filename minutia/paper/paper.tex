@@ -35,7 +35,7 @@
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}        % norm using amsmath
 
 
-\title{Adversarial State Aggregation}
+\title{Distributional State Aggregation}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -80,10 +80,10 @@ University of New Hampshire \\
     \maketitle
 
     \begin{abstract}
-        Promising advances in deep reinforcement learning suggests several application to the algorithms. However
-        robustness of these algorithms remains doubts to trust these algorithms in practice. In this paper we study
-        resistance of the state-of-the-art algorithms to environment dynamics. We then show the amount of robustness
-        we can achieve as a guarantee of performance in presence of those changes.
+        Promising advances in deep reinforcement learning suggests several application to the algorithms.
+        However robustness of these algorithms remains doubts to trust these algorithms in practice.
+        In this paper we study resistance of the state-of-the-art algorithms to environment dynamics.
+        We then show the amount of robustness we can achieve as a guarantee of performance in presence of those changes.
     \end{abstract}
 
 
@@ -110,8 +110,6 @@ University of New Hampshire \\
     These efforts would be served to develop robustness in those spectacular models and reduce their
     susceptibility to data tampering or dynamics of the environment.
 
-    In this work, we scrutinize state-of-the-art deep RL algorithms resiliency to environment parameters alterations
-    and then introduced our approach to overcome those. Then a guarantee of performance to these attacks is introduced.
 
     \section{Markov Decision Processes}
     Reinforcement learning problems can be formulated as an Markov decision process (MDP)\cite{Puterman1994}.
@@ -135,7 +133,8 @@ University of New Hampshire \\
     Value function approximation alleviates the computational hurdle of a large state-space problem.
     We introduce an approximate policy iteration method to solve an aggregate problem.
     State aggregation is an approximation approach to make a problem more tractable by a reduction in dimensionality in
-    state space \footnote{aggregation in action space although is possible, has less significance comparatively.}.
+    state space \footnote{aggre
+    gation in action space although is possible, has less significance comparatively.}.
     State aggregation, in particular, is a parametric feature-based approximation where the features are membership
     functions of 0-1 form.
     Aggregation groups similar states together, so called representative states, which lets the \textit{aggregate}
@@ -176,67 +175,36 @@ University of New Hampshire \\
     such as value iteration (VI), policy iteration (PI).
 
     \section{Method}
+    Splitting the observations into neighborhoods of similar observations is one way to interpret an aggregation
+    problem.
+    Inspired by histograms and the statistics behind finding the proper number of bins for a given distribution, we
+    build our proposal on top of such basics.
+    Finding proper number of bins for a given distribution could be calculated by Freedman-Diaconis rule. As the rule
+    states:
+
+    \begin{equation}
+        \text { Bin width }=2 \frac{\operatorname{IQR}(x)}{\sqrt[3]{n}}
+    \end{equation}
+
+    where n is number of observations and IQR is the interquartile range of data.
+
     For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations
     to the end of this paper. We use model-free LSPI and LSTDQ \citep{Lagoudakis2003} to update and
-    evaluate the policy of actions, respectively. CRAAM, on the other hand, as a exact method tries to approximate
-    the value function by dynamic programming optimization.
+    evaluate the policy of actions, respectively.
 
     We developed an aggregation scheme to lower the state space dimensionality by assigning same action to the state
     in a neighbourhood, so called nearest neighbour/ piecewise linear aggregation.
     We then solve directly the lower dimension problem which relatively takes less computation.
 
-    \subsection{Aggregation}
-    Find the best policy then find optimal number of buckets.
-    Train the agent and retrieve the best policy then by running the agent with the best policy \textit{generate}
-    samples.
-    These collected samples are not based on a random policy but the best trained policy (baseline).
-    Then we can test our hypothesis on the collected samples to see how discretization affect another trained agent.
-    One way to measure the effect of discretization is average reward received by the trained agent.
-
-
-    \subsection{Adversarial attacks}
-    The designed attack may have different levels of access to the underlying training policy which have motivated
-    the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or
-    \textit{black-box} attacks. White-box attacks illustrating the scenario in which the... Adversarial attacks fall
-    in either one of the following categories based upon the stage, which in the adversary perturbs the model:
-    \begin{itemize}
-        \item Train time: Data poisoning.
-        \item Evaluation time: Adversarial examples.
-        \item Deploy time: Black-box attacks.
-    \end{itemize}
-
-
-    \subsection{Objective}
-    The aggregate problem is stochastic even if the original problem is deterministic. Once we lay out the aggregate
-    problem framework we can solve the problem by any exact methods either value- or policy-space solutions.
-
-
-    The ultimate goal is deceiving the model either in choosing the worst possible action in an RL task or misclassifying an input in a classification task in a way which is not perceptible for unaided eye. In terms of a Markovian RL task we show how minimum set of worst-case actions are needed to result in the minimum final reward. We try to show that the model is not robust to other configuration of each benchmarks with different dynamics.
-
-    The main goal of adversarial training and examples can be expressed briefly in form of the following equation:
-    %    \begin{equation}
-    %        \begin{aligned}
-    %            & \underset{\theta}{\min}
-    %            & & \sum_{x,y \in S} \underset{\delta \in \Delta}{\max}
-    %            & & & \textbb{Loss}(x + \delta, y; \theta)
-    %        \end{aligned}
-    %    \end{equation}
+    The aggregate problem is stochastic even if the original problem is deterministic.
+    Once we lay out the aggregate problem framework we can solve the problem by any exact methods either value- or
+    policy-space solutions.
 
 
     \section{Experiment}
     We apply the approach to two MDPs proposed by\cite{Strehl2004}. \textit{RiverSwim} an MDP consists of six states and \textit{SixArms} one with seven states. In \textit{RiverSwim} flow of the river is to left and the swimmer picks probabilistically equal either state 1 or 2 as the start point. All states but two terminal states have zero reward to land at while the right most one rewards substantially higher than the other one. The agent in SixArms selects between six distinct actions which pulls different arms of a multi-armed bandit. By pulling an arm the agent traverses to a new state. Although the agent does not obtain reward by pulling the arms but going to the connected state to that arm is highly rewarding in which the transition probability is in inverse relationship with the reward value.
 
     As both problems favor keeping the agent in states with lower reward, exploration is paramount to maximize the accumulated reward. This is also confirmed by the authors in \cite{Strehl2004} that the agent will fail to learn when a rudimentary $\epsilon$-greedy algorithm.
-
-    Our implementation uses Deep Q-Network (DQN)\cite{Mnih2015} as the policy optimizer. OpenAI Gym \cite{Brockman2016} is the testbed in the benchmarks in this paper. In training phase, models are trained in the environment. Online methods such as DQN learn by interacting directly in the environment, however, CRAAM
-
-    % \begin{figure}
-    %     \centering
-    %     \includegraphics[width=1\columnwidth]{minutia/cartpole-v1_batchsize-32_episodes-100_full-step.png}
-    %     \caption{Average reward of DQN training to 100 episodes in cartpole.}
-    %     \label{fig:my_label}
-    % \end{figure}
-
 
 
     \section{Future Works}
@@ -246,8 +214,6 @@ University of New Hampshire \\
 
     \subsection{Implementation note}
     * Reshape is needed after getting each state from Gym models.
-
-
 
 
     \bibliographystyle{plain}

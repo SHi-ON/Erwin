@@ -522,6 +522,41 @@
     \subsection{Reward-Perturbed attacks}
     In an adversarial environment we try to perturb reward to interfere in learning process of the RL agent. We considered this attack also in scenarios with a single reward which we will show the process later.
 
+      \subsection{Adversarial attacks}
+    The designed attack may have different levels of access to the underlying training policy which have motivated
+    the community to classify adversarial attacks into two distinct categories, namely \textit{white-box} or
+    \textit{black-box} attacks. White-box attacks illustrating the scenario in which the... Adversarial attacks fall
+    in either one of the following categories based upon the stage, which in the adversary perturbs the model:
+    \begin{itemize}
+        \item Train time: Data poisoning.
+        \item Evaluation time: Adversarial examples.
+        \item Deploy time: Black-box attacks.
+    \end{itemize}
+
+    In this work, we scrutinize state-of-the-art deep RL algorithms resiliency to environment parameters alterations
+     and then introduced our approach to overcome those. Then a guarantee of performance to these attacks is introduced.
+
+
+    The ultimate goal is deceiving the model either in choosing the worst possible action in an RL task or misclassifying an input in a classification task in a way which is not perceptible for unaided eye. In terms of a Markovian RL task we show how minimum set of worst-case actions are needed to result in the minimum final reward. We try to show that the model is not robust to other configuration of each benchmarks with different dynamics.
+
+    The main goal of adversarial training and examples can be expressed briefly in form of the following equation:
+    %    \begin{equation}
+    %        \begin{aligned}
+    %            & \underset{\theta}{\min}
+    %            & & \sum_{x,y \in S} \underset{\delta \in \Delta}{\max}
+    %            & & & \textbb{Loss}(x + \delta, y; \theta)
+    %        \end{aligned}
+    %    \end{equation}
+
+     Our implementation uses Deep Q-Network (DQN)\cite{Mnih2015} as the policy optimizer. OpenAI Gym \cite{Brockman2016} is the testbed in the benchmarks in this paper. In training phase, models are trained in the environment. Online methods such as DQN learn by interacting directly in the environment, however, CRAAM
+
+    % \begin{figure}
+    %     \centering
+    %     \includegraphics[width=1\columnwidth]{minutia/cartpole-v1_batchsize-32_episodes-100_full-step.png}
+    %     \caption{Average reward of DQN training to 100 episodes in cartpole.}
+    %     \label{fig:my_label}
+    % \end{figure}
+
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
