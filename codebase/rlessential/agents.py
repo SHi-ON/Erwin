@@ -327,6 +327,7 @@ class MachineReplacementAgent(Agent):
     def run(self):
         pass
 
+
 # showcase the agent performance
 if __name__ == '__main__':
     agent = QLearningCartPoleAgent()
