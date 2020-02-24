@@ -1,9 +1,8 @@
-import os
 import time
+import warnings
 
 import numpy as np
 import pandas as pd
-import gym
 
 from rlessential.domains import TwoStateMDP, TwoStateParametricMDP, MachineReplacementMDP
 from util import timing
@@ -11,21 +10,25 @@ from util import timing
 
 class ValueIteration:
 
-    def __init__(self, mdp, discount, threshold, initial_values=None, verbose=False):
-        self.mdp = mdp
+    def __init__(self, domain, discount, threshold, initial_values=None, verbose=False):
+        self.domain = domain
         self.discount = discount
         self.threshold = threshold
         self.initial_values = initial_values
         self.verbose = verbose
 
-    def iterate(self):
-        num_s = self.mdp.num_states
-        num_a = self.mdp.num_actions
-        r = self.mdp.get_rewards()
-        p = self.mdp.get_probabilities()
+        # format: (#iter, V(s), distance)
+        self.iter_values = list()
+
+    def calculate_value(self):
+        num_s = self.domain.num_states
+        num_a = self.domain.num_actions
+        r = self.domain.get_rewards()
+        p = self.domain.get_probabilities()
+        sum_probs = np.sum(p, axis=1, keepdims=True)
 
         if self.verbose:
-            print('Value iteration begins')
+            print('Value iteration begins...')
 
         # set starting state values
         if self.initial_values is not None:
@@ -33,89 +36,61 @@ class ValueIteration:
         else:
             v_curr = np.zeros((num_s, 1))
 
-        iter_values = list()
-        iter_values.append((0, v_curr.reshape(num_s)))
+        self.iter_values.append((0, v_curr.reshape(num_s)))
 
         dist = np.inf
         i = 1
         t = time.perf_counter()
         while dist >= self.threshold:
+
+            # noinspection PyCompatibility
             v = r + self.discount * p @ v_curr
 
             split_values = np.split(v, num_s)
-
+            split_values = np.array(split_values)
+            for s in range(num_s):
+                for a in range(num_a):
+                    if sum_probs[s * num_a + a] == 0:
+                        split_values[s][a] = -np.inf
             # maximizing the Bellman eq. for all actions
             v_next = np.array(list(map(np.max, split_values)))
             v_next = v_next.reshape(num_s, 1)
             dist = np.linalg.norm(v_next - v_curr, ord=np.inf)
-            iter_values.append((i,
-                                v_next.reshape(num_s),
-                                dist))
+            self.iter_values.append((i,
+                                     v_next.reshape(num_s),
+                                     dist))
             i += 1
             v_curr = v_next
 
         if self.verbose:
             timing(t)
-        # print(*values, sep='\n')
-        #
-        # # policy calculation
-        # last_v = r + discount * p @ v_curr
-        # split_last_values = np.split(last_v, num_s)
-        # # find actions that maximize the Bellman eq. (argmax)
-        # policy = np.array(list(map(np.argmax, split_last_values)))
-        # policy = policy.reshape(num_s, 1)
-        # print('value iteration - policy: \n', policy)
-        # timing(t)
-        #
-        # return values
+            print('Value iteration finished:')
+            print(*self.iter_values, sep='\n')
 
+    def calculate_policy(self):
+        if not self.iter_values:
+            print('Value iteration has not been run yet!')
+            self.calculate_value()
+        num_s = self.domain.num_states
+        num_a = self.domain.num_actions
+        r = self.domain.get_rewards()
+        p = self.domain.get_probabilities()
+        sum_probs = np.sum(p, axis=1, keepdims=True)
 
-def value_iteration(mdp, threshold, discount, initial_values=None):
-    num_s = mdp.num_states
-    num_a = mdp.num_actions
-    r = mdp.get_rewards()
-    p = mdp.get_probabilities()
+        last_v = self.iter_values[-1][1].reshape(num_s, 1)
+        # noinspection PyCompatibility
+        last_v = r + self.discount * p @ last_v
+        split_last_values = np.split(last_v, num_s)
+        split_last_values = np.array(split_last_values)
+        for s in range(num_s):
+            for a in range(num_a):
+                if sum_probs[s * num_a + a] == 0:
+                    split_last_values[s][a] = -np.inf
+        policy_calc = np.array(list(map(np.argmax, split_last_values)))
+        policy_calc = policy_calc.reshape(num_s, 1)
 
-    print('Value iteration begins')
-
-    # set starting state values
-    if initial_values is not None:
-        v_curr = initial_values.reshape(num_s, 1)
-    else:
-        v_curr = np.zeros((num_s, 1))
-
-    distance = np.inf
-    values = list()
-    values.append((0, v_curr.reshape(num_s)))
-    i = 1
-    t = time.perf_counter()
-    while distance >= threshold:
-        v = r + discount * p @ v_curr
-
-        split_values = np.split(v, num_s)
-        # maximizing the Bellman eq. for all actions
-        v_next = np.array(list(map(np.max, split_values)))
-        v_next = v_next.reshape(num_s, 1)
-        distance = np.linalg.norm(v_next - v_curr, ord=np.inf)
-        values.append((i,
-                       v_next.reshape(num_s),
-                       distance))
-        i += 1
-        v_curr = v_next
-
-    timing(t)
-    print(*values, sep='\n')
-
-    # policy calculation
-    last_v = r + discount * p @ v_curr
-    split_last_values = np.split(last_v, num_s)
-    # find actions that maximize the Bellman eq. (argmax)
-    policy = np.array(list(map(np.argmax, split_last_values)))
-    policy = policy.reshape(num_s, 1)
-    print('value iteration - policy: \n', policy)
-    timing(t)
-
-    return values
+        if self.verbose:
+            print('value iteration - calculated policy: \n', policy_calc)
 
 
 def policy_iteration(mdp, threshold, discount):
@@ -177,12 +152,13 @@ def main():
     # mdp_data = pd.read_csv('../dataset/mdp/twostate_mdp.csv')
     # mdp = TwoStateMDP(mdp_data)
 
-    mdp_data = pd.read_csv('../dataset/mdp/machine_replacement_mdp.csv')
-    mdp = MachineReplacementMDP(mdp_data)
+    mdp_data = pd.read_csv('dataset/mdp/machine_replacement_mdp.csv')
+    # mdp_data = pd.read_csv('dataset/mdp/twostate_mdp.csv')
+    domain = MachineReplacementMDP(mdp_data)
 
-    # value_iteration(mdp, threshold=tau, discount=gamma, initial_values=init_v)
-    value_iteration(mdp, threshold=tau, discount=gamma)
-    policy_iteration(mdp, threshold=tau, discount=gamma)
+    vi = ValueIteration(domain, discount=gamma, threshold=tau, verbose=True)
+    # vi.calculate_value()
+    vi.calculate_policy()
 
 
 if __name__ == '__main__':
