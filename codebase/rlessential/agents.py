@@ -315,17 +315,43 @@ class RAAMAgent:
 
 class MachineReplacementAgent(Agent):
 
-    def __init__(self, domain):
+    def __init__(self, domain, horizon):
         self.domain = domain
+        self.horizon = horizon
 
     def choose_action(self, state):
-        pass
+        state_probs, state_actions = self.domain.get_possible_actions(state)
+        assert (abs(1 - sum(state_probs)) < 0.01)
+        action = int(np.random.choice(state_actions, p=state_probs))
+        return action
+
+    # if self.probabilities is not None:
+    #     # find all relevant state ids
+    #     all_state_ids = np.where(self.state_ids == self.state_ids[state_index])[0]
+    #     all_probs = self.probabilities[all_state_ids]
+    #     all_actions = self.actions[all_state_ids]
+    #     assert (abs(1 - sum(all_probs)) < 0.01)
+    #     action = int(np.random.choice(all_actions, p=all_probs))
+    # else:
+    #     # assume that there is a single action for each state
+    #     # switch between q-values or the policy
+    #     if self.q_values is not None:
+    #         # TODO: np.where rather than .loc[]
+    #         state_q = self.q_values.loc[self.q_values['idstate'] == state_index]
+    #         action = int(state_q.loc[state_q['qvalue'] == state_q.max()[2]]['idaction'])
+    #     else:
+    #         action = int(self.actions[state_index])
+    # return action
 
     def train(self):
         pass
 
     def run(self):
-        pass
+        curr_state = 0
+        for h in tqdm.trange(self.horizon):
+            action = self.choose_action(curr_state)
+            next_state = curr_state * self.domain.num_actions + action
+
 
 
 # showcase the agent performance

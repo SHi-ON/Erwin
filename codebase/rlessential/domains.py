@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+import warnings
 
 import numpy as np
+
 
 # TODO: migrate self-defined domains in lspi's domain module to here
 
@@ -54,6 +56,8 @@ class BaseMDP(MDP):
         self.mdp = mdp
         self.num_states = self.state_count()
         self.num_actions = self.action_count()
+        self.probs = self.get_probabilities()
+        self.rewards = self.get_rewards()
 
     def state_count(self):
         unique_from = self.mdp['idstatefrom'].nunique()
@@ -64,15 +68,6 @@ class BaseMDP(MDP):
         unique_action = self.mdp['idaction'].nunique()
         return unique_action
 
-    def get_rewards(self):
-        rewards = np.zeros((self.num_states * self.num_actions, 1))
-        for index, row in self.mdp.iterrows():
-            s = row['idstatefrom'].astype(int)
-            a = row['idaction'].astype(int)
-            # any float value, no type casting
-            rewards[s * self.num_actions + a] = row['reward']
-        return rewards
-
     def get_probabilities(self):
         probs = np.zeros((self.num_states * self.num_actions, self.num_states))
         for index, row in self.mdp.iterrows():
@@ -82,6 +77,28 @@ class BaseMDP(MDP):
             # any float value, no type casting
             probs[s * self.num_actions + a][sp] = row['probability']
         return probs
+
+    def get_rewards(self):
+        rewards = np.zeros((self.num_states * self.num_actions, 1))
+        for index, row in self.mdp.iterrows():
+            s = row['idstatefrom'].astype(int)
+            a = row['idaction'].astype(int)
+            # any float value, no type casting
+            rewards[s * self.num_actions + a] = row['reward']
+        return rewards
+
+    def get_possible_actions(self, state):
+        if not self.probs:
+            warnings.warn('Failed to retrieve probabilities!')
+            return None
+        state_actions = list()
+        state_probs = list()
+        for a in range(self.num_actions):
+            p_s = self.probs[state * self.num_actions + a]
+            if p_s != 0:
+                state_actions.append(a)
+                state_probs.append(p_s)
+        return state_actions, state_probs
 
 
 class TwoStateMDP(BaseMDP):
@@ -185,6 +202,7 @@ class MachineReplacementMDP(BaseMDP):
     5 actions: 3 **repairs** and 2 **do nothings**
 
     """
+
     def __init__(self, mdp):
         # noinspection PyCompatibility
         super().__init__(mdp)
