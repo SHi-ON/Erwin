@@ -46,12 +46,12 @@
 % \AND instead of \And before the third author name.
 
 \author{%
-Authors \\ %\thanks{Use footnote for providing further information
+    Authors \\ %\thanks{Use footnote for providing further information
 %    about author (webpage, alternative address)---\emph{not} for acknowledging
 %    funding agencies.}%
-Department of Computer Science\\
-University of New Hampshire \\
-\texttt{\{authors\}@cs.unh.edu} \\
+    Department of Computer Science\\
+    University of New Hampshire \\
+    \texttt{\{authors\}@cs.unh.edu} \\
 % examples of more authors
 % \And
 % Coauthor \\
@@ -80,10 +80,14 @@ University of New Hampshire \\
     \maketitle
 
     \begin{abstract}
-        Promising advances in deep reinforcement learning suggests several application to the algorithms.
-        However robustness of these algorithms remains doubts to trust these algorithms in practice.
-        In this paper we study resistance of the state-of-the-art algorithms to environment dynamics.
-        We then show the amount of robustness we can achieve as a guarantee of performance in presence of those changes.
+        We present a state aggregation algorithm and a learning algorithm based on the former to solve a stochastic
+        problem.
+        The presented aggregation algorithm uses range of collected samples to provide the proper aggregation
+        \textit{buckets}.
+        Our approach is a batch learning by which we detect the \textit{splitting policy} using inter-quartile range
+        of data for each feature.
+        We then show the amount of robustness we can achieve as a guarantee of performance in presence of those
+        aggregation policies.
     \end{abstract}
 
 
@@ -91,11 +95,11 @@ University of New Hampshire \\
     Real-world problems embody high-dimensional state spaces where in computational issues
     arise.
     Various approximation methods are proposed in the literature to reduce the resulted value function
-    dimensionality \cite{Sutton1998, Francois-Lavet2018}.
+    dimensionality\cite{Sutton1998, Francois-Lavet2018}.
     State aggregation is one of the simplest and most analytically transparent state representation approximation.
 
     Although state aggregation may not generalize as well as neural network-based methods, the techniques has both
-    analytical and practical advantages \cite{Lagoudakis2003}.
+    analytical and practical advantages\cite{Lagoudakis2003}.
     In comparison, state aggregation takes less computation power to calculate representative features.
     Moreover, analysis and troubleshooting in a state aggregation process is more obvious than a black-box neural
     network.
@@ -112,7 +116,9 @@ University of New Hampshire \\
 
 
     \section{Markov Decision Processes}
-    Reinforcement learning problems can be formulated as an Markov decision process (MDP)\cite{Puterman1994}.
+    Reinforcement learning problems can be formulated using a Markov Decision Processes (MDP)
+    framework\cite{Puterman1994, Bertsekas}.
+    MDPs facilitate handling sequential decision-making under uncertainty.
     Discrete discounted reward criterion is the center of focus for ease of exposition in this paper.
     For an environment and a decision maker, state space $S$ and action space $A$ are defined, respectively.
     The transition probabilities $T$ describe how likely is the next state $s'$ by taking a specific action $a$ by
@@ -144,7 +150,8 @@ University of New Hampshire \\
 
 
     Now we formulate the aggregated problem by introducing the dynamics of the aggregate problem.
-    The transition probabilities between two representative states:
+    The transition probabilities between
+    two representative states:
 
     \begin{equation}
         \hat{P}_{s s^\prime}(a)=\sum_{j=1}^{n} P_{s j}(a) \phi_{j y},
@@ -173,6 +180,7 @@ University of New Hampshire \\
 
     In this paper, we lay down the aggregation framework and then solve the aggregate problem by a tabular method
     such as value iteration (VI), policy iteration (PI).
+
 
     \section{Method}
     Splitting the observations into neighborhoods of similar observations is one way to interpret an aggregation
@@ -219,7 +227,6 @@ University of New Hampshire \\
     \bibliographystyle{plain}
     \bibliography{library}
     % \section*{References}
-
 
 
     % [1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
