@@ -44,4 +44,3 @@ idstatefrom,idaction,idstateto,probability,reward
 9          ,0       ,9        ,0.4        ,-10
 9          ,1       ,8        ,0.6        ,-2
 9          ,4       ,9        ,1.0        ,-10
-

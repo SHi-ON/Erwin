@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
+# TODO: migrate self-defined domains in lspi's domain module to here
+
 
 class MDP(ABC):
     # same as new in 3.4:

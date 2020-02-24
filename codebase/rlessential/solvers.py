@@ -10,11 +10,13 @@ from util import timing
 
 class ValueIteration:
 
-    def __init__(self, domain, discount, threshold, initial_values=None, verbose=False):
+    def __init__(self, domain, discount, threshold,
+                 num_iterations=0, initial_values=None, verbose=False):
         self.domain = domain
         self.discount = discount
         self.threshold = threshold
         self.initial_values = initial_values
+        self.num_iterations = num_iterations
         self.verbose = verbose
 
         # format: (#iter, V(s), distance)
@@ -41,7 +43,7 @@ class ValueIteration:
         dist = np.inf
         i = 1
         t = time.perf_counter()
-        while dist >= self.threshold:
+        while dist >= self.threshold or i < self.num_iterations:
 
             # noinspection PyCompatibility
             v = r + self.discount * p @ v_curr
