@@ -8,7 +8,7 @@ import pickle
 OUTPUT_DIR = 'outputs'
 
 
-def  timing(t):
+def timing(t):
     """
     Prints the elapsed time since
     the passed time t to the standard output.
@@ -47,4 +47,3 @@ def pickle_load(file_name):
 
 def erwin_log(report):
     print('ErwinLog: An exception has been caught:\n', report)
-
