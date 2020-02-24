@@ -319,7 +319,7 @@ class MachineReplacementAgent(Agent):
         self.domain = domain
 
     def choose_action(self, state):
-
+        pass
 
     def train(self):
         pass
