@@ -324,6 +324,7 @@ class MachineReplacementMDPAgent(Agent):
 
         self.horizon = horizon
         self.state_ = 0
+        self.samples = list()
 
     def choose_action(self, state):
         # TODO: try epsilon-greedy or Boltzmann distribution
@@ -338,13 +339,12 @@ class MachineReplacementMDPAgent(Agent):
 
     def run(self):
         curr_state = self.domain.state_
-        samples = list()
         i = 0
         while i < self.horizon:
             action = self.choose_action(curr_state)
             sample = self.domain.step(action)
             curr_state = sample.next_state
-            samples.append(sample)
+            self.samples.append(sample)
             i += 1
 
 

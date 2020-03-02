@@ -122,7 +122,7 @@ class BaseMDP(MDP):
         if state is None:
             state = self.state_
 
-        candidate_transitions = self.mdp.iloc[state.item() * self.num_actions: (state.item() + 1) * self.num_actions, :]
+        candidate_transitions = self.mdp.loc[self.mdp[COL_STATE_FROM] == state.item()]
         candidate_transitions = candidate_transitions.loc[candidate_transitions[COL_PROBABILITY] != 0]
         if len(candidate_transitions) == 0:
             raise KeyError('Not able to find any candidates for state {}'.format(state))

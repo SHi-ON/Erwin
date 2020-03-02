@@ -1,6 +1,7 @@
 
 import pandas as pd
 import numpy as np
+from scipy.stats import iqr
 
 from rlessential.domains import MachineReplacementMDP
 from agents import MachineReplacementMDPAgent
@@ -50,6 +51,33 @@ def cartpole_iqr_compare():
     agent_hist.run(False)
 
 
+def samples_preprocess(samples, verbose=True):
+    state_samples = [sample_.current_state for sample_ in samples]
+    state_samples = np.stack(state_samples, axis=0)
+
+    if verbose:
+        print('{} state samples are processed.'.format(len(state_samples)))
+        print('output samples shape: {}'.format(state_samples.shape))
+
+    return state_samples
+
+
+def discretize_samples(samples):
+    iq_range = iqr(samples, axis=0)
+    bin_width = 2 * iq_range * (len(samples) ** (-1 / 3))
+
+    hi = np.max(samples, axis=0)
+    lo = np.min(samples, axis=0)
+
+    counts = (hi - lo) / bin_width
+    counts = np.round(counts)
+    counts = counts.astype(int)
+
+    num_buckets = tuple(counts)
+
+    return num_buckets
+
+
 if __name__ == '__main__':
 
     mdp = pd.read_csv('dataset/mdp/machine_replacement_mdp.csv')
@@ -58,16 +86,22 @@ if __name__ == '__main__':
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
 
+
     domain_mr = MachineReplacementMDP(mdp)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
     agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=100)
     agent_mr.run()
 
+    samples = agent_mr.samples
+    samples = discretize_samples(samples)
+
+
+
+
+
+
+
     # # even different initial values will end up with the same state values!
     # init_val = np.arange(10)
     # init_val = np.random.rand(10) * 10
-
-
-
-
 
