@@ -4,6 +4,8 @@ import numpy as np
 import gym
 import tqdm
 
+from sample import Sample
+
 
 class Agent(object):
     """
@@ -310,48 +312,40 @@ class RAAMAgent:
                         for s_r in transition_reward:
                             sum_rewards += s_r[1]
                         # TODO: check to be correct
-                        self.r[a,b,s] = (1 / len(transition_reward)) * sum_rewards
+                        self.r[a, b, s] = (1 / len(transition_reward)) * sum_rewards
 
 
-class MachineReplacementAgent(Agent):
+class MachineReplacementMDPAgent(Agent):
 
-    def __init__(self, domain, horizon):
+    def __init__(self, domain, solver, discount, horizon=None):
         self.domain = domain
+        self.solver = solver
+        self.discount = discount
+
         self.horizon = horizon
+        self.state_ = 0
 
     def choose_action(self, state):
-        state_probs, state_actions = self.domain.get_possible_actions(state)
-        assert (abs(1 - sum(state_probs)) < 0.01)
-        action = int(np.random.choice(state_actions, p=state_probs))
-        return action
+        # TODO: try epsilon-greedy or Boltzmann distribution
 
-    # if self.probabilities is not None:
-    #     # find all relevant state ids
-    #     all_state_ids = np.where(self.state_ids == self.state_ids[state_index])[0]
-    #     all_probs = self.probabilities[all_state_ids]
-    #     all_actions = self.actions[all_state_ids]
-    #     assert (abs(1 - sum(all_probs)) < 0.01)
-    #     action = int(np.random.choice(all_actions, p=all_probs))
-    # else:
-    #     # assume that there is a single action for each state
-    #     # switch between q-values or the policy
-    #     if self.q_values is not None:
-    #         # TODO: np.where rather than .loc[]
-    #         state_q = self.q_values.loc[self.q_values['idstate'] == state_index]
-    #         action = int(state_q.loc[state_q['qvalue'] == state_q.max()[2]]['idaction'])
-    #     else:
-    #         action = int(self.actions[state_index])
-    # return action
+        allowed_actions = self.domain.get_allowed_actions()
+
+        # randomized action selection - uniform distribution
+        return np.random.choice(allowed_actions)
 
     def train(self):
-        pass
+        self.solver.calculate_value()
 
     def run(self):
-        curr_state = 0
-        for h in tqdm.trange(self.horizon):
+        curr_state = self.domain.state_
+        samples = list()
+        i = 0
+        while i < self.horizon:
             action = self.choose_action(curr_state)
-            next_state = curr_state * self.domain.num_actions + action
-
+            sample = self.domain.step(action)
+            curr_state = sample.next_state
+            samples.append(sample)
+            i += 1
 
 
 # showcase the agent performance

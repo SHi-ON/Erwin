@@ -346,6 +346,7 @@ class RiverSwimDomain(Domain):
 
         next_state = np.array([curr_sample.values[2].astype(int)])
         reward = np.array([curr_sample.values[4].astype(int)])
+
         sample = Sample(self._state.copy(), action, reward, next_state)
 
         self._state = next_state

@@ -210,10 +210,26 @@
 
 
     \section{Experiment}
-    We apply the approach to two MDPs proposed by\cite{Strehl2004}. \textit{RiverSwim} an MDP consists of six states and \textit{SixArms} one with seven states. In \textit{RiverSwim} flow of the river is to left and the swimmer picks probabilistically equal either state 1 or 2 as the start point. All states but two terminal states have zero reward to land at while the right most one rewards substantially higher than the other one. The agent in SixArms selects between six distinct actions which pulls different arms of a multi-armed bandit. By pulling an arm the agent traverses to a new state. Although the agent does not obtain reward by pulling the arms but going to the connected state to that arm is highly rewarding in which the transition probability is in inverse relationship with the reward value.
+    We apply the approach to two MDPs proposed by\cite{Strehl2004}.
+    \textit{RiverSwim} an MDP consists of six states and \textit{SixArms} one with seven states.
+    In \textit{RiverSwim} flow of the river is to left and the swimmer picks probabilistically equal either state 1
+    or 2 as the start point.
+    All states but two terminal states have zero reward to land at while the right most one rewards substantially
+    higher than the other one.
+    The agent in SixArms selects between six distinct actions which pulls different arms of a multi-armed bandit.
+    By pulling an arm the agent traverses to a new state.
+    Although the agent does not obtain reward by pulling the arms but going to the connected state to that arm is
+    highly rewarding in which the transition probability is in inverse relationship with the reward value.
 
-    As both problems favor keeping the agent in states with lower reward, exploration is paramount to maximize the accumulated reward. This is also confirmed by the authors in \cite{Strehl2004} that the agent will fail to learn when a rudimentary $\epsilon$-greedy algorithm.
+    As both problems favor keeping the agent in states with lower reward, exploration is paramount to maximize the
+    accumulated reward.
+    This is also confirmed by the authors in \cite{Strehl2004} that the agent will fail to learn when a rudimentary
+    $\epsilon$-greedy algorithm.
 
+    We use a randomized policy to simulate trajectories and collect samples to attenuate bias in action selection
+    process.
+    As it has shown the literature, $\epsilon$-greedy has a bias in solving exploration-exploitation dilemma, we
+    explore the environment by following a randomized policy with a uniform distribution.
 
     \section{Future Works}
     We developed the presented approach with having reproducibility in mind. It could be served as a launching pad for the future contributors who want to surf this newly emerged field deeper. Future ideas to pursue is a generative model to be able to generate adversaries from a network.

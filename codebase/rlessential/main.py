@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from rlessential.domains import MachineReplacementMDP
-from agents import MachineReplacementAgent
+from agents import MachineReplacementMDPAgent
 from rlessential.solvers import ValueIteration
 
 
@@ -54,20 +54,19 @@ if __name__ == '__main__':
 
     mdp = pd.read_csv('dataset/mdp/machine_replacement_mdp.csv')
 
-    domain_mr = MachineReplacementMDP(mdp)
-    agent_mr = MachineReplacementAgent(domain_mr)
-
-
     gamma = 0.90
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
 
-    # even different initial values will end up with the same state values!
-    init_val = np.arange(10)
-    init_val = np.random.rand(10) * 10
+    domain_mr = MachineReplacementMDP(mdp)
+    solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
+    agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=100)
+    agent_mr.run()
 
-    vi = ValueIteration(domain_mr, discount=gamma, initial_values=init_val, threshold=tau, verbose=True)
-    vi.calculate_value()
+    # # even different initial values will end up with the same state values!
+    # init_val = np.arange(10)
+    # init_val = np.random.rand(10) * 10
+
 
 
 

@@ -22,6 +22,15 @@ class ValueIteration:
         # format: (#iter, V(s), distance)
         self.iter_values = list()
 
+    def v_table(self):
+        if not self.iter_values:
+            print('Value iteration has not been run yet!')
+            self.calculate_value()
+
+        num_s = self.domain.num_states
+        last_v = self.iter_values[-1][1].reshape(num_s, 1)
+        return last_v
+
     def calculate_value(self):
         num_s = self.domain.num_states
         num_a = self.domain.num_actions
