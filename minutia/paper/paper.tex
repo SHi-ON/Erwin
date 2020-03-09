@@ -210,6 +210,18 @@
     policy-space solutions.
 
 
+    The objective is finding an optimal aggregate model which falls in the span of spectrum from a fine-grid model
+    to a rigid aggregate model.
+    Our presented method calculates a discretization policy for which we calculate a feasible value function.
+    Return of a policy shows the quality of the gauged policy.
+    Hence, by calculating the accumulative return (eq.\ref{eq:return}) over run of the \textit{true} model and in a
+    comparison with the original return we can measure the improvement.
+
+    \begin{equation}
+        R = \sum_{k=0}^{\infty} \gamma^{k} r_{k+1}. \label{eq:return}
+    \end{equation}
+
+
     \section{Experiment}
     We apply the approach to two MDPs proposed by\cite{Strehl2004}.
     \textit{RiverSwim} an MDP consists of six states and \textit{SixArms} one with seven states.
