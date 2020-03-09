@@ -86,22 +86,18 @@ if __name__ == '__main__':
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
 
-
     domain_mr = MachineReplacementMDP(mdp)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
     agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=100)
     agent_mr.run()
 
     samples = agent_mr.samples
-    samples = discretize_samples(samples)
+    samples = samples_preprocess(samples)  # extract states from the samples
+    num_buckets = discretize_samples(samples)  # range calculation
+
+    vals = solver_vi()
 
 
 
 
-
-
-
-    # # even different initial values will end up with the same state values!
-    # init_val = np.arange(10)
-    # init_val = np.random.rand(10) * 10
 
