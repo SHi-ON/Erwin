@@ -92,15 +92,10 @@ if __name__ == '__main__':
     agent_mr.run()
 
     samples = agent_mr.samples
-    samples = discretize_samples(samples)
+    samples = samples_preprocess(samples)  # extract states from the samples
+    num_buckets = discretize_samples(samples)  # range calculation
+
+    vals = solver_vi()
 
 
-
-
-
-
-
-    # # even different initial values will end up with the same state values!
-    # init_val = np.arange(10)
-    # init_val = np.random.rand(10) * 10
 
