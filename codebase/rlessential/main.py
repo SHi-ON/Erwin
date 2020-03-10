@@ -86,7 +86,6 @@ if __name__ == '__main__':
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
 
-
     domain_mr = MachineReplacementMDP(mdp)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
     agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=100)
