@@ -140,7 +140,7 @@ class BaseMDP(MDP):
         if len(candidate_transitions) == 0:
             raise KeyError('Not able to find any candidates for state-action pair ({}, {})'.format(self.state_, action))
         elif len(candidate_transitions) != 1:
-            candidate_transitions = self.mdp.sample(candidate_transitions, weights=COL_PROBABILITY)
+            candidate_transitions = candidate_transitions.sample(weights=COL_PROBABILITY)
 
         transition_reward = candidate_transitions[COL_REWARD].values.reshape(1, )
         transition_next_state = candidate_transitions[COL_STATE_TO].values.reshape(1, ).astype(np.int)

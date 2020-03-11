@@ -22,7 +22,7 @@ class ValueIteration:
         # format: (#iter, V(s), distance)
         self.iter_values = list()
 
-    def v_table(self):
+    def get_v_table(self):
         if not self.iter_values:
             print('Value iteration has not been run yet!')
             self.calculate_value()
@@ -88,7 +88,7 @@ class ValueIteration:
         p = self.domain.get_probabilities()
         sum_probs = np.sum(p, axis=1, keepdims=True)
 
-        last_v = self.iter_values[-1][1].reshape(num_s, 1)
+        last_v = self.get_v_table()
         # noinspection PyCompatibility
         last_v = r + self.discount * p @ last_v
         split_last_values = np.split(last_v, num_s)

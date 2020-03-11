@@ -2,10 +2,12 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import iqr
+from sklearn.cluster import KMeans
 
 from rlessential.domains import MachineReplacementMDP
 from agents import MachineReplacementMDPAgent
 from rlessential.solvers import ValueIteration
+from util import RANDOM_SEED
 
 
 def cartpole_iqr_compare():
@@ -51,7 +53,7 @@ def cartpole_iqr_compare():
     agent_hist.run(False)
 
 
-def samples_preprocess(samples, verbose=True):
+def preprocess_samples(samples, verbose=True):
     state_samples = [sample_.current_state for sample_ in samples]
     state_samples = np.stack(state_samples, axis=0)
 
@@ -69,13 +71,15 @@ def discretize_samples(samples):
     hi = np.max(samples, axis=0)
     lo = np.min(samples, axis=0)
 
-    counts = (hi - lo) / bin_width
-    counts = np.round(counts)
-    counts = counts.astype(int)
+    bin_count = (hi - lo) / bin_width
+    bin_count = np.round(bin_count).astype(int)
+    bin_count = bin_count.item()
 
-    num_buckets = tuple(counts)
+    return bin_count
 
-    return num_buckets
+
+def discretize_values(values):
+    pass
 
 
 if __name__ == '__main__':
@@ -85,17 +89,20 @@ if __name__ == '__main__':
     gamma = 0.90
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
+    steps = 1000
 
     domain_mr = MachineReplacementMDP(mdp)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
-    agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=100)
-    agent_mr.run()
+    agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=steps)
 
+    agent_mr.train()
+    values = solver_vi.get_v_table()
+
+    agent_mr.run()
     samples = agent_mr.samples
-    samples = samples_preprocess(samples)  # extract states from the samples
+    samples = preprocess_samples(samples)  # extract states from the samples
     num_buckets = discretize_samples(samples)  # range calculation
 
-    vals = solver_vi()
-
-
-
+    kmeans = KMeans(n_clusters=num_buckets, random_state=RANDOM_SEED)
+    kmeans.fit(values)
+    kmeans.labels_
