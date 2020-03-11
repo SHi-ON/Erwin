@@ -197,7 +197,6 @@
     where n is number of observations and $IQR(x)$ is the inter-quartile range of data.f
 
     By having the inter-quartile range of data for each feature, a discretization policy can be calculated.
-    As
 
 
     For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations
@@ -223,6 +222,9 @@
     \begin{equation}
         R = \sum_{k=0}^{\infty} \gamma^{k} r_{k+1}. \label{eq:return}
     \end{equation}
+
+    The original states with the closest \textit{calculated} values forgather to build aggregate states.
+    For this purpose, state values are clustered by K-means analysis to calculate the relevant aggregate states.
 
 
     \section{Experiment}
