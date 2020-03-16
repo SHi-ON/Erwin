@@ -223,8 +223,15 @@
         R = \sum_{k=0}^{\infty} \gamma^{k} r_{k+1}. \label{eq:return}
     \end{equation}
 
+
+    \subsection{Aggregation}
     The original states with the closest \textit{calculated} values forgather to build aggregate states.
     For this purpose, state values are clustered by K-means analysis to calculate the relevant aggregate states.
+    State aggregation merge similar transitions based on a triple $<s, s', a>$ where $s$ indicates the starting state,
+    $s'$ is the ending state, and the take action in that transition represented by $a$.
+    In the process of stacking similar transitions, we here presume all inbound transitions as outbound transition of
+    the ending state.
+    This assumption render all transitions as outbound ones.
 
 
     \section{Experiment}
