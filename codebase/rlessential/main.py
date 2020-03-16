@@ -106,3 +106,6 @@ if __name__ == '__main__':
     kmeans = KMeans(n_clusters=num_buckets, random_state=RANDOM_SEED)
     kmeans.fit(values)
     kmeans.labels_
+
+
+
