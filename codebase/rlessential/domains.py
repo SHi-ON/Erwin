@@ -3,14 +3,9 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 from sample import Sample
+from consts import *
 
 # TODO: migrate self-defined domains in lspi's domain module to here
-
-COL_STATE_FROM = 'idstatefrom'
-COL_ACTION = 'idaction'
-COL_STATE_TO = 'idstateto'
-COL_PROBABILITY = 'probability'
-COL_REWARD = 'reward'
 
 
 class MDP(ABC):

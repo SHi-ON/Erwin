@@ -1,3 +1,4 @@
+from collections import defaultdict
 
 import pandas as pd
 import numpy as np
@@ -8,6 +9,7 @@ from rlessential.domains import MachineReplacementMDP
 from agents import MachineReplacementMDPAgent
 from rlessential.solvers import ValueIteration
 from util import RANDOM_SEED
+from consts import *
 
 
 def cartpole_iqr_compare():
@@ -78,20 +80,65 @@ def discretize_samples(samples):
     return bin_count
 
 
-def discretize_values(values):
-    pass
+def cluster_values(values, num_buckets, random_seed):
+    kmeans = KMeans(n_clusters=num_buckets, random_state=random_seed)
+    kmeans.fit(values)
+
+    return kmeans.labels_
+
+
+def aggregate(mdp, labels):
+    # mapping
+    agg_map = {i: v for i, v in enumerate(labels)}
+
+    # original rewards
+    rewards_orig = {i: r for i, r in zip(domain_mr.mdp[COL_STATE_TO], domain_mr.mdp[COL_REWARD])}
+
+    agg_state = list(set(agg_map.values()))
+
+    # aggregate rewards
+    rewards_agg = defaultdict(int)
+    for k, v in agg_map.items():
+        rewards_agg[v] += rewards_orig[k]
+
+    # get a deep copy
+    df_agg = mdp.copy(deep=True)
+
+    # state mapping
+    # should be done only once!
+    df_agg.loc[:, [COL_STATE_FROM, COL_STATE_TO]] = \
+        df_agg.loc[:, [COL_STATE_FROM, COL_STATE_TO]].replace(agg_map)
+
+    # reward mapping
+    for k, v in rewards_agg.items():
+        df_agg.loc[df_agg[COL_STATE_TO] == k, COL_REWARD] = v
+
+    # probability mapping
+    for s in agg_state:
+        for a in range(domain_mr.num_actions):
+            for sp in agg_state:
+                cond = ((df_agg[COL_STATE_FROM] == s) & (df_agg[COL_ACTION] == a) & (df_agg[COL_STATE_TO] == sp))
+                df = df_agg.loc[cond]
+                if len(df) != 0:
+                    prob = df[COL_PROBABILITY].mean()
+                    df_agg.loc[cond, COL_PROBABILITY] = prob
+
+    df_agg.drop_duplicates(inplace=True)
+    df_agg.sort_values(by=[COL_STATE_FROM, COL_ACTION, COL_STATE_TO], inplace=True)
+    df_agg.reset_index(drop=True, inplace=True)
+
+    return df_agg
 
 
 if __name__ == '__main__':
-
-    mdp = pd.read_csv('dataset/mdp/machine_replacement_mdp.csv')
+    mdp_input = pd.read_csv('dataset/mdp/machine_replacement_mdp.csv')
 
     gamma = 0.90
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
     steps = 1000
 
-    domain_mr = MachineReplacementMDP(mdp)
+    domain_mr = MachineReplacementMDP(mdp_input)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
     agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=steps)
 
@@ -103,9 +150,9 @@ if __name__ == '__main__':
     samples = preprocess_samples(samples)  # extract states from the samples
     num_buckets = discretize_samples(samples)  # range calculation
 
-    kmeans = KMeans(n_clusters=num_buckets, random_state=RANDOM_SEED)
-    kmeans.fit(values)
-    kmeans.labels_
+    agg_values_labels = cluster_values(values, num_buckets, RANDOM_SEED)
 
+    # synthesize the aggregate mdp
+    agg_mdp = aggregate(domain_mr.mdp, agg_values_labels)
 
 
