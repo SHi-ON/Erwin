@@ -139,15 +139,13 @@
     Value function approximation alleviates the computational hurdle of a large state-space problem.
     We introduce an approximate policy iteration method to solve an aggregate problem.
     State aggregation is an approximation approach to make a problem more tractable by a reduction in dimensionality in
-    state space \footnote{aggre
-    gation in action space although is possible, has less significance comparatively.}.
+    state space \footnote{aggregation in action space although is possible, has less significance comparatively.}.
     State aggregation, in particular, is a parametric feature-based approximation where the features are membership
     functions of 0-1 form.
     Aggregation groups similar states together, so called representative states, which lets the \textit{aggregate}
     problem to be solved by an exact method.
     The computed value function from the exact solution of the aggregate problem can be then used in the original
     problem.
-
 
     Now we formulate the aggregated problem by introducing the dynamics of the aggregate problem.
     The transition probabilities between
@@ -231,7 +229,8 @@
     $s'$ is the ending state, and the take action in that transition represented by $a$.
     In the process of stacking similar transitions, we here presume all inbound transitions as outbound transition of
     the ending state.
-    This assumption render all transitions as outbound ones.
+    This assumption render all transitions as outbound ones, therefore we assign the average probability as the
+    transition probability in the aggregate model.
 
 
     \section{Experiment}
@@ -257,7 +256,9 @@
     explore the environment by following a randomized policy with a uniform distribution.
 
     \section{Future Works}
-    We developed the presented approach with having reproducibility in mind. It could be served as a launching pad for the future contributors who want to surf this newly emerged field deeper. Future ideas to pursue is a generative model to be able to generate adversaries from a network.
+    We developed the presented approach with having reproducibility in mind.
+    It could be served as a launching pad for the future contributors who want to surf this newly emerged field deeper.
+    Future ideas to pursue is a generative model to be able to generate adversaries from a network.
 
     \section*{Appendix}
 
