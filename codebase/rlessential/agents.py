@@ -324,6 +324,8 @@ class MachineReplacementMDPAgent(Agent):
 
         self.horizon = horizon
         self.state_ = 0
+
+        self.total_reward = 0
         self.samples = list()
 
     def choose_action(self, state):
@@ -343,6 +345,7 @@ class MachineReplacementMDPAgent(Agent):
         while i < self.horizon:
             action = self.choose_action(curr_state)
             sample = self.domain.step(action)
+            self.total_reward += sample.reward
             curr_state = sample.next_state
             self.samples.append(sample)
             i += 1

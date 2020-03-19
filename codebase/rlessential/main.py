@@ -68,13 +68,13 @@ def preprocess_samples(samples, verbose=True):
 
 def discretize_samples(samples):
     iq_range = iqr(samples, axis=0)
-    bin_width = 2 * iq_range * (len(samples) ** (-1 / 3))
+    bin_width = 2 * iq_range / (len(samples) ** (1 / 3))
 
     hi = np.max(samples, axis=0)
     lo = np.min(samples, axis=0)
 
     bin_count = (hi - lo) / bin_width
-    bin_count = np.round(bin_count).astype(int)
+    bin_count = bin_count.astype(int)
     bin_count = bin_count.item()
 
     return bin_count
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     gamma = 0.90
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
-    steps = 1000
+    steps = 10000
 
     domain_mr = MachineReplacementMDP(mdp_input)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
@@ -146,7 +146,9 @@ if __name__ == '__main__':
     values = solver_vi.get_v_table()
 
     agent_mr.run()
+    total_reward_mr = agent_mr.total_reward
     samples = agent_mr.samples
+
     samples = preprocess_samples(samples)  # extract states from the samples
     num_buckets = discretize_samples(samples)  # range calculation
 
@@ -154,5 +156,20 @@ if __name__ == '__main__':
 
     # synthesize the aggregate mdp
     agg_mdp = aggregate(domain_mr.mdp, agg_values_labels)
+
+    domain_agg_mr = MachineReplacementMDP(agg_mdp)
+    solver_agg_vi = ValueIteration(domain_agg_mr, discount=gamma, threshold=tau, verbose=True)
+    agent_agg_mr = MachineReplacementMDPAgent(domain_agg_mr, solver_agg_vi, discount=gamma, horizon=steps)
+
+    agent_agg_mr.train()
+    values_agg = solver_agg_vi.get_v_table()
+
+    agent_agg_mr.run()
+    total_reward_agg_mr = agent_agg_mr.total_reward
+
+    print('original reward:', total_reward_mr)
+    print('aggregate reward:', total_reward_agg_mr)
+
+
 
 
