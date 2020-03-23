@@ -106,7 +106,6 @@ class ValueIteration:
         return policy_calc
 
 
-
 def policy_iteration(mdp, threshold, discount):
     num_s = mdp.num_states
     num_a = mdp.num_actions
