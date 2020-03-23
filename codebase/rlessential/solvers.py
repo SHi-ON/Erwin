@@ -97,11 +97,14 @@ class ValueIteration:
             for a in range(num_a):
                 if sum_probs[s * num_a + a] == 0:
                     split_last_values[s][a] = -np.inf
+
         policy_calc = np.array(list(map(np.argmax, split_last_values)))
         policy_calc = policy_calc.reshape(num_s, 1)
-
         if self.verbose:
             print('value iteration - calculated policy: \n', policy_calc)
+
+        return policy_calc
+
 
 
 def policy_iteration(mdp, threshold, discount):
