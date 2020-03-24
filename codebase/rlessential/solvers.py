@@ -21,6 +21,7 @@ class ValueIteration:
 
         # format: (#iter, V(s), distance)
         self.iter_values = list()
+        self.policy = None
 
     def get_v_table(self):
         if not self.iter_values:
@@ -103,7 +104,7 @@ class ValueIteration:
         if self.verbose:
             print('value iteration - calculated policy: \n', policy_calc)
 
-        return policy_calc
+        self.policy = policy_calc
 
 
 def policy_iteration(mdp, threshold, discount):

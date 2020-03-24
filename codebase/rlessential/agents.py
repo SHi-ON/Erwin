@@ -328,22 +328,25 @@ class MachineReplacementMDPAgent(Agent):
         self.total_reward = 0
         self.samples = list()
 
-    def choose_action(self, state):
+    def choose_action(self, state, random=True):
         # TODO: try epsilon-greedy or Boltzmann distribution
+
+        if not random and self.solver.policy is None:
+            self.solver.calculate_policy()
 
         allowed_actions = self.domain.get_allowed_actions()
 
         # randomized action selection - uniform distribution
-        return np.random.choice(allowed_actions)
+        return np.random.choice(allowed_actions) if random else self.solver.policy[state].item()
 
     def train(self):
         self.solver.calculate_value()
 
-    def run(self):
+    def run(self, randomized=True):
         curr_state = self.domain.state_
         i = 0
         while i < self.horizon:
-            action = self.choose_action(curr_state)
+            action = self.choose_action(curr_state, random=randomized)
             sample = self.domain.step(action)
             self.total_reward += sample.reward
             curr_state = sample.next_state

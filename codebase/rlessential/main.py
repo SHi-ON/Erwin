@@ -87,12 +87,10 @@ def cluster_values(values, num_buckets, random_seed):
     return kmeans.labels_
 
 
-def aggregate(mdp, labels):
-    # mapping
-    agg_map = {i: v for i, v in enumerate(labels)}
+def aggregate(mdp, agg_map):
 
     # original rewards
-    rewards_orig = {i: r for i, r in zip(domain_mr.mdp[COL_STATE_TO], domain_mr.mdp[COL_REWARD])}
+    rewards_orig = dict(zip(domain_mr.mdp[COL_STATE_TO], domain_mr.mdp[COL_REWARD]))
 
     agg_state = list(set(agg_map.values()))
 
@@ -136,7 +134,7 @@ if __name__ == '__main__':
     gamma = 0.90
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
-    steps = 10000
+    steps = 1000
 
     domain_mr = MachineReplacementMDP(mdp_input)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
@@ -145,7 +143,7 @@ if __name__ == '__main__':
     agent_mr.train()
     values = solver_vi.get_v_table()
 
-    agent_mr.run()
+    agent_mr.run(randomized=True)
     total_reward_mr = agent_mr.total_reward
     samples = agent_mr.samples
 
@@ -154,17 +152,27 @@ if __name__ == '__main__':
 
     agg_values_labels = cluster_values(values, num_buckets, RANDOM_SEED)
 
+    # mapping
+    aggregate_map = dict(enumerate(agg_values_labels))
+
+    # reverse dictionary with duplicates
+    agg_to_orig = dict()
+    for k, v in aggregate_map.items():
+        agg_to_orig.setdefault(v, list()).append(k)
+
     # synthesize the aggregate mdp
-    agg_mdp = aggregate(domain_mr.mdp, agg_values_labels)
+    agg_mdp = aggregate(domain_mr.mdp, aggregate_map)
 
     domain_agg_mr = MachineReplacementMDP(agg_mdp)
     solver_agg_vi = ValueIteration(domain_agg_mr, discount=gamma, threshold=tau, verbose=True)
     agent_agg_mr = MachineReplacementMDPAgent(domain_agg_mr, solver_agg_vi, discount=gamma, horizon=steps)
 
     agent_agg_mr.train()
-    values_agg = solver_agg_vi.get_v_table()
+    agg_values = solver_agg_vi.get_v_table()
+    agg_policy = solver_agg_vi.calculate_policy()
 
-    agent_agg_mr.run()
+    # FIXME: run with the agg policy not randomized!
+    agent_agg_mr.run(randomized=False)
     total_reward_agg_mr = agent_agg_mr.total_reward
 
     print('original reward:', total_reward_mr)
