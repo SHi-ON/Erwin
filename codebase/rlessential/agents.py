@@ -1,10 +1,8 @@
 import abc
 
-import numpy as np
 import gym
+import numpy as np
 import tqdm
-
-from sample import Sample
 
 
 class Agent(object):
@@ -328,30 +326,45 @@ class MachineReplacementMDPAgent(Agent):
         self.total_reward = 0
         self.samples = list()
 
-    def choose_action(self, state, random=True):
+    def choose_action(self, state, external_policy=None, random=True):
         # TODO: try epsilon-greedy or Boltzmann distribution
 
-        if not random and self.solver.policy is None:
+        # randomized action selection - uniform distribution=
+        if random:
+            allowed_actions = self.domain.get_allowed_actions()
+            return np.random.choice(allowed_actions)
+
+        # external policy is provided
+        if external_policy is not None:
+            if external_policy.shape[0] != self.domain.num_states:
+                raise ValueError('shape mismatch: external policy of shape {0} does not cover all {1} states.'
+                                 .format(external_policy.shape[0], self.domain.num_states))
+
+            if not (0 <= state <= external_policy.shape[0]):
+                raise IndexError('state {0} is out of bounds for the external policy'.format(state))
+
+            return external_policy[state].item()
+
+        # action selection from the calculated policy
+        if self.solver.policy is None:
             self.solver.calculate_policy()
-
-        allowed_actions = self.domain.get_allowed_actions()
-
-        # randomized action selection - uniform distribution
-        return np.random.choice(allowed_actions) if random else self.solver.policy[state].item()
+        return self.solver.policy[state].item()
 
     def train(self):
         self.solver.calculate_value()
 
-    def run(self, randomized=True):
+    def run(self, policy=None, randomized=True):
+        self.total_reward = 0
         curr_state = self.domain.state_
         i = 0
         while i < self.horizon:
-            action = self.choose_action(curr_state, random=randomized)
+            action = self.choose_action(curr_state, external_policy=policy, random=randomized)
             sample = self.domain.step(action)
             self.total_reward += sample.reward
             curr_state = sample.next_state
             self.samples.append(sample)
             i += 1
+        return self.total_reward
 
 
 # showcase the agent performance

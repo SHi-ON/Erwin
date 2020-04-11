@@ -134,7 +134,7 @@ if __name__ == '__main__':
     gamma = 0.90
     epsilon = 0.0000001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
-    steps = 1000
+    steps = 5000
 
     domain_mr = MachineReplacementMDP(mdp_input)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     agent_mr.train()
     values = solver_vi.get_v_table()
 
-    agent_mr.run(randomized=True)
+    agent_mr.run(policy=None, randomized=True)
     total_reward_mr = agent_mr.total_reward
     samples = agent_mr.samples
 
@@ -157,8 +157,8 @@ if __name__ == '__main__':
 
     # reverse dictionary with duplicates
     agg_to_orig = dict()
-    for k, v in aggregate_map.items():
-        agg_to_orig.setdefault(v, list()).append(k)
+    for s, s_agg in aggregate_map.items():
+        agg_to_orig.setdefault(s_agg, list()).append(s)
 
     # synthesize the aggregate mdp
     agg_mdp = aggregate(domain_mr.mdp, aggregate_map)
@@ -171,13 +171,21 @@ if __name__ == '__main__':
     agg_values = solver_agg_vi.get_v_table()
     agg_policy = solver_agg_vi.calculate_policy()
 
-    # FIXME: run with the agg policy not randomized!
-    agent_agg_mr.run(randomized=False)
+    agent_agg_mr.run(policy=None, randomized=False)
     total_reward_agg_mr = agent_agg_mr.total_reward
+
+    # TODO: run aggregate policy on the true model (original)
+    orig_agg_policy = np.zeros((domain_mr.num_states, 1))
+    for s_agg, s_group in agg_to_orig.items():
+        for s in s_group:
+            orig_agg_policy[s] = agg_policy[s_agg]
+
+    agent_mr.run(policy=orig_agg_policy, randomized=False)
+    total_reward_mr_true = agent_mr.total_reward
 
     print('original reward:', total_reward_mr)
     print('aggregate reward:', total_reward_agg_mr)
-
+    print('true aggregate reward:', total_reward_mr_true)
 
 
 

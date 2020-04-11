@@ -105,6 +105,7 @@ class ValueIteration:
             print('value iteration - calculated policy: \n', policy_calc)
 
         self.policy = policy_calc
+        return policy_calc
 
 
 def policy_iteration(mdp, threshold, discount):
