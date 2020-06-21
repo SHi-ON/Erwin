@@ -323,7 +323,7 @@ class MachineReplacementMDPAgent(Agent):
         self.horizon = horizon
         self.state_ = 0
 
-        self.total_reward = 0
+        self.rewards = np.zeros((self.horizon, 1))
         self.samples = list()
 
     def choose_action(self, state, external_policy=None, random=True):
@@ -354,17 +354,15 @@ class MachineReplacementMDPAgent(Agent):
         self.solver.calculate_value()
 
     def run(self, policy=None, randomized=True):
-        self.total_reward = 0
         curr_state = self.domain.state_
-        i = 0
-        while i < self.horizon:
+
+        for i in tqdm.trange(self.horizon):
             action = self.choose_action(curr_state, external_policy=policy, random=randomized)
             sample = self.domain.step(action)
-            self.total_reward += sample.reward
+            self.rewards[i] = sample.reward
             curr_state = sample.next_state
             self.samples.append(sample)
-            i += 1
-        return self.total_reward
+        return self.rewards
 
 
 # showcase the agent performance

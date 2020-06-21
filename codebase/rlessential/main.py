@@ -1,58 +1,17 @@
 from collections import defaultdict
 
-import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import seaborn as sns
 from scipy.stats import iqr
 from sklearn.cluster import KMeans
 
-from rlessential.domains import MachineReplacementMDP
 from agents import MachineReplacementMDPAgent
+from consts import *
+from rlessential.domains import MachineReplacementMDP
 from rlessential.solvers import ValueIteration
 from util import RANDOM_SEED
-from consts import *
-
-
-def cartpole_iqr_compare():
-    print("loading samples")
-
-    samples = pickle.load(open('samples.p', 'rb'))
-
-    print("unifying samples")
-
-    ss = []
-    for s in samples:
-        ss.append(s[0])
-        # ss.append(s[3])
-    len(samples)
-    len(ss)
-
-    print("stacking")
-
-    smp = np.stack(ss, axis=0)
-    smp.shape
-
-    n = len(smp)
-    iq_range = iqr(smp, axis=0)
-    h = 2 * iq_range * (n ** (-1 / 3))
-
-    hi = np.max(smp, axis=0)
-    lo = np.min(smp, axis=0)
-
-    counts = (hi - lo) / h
-    counts = counts / 1
-    counts = np.round(counts)
-    counts = counts.astype(int)
-    num_buckets = tuple(counts)
-
-    print("agents")
-
-    agent_base = QLearningCartPoleAgent(num_buckets=(1, 2, 6, 12), num_episodes=1000, discount=0.99)
-    agent_base.train()
-    agent_base.run(False)
-
-    agent_hist = QLearningCartPoleAgent(num_buckets=num_buckets, num_episodes=1000, discount=0.99)
-    agent_hist.train()
-    agent_hist.run(False)
 
 
 def preprocess_samples(samples, verbose=True):
@@ -88,7 +47,6 @@ def cluster_values(values, num_buckets, random_seed):
 
 
 def aggregate(mdp, agg_map):
-
     # original rewards
     rewards_orig = dict(zip(domain_mr.mdp[COL_STATE_TO], domain_mr.mdp[COL_REWARD]))
 
@@ -128,13 +86,13 @@ def aggregate(mdp, agg_map):
     return df_agg
 
 
-if __name__ == '__main__':
-    mdp_input = pd.read_csv('dataset/mdp/machine_replacement_mdp.csv')
-
+def run_machine_replacement():
     gamma = 0.90
-    epsilon = 0.0000001
+    epsilon = 0.0001
     tau = (epsilon * (1 - gamma)) / (2 * gamma)
+
     steps = 5000
+
 
     domain_mr = MachineReplacementMDP(mdp_input)
     solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
@@ -144,7 +102,7 @@ if __name__ == '__main__':
     values = solver_vi.get_v_table()
 
     agent_mr.run(policy=None, randomized=True)
-    total_reward_mr = agent_mr.total_reward
+    total_reward_mr = agent_mr.rewards
     samples = agent_mr.samples
 
     samples = preprocess_samples(samples)  # extract states from the samples
@@ -172,7 +130,7 @@ if __name__ == '__main__':
     agg_policy = solver_agg_vi.calculate_policy()
 
     agent_agg_mr.run(policy=None, randomized=False)
-    total_reward_agg_mr = agent_agg_mr.total_reward
+    total_reward_agg_mr = agent_agg_mr.rewards
 
     # TODO: run aggregate policy on the true model (original)
     orig_agg_policy = np.zeros((domain_mr.num_states, 1))
@@ -181,11 +139,26 @@ if __name__ == '__main__':
             orig_agg_policy[s] = agg_policy[s_agg]
 
     agent_mr.run(policy=orig_agg_policy, randomized=False)
-    total_reward_mr_true = agent_mr.total_reward
+    total_reward_mr_true = agent_mr.rewards
 
-    print('original reward:', total_reward_mr)
-    print('aggregate reward:', total_reward_agg_mr)
-    print('true aggregate reward:', total_reward_mr_true)
+    print('original reward:', total_reward_mr.sum())
+    print('aggregate reward:', total_reward_agg_mr.sum())
+    print('true aggregate reward:', total_reward_mr_true.sum())
+
+    x = np.arange(steps)
+    y = total_reward_mr.reshape(steps, ).cumsum()
+    y = total_reward_mr.reshape(steps, )
+
+    y = total_reward_agg_mr.reshape(steps, ).cumsum()
+
+    y = total_reward_mr_true.reshape(steps, ).cumsum()
+
+    plt.figure()
+    sns.lineplot(x=x, y=total_reward_mr.reshape(steps, ), err_style='band', ci=200, n_boot=1000)
+    sns.lineplot(x=x, y=total_reward_agg_mr.reshape(steps, ), err_style='band', ci=200, n_boot=1000)
+    sns.lineplot(x=x, y=total_reward_mr_true.reshape(steps, ), err_style='band', ci=200, n_boot=1000)
+    plt.show()
 
 
-
+if __name__ == '__main__':
+    pass

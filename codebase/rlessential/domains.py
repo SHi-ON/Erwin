@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 
 import numpy as np
+import pandas as pd
 
-from sample import Sample
 from consts import *
-
-# TODO: migrate self-defined domains in lspi's domain module to here
+from sample import Sample
 
 
 class MDP(ABC):
@@ -165,15 +164,17 @@ class TwoStateMDP(BaseMDP):
     """
     MDP from Figure 3.1.1 in Putterman's MDP book, page 34.
 
-    **Details**:
+    file name: `twostate_mdp.csv`
 
-    2 states: {s1, s2} -> {0, 1}
-
+    **Details**: \
+    2 states: {s1, s2} -> {0, 1} \
     3 actions: {a11, a12, a21} -> {0, 1, 2}
     """
 
-    def __init__(self, mdp):
+    def __init__(self, mdp=None):
         # noinspection PyCompatibility
+        if mdp is None:
+            mdp = pd.read_csv(MDP_PATH + 'twostate_mdp.csv')
         super().__init__(mdp)
 
 
@@ -181,23 +182,23 @@ class TwoStateParametricMDP(BaseMDP):
     """
     MDP from example 6.4.2 in Putterman's MDP book, page 182.
 
-    **Details**:
+    file name: `twostate_parametric_mdp.csv`
 
-    2 states: {s1, s2} -> {0, 1}
-
-    2 actions: {a, a2,1} -> {0, 1}
-
-    2 rewards: {:math:`-a^2`, -0.5} -> {0, 1}
-
+    **Details**: \
+    2 states: {s1, s2} -> {0, 1} \
+    2 actions: {a, a2,1} -> {0, 1} \
+    2 rewards: {$$-a^2$$, -0.5} -> {0, 1} \
     3 probabilities: {a/2, 1-a/2, 1} -> {0, 1, 2}
     """
 
-    def __init__(self, mdp, param):
+    def __init__(self, param, mdp=None):
         # noinspection PyCompatibility
+        if mdp is None:
+            mdp = pd.read_csv(MDP_PATH + 'twostate_parametric_mdp.csv')
         super().__init__(mdp)
         self.param = param
-        self.rewards = TwoStateParametricMDP.parametrize_rewards(param)
-        self.probabilities = TwoStateParametricMDP.parametrize_probabilities(param)
+        self.rewards = self.parametrize_rewards(param)
+        self.probabilities = self.parametrize_probabilities(param)
 
     def get_rewards(self):
         rewards = np.full((self.num_states * self.num_actions, 1), -np.inf)
@@ -231,38 +232,73 @@ class TwoStateParametricMDP(BaseMDP):
 
 class RAAMMDP(BaseMDP):
     """
-    Three-state deterministic MDP in the `RAAM Paper <http://www.cs.unh.edu/~mpetrik/pub/Petrik2014_appendix.pdf>`_.
+    Three-state deterministic MDP problem from the [RAAM paper](http://www.cs.unh.edu/~mpetrik/pub/Petrik2014_appendix.pdf).
 
-    **Details**:
+    file name: `raam_mdp.csv`
 
-    3 states: {s1, s2, s3} -> {0, 1, 2}
-
-    3 actions: {a1, a2, 0} -> {0, 1, 2}
-
-    3 rewards: {0, 1, :math:`\epsilon`} -> {0, 1, 2}
-
+    **Details**: \
+    3 states: {s1, s2, s3} -> {0, 1, 2} \
+    3 actions: {a1, a2, 0} -> {0, 1, 2} \
+    3 rewards: {0, 1, $$\epsilon$$} -> {0, 1, 2} \
     3 probabilities: deterministic (all ones)
-
     """
 
-    def __init__(self, mdp):
+    def __init__(self, mdp=None):
         # noinspection PyCompatibility
+        if mdp is None:
+            mdp = pd.read_csv(MDP_PATH + 'raam_mdp.csv')
         super().__init__(mdp)
 
 
 class MachineReplacementMDP(BaseMDP):
     """
-    Machine Replacement MDP problem from the `Percentile Optimization paper
-    <http://web.hec.ca/pages/erick.delage/percentileMDP.pdf>`_, Figure 3.
+    Machine Replacement MDP problem from the [Percentile Optimization paper](http://web.hec.ca/pages/erick.delage/percentileMDP.pdf), Figure 3.
 
-    **Details**:
+    file name: `machine_replacement_mdp.csv`
 
-    10 states: {1, 2, ..., 8, R1, R2} -> {0, 1, 2, ..., 9}
-
-    5 actions: 3 **repairs** and 2 **do nothings**
-
+    **Details**: \
+    10 states: {1, 2, ..., 8, R1, R2} -> {0, 1, 2, ..., 9} \
+    2 actions: either **"do nothing"**=0 or **"repair"**=1
     """
 
-    def __init__(self, mdp):
+    def __init__(self, mdp=None):
         # noinspection PyCompatibility
+        if mdp is None:
+            mdp = pd.read_csv(MDP_PATH + 'machine_replacement_mdp.csv')
+        super().__init__(mdp)
+
+
+class RiverSwimMDP(BaseMDP):
+    """
+    RiverSwim MDP problem from [Strehl et al. 2004](http://web.hec.ca/pages/erick.delage/percentileMDP.pdf), Figure 3.
+
+    file name: `river_swim_mdp.csv`
+
+    **Details**: \
+    6 states: {0, 1, 2, ..., 5} \
+    2 actions: **left**=0 and **right**=1
+    """
+
+    def __init__(self, mdp=None):
+        # noinspection PyCompatibility
+        if mdp is None:
+            mdp = pd.read_csv(MDP_PATH + 'river_swim_mdp.csv')
+        super().__init__(mdp)
+
+
+class SixArmsMDP(BaseMDP):
+    """
+    SixArms MDP problem from [Strehl et al. 2004](http://web.hec.ca/pages/erick.delage/percentileMDP.pdf), Figure 3.
+
+    file name: `six_arms_mdp.csv`
+
+    **Details**: \
+    7 states: {0, 1, 2, ..., 6}
+    6 actions: {0, 1, 2, ..., 5}
+    """
+
+    def __init__(self, mdp=None):
+        # noinspection PyCompatibility
+        if mdp is None:
+            mdp = pd.read_csv(MDP_PATH + 'six_arms_mdp.csv')
         super().__init__(mdp)

@@ -1,10 +1,7 @@
 import time
-import warnings
 
 import numpy as np
-import pandas as pd
 
-from rlessential.domains import TwoStateMDP, TwoStateParametricMDP, MachineReplacementMDP
 from util import timing
 
 
@@ -153,28 +150,3 @@ def policy_iteration(mdp, threshold, discount):
     timing(t)
 
     return policy_next
-
-
-def main():
-    gamma = 0.95
-    epsilon = 0.01
-    tau = (epsilon * (1 - gamma)) / (2 * gamma)
-
-    # mdp_data = pd.read_csv('../dataset/mdp/twostate_parametric_mdp.csv')
-    # mdp = TwoStateParametricMDP(mdp_data, 0)
-    # init_v = np.array([-4.5, -5])
-
-    # mdp_data = pd.read_csv('../dataset/mdp/twostate_mdp.csv')
-    # mdp = TwoStateMDP(mdp_data)
-
-    mdp_data = pd.read_csv('dataset/mdp/machine_replacement_mdp.csv')
-    # mdp_data = pd.read_csv('dataset/mdp/twostate_mdp.csv')
-    domain = MachineReplacementMDP(mdp_data)
-
-    vi = ValueIteration(domain, discount=gamma, threshold=tau, verbose=True)
-    # vi.calculate_value()
-    vi.calculate_policy()
-
-
-if __name__ == '__main__':
-    main()

@@ -5,3 +5,6 @@ COL_ACTION = 'idaction'
 COL_STATE_TO = 'idstateto'
 COL_PROBABILITY = 'probability'
 COL_REWARD = 'reward'
+
+MDP_PATH = 'rlessential/mdp/'
+
