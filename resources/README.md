@@ -2,6 +2,7 @@
 
 #### Books:
 * [Reinforcement Learning and Optimal Control](https://www.amazon.com/Reinforcement-Learning-Optimal-Control-Bertsekas/dp/1886529396)
+* [Reinforcement Learning and Dynamic Programming Using Function Approximators](https://www.amazon.com/Reinforcement-Programming-Approximators-Automation-Engineering/dp/1439821089)
 * [Reinforcement Learning](https://drive.google.com/file/d/1opPSz5AZ_kVa1uWOdOiveNiBFiEOHjkG/view)
 * [Deep Reinforcement Learning](https://arxiv.org/abs/1811.12560)
 * [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook)
@@ -38,6 +39,7 @@
 
 #### Miscs:
 * [DAWNBench: Deep learning model training cost benchmark](https://dawn.cs.stanford.edu/benchmark/)
+* [ML language comparison and why only Swift](https://github.com/tensorflow/swift/blob/master/docs/WhySwiftForTensorFlow.md)
 
 #### Code Repositories:
 * [RL algorithms implementation based on David Silver's course](https://github.com/dennybritz/reinforcement-learning)
