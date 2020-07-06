@@ -1,164 +1,188 @@
-from collections import defaultdict
-
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import seaborn as sns
 from scipy.stats import iqr
 from sklearn.cluster import KMeans
 
-from agents import MachineReplacementMDPAgent
-from consts import *
-from rlessential.domains import MachineReplacementMDP
-from rlessential.solvers import ValueIteration
-from util import RANDOM_SEED
+import consts
+from agents import BaseAgent
+from rlessential.domains import MachineReplacementMDPDomain
+from rlessential.solvers import ValueIterationSolver
+
+# hyper-parameters
+gamma = 0.90
+epsilon = 0.0001
+tau = (epsilon * (1 - gamma)) / (2 * gamma)
+
+steps = 3000
 
 
-def preprocess_samples(samples, verbose=True):
-    state_samples = [sample_.current_state for sample_ in samples]
-    state_samples = np.stack(state_samples, axis=0)
+def extract_states(samples):
+    """
+    Extracts states from the samples. The function preserves duplicates.
 
-    if verbose:
-        print('{} state samples are processed.'.format(len(state_samples)))
-        print('output samples shape: {}'.format(state_samples.shape))
+    :param samples: collected samples
+    :return: states
+    """
+    states = [sample_.current_state for sample_ in samples]
+    states = np.stack(states, axis=0)
 
-    return state_samples
+    assert len(states) == len(samples)
+    assert states.shape == (len(samples), 1)
+
+    return states
 
 
-def discretize_samples(samples):
-    iq_range = iqr(samples, axis=0)
-    bin_width = 2 * iq_range / (len(samples) ** (1 / 3))
+def calculate_bin_width(samples):
+    inter_quartile_range = iqr(samples, axis=0)
+    bin_width = 2 * inter_quartile_range / (len(samples) ** (1 / 3))
+    return bin_width
 
+
+def calculate_bin_count(samples, bin_width):
     hi = np.max(samples, axis=0)
     lo = np.min(samples, axis=0)
 
     bin_count = (hi - lo) / bin_width
+    bin_count = np.ceil(bin_count)
     bin_count = bin_count.astype(int)
     bin_count = bin_count.item()
-
     return bin_count
 
 
-def cluster_values(values, num_buckets, random_seed):
-    kmeans = KMeans(n_clusters=num_buckets, random_state=random_seed)
-    kmeans.fit(values)
+def cluster_values(samples, bin_count):
+    kmeans = KMeans(n_clusters=bin_count,
+                    random_state=consts.RANDOM_SEED)
+    kmeans.fit(samples)
+    labels = kmeans.labels_
+    return labels
 
-    return kmeans.labels_
+
+def map_aggregate_states(labels):
+    """
+    Associates an original state to an aggregate state (aggregation), and vice versa (disaggregation).
+
+    :param labels: clustering labels
+    :return: tuple of both aggregation and disaggregation mappings
+    """
+    aggregation_mapping = dict(enumerate(labels))
+
+    disaggregation_mapping = dict()
+    for s_original, s_aggregate in aggregation_mapping.items():
+        disaggregation_mapping.setdefault(s_aggregate, list()).append(s_original)
+
+    return aggregation_mapping, disaggregation_mapping
 
 
-def aggregate(mdp, agg_map):
-    # original rewards
-    rewards_orig = dict(zip(domain_mr.mdp[COL_STATE_TO], domain_mr.mdp[COL_REWARD]))
+def map_aggregate_rewards(state_mapping, original_domain):
+    """
+    Associates original and aggregate rewards with the corresponding ending state.
 
-    agg_state = list(set(agg_map.values()))
+    :param state_mapping: state aggregation mapping
+    :param original_domain: the original domain
+    :return: tuple of both original and aggregate rewards
+    """
+    original_rewards = dict(zip(original_domain.mdp[consts.COL_STATE_TO], original_domain.mdp[consts.COL_REWARD]))
 
-    # aggregate rewards
-    rewards_agg = defaultdict(int)
-    for k, v in agg_map.items():
-        rewards_agg[v] += rewards_orig[k]
+    aggregate_rewards = dict()
+    for s_original, s_aggregate in state_mapping.items():
+        aggregate_rewards.setdefault(s_aggregate, int())
+        aggregate_rewards[s_aggregate] += original_rewards[s_original]
 
-    # get a deep copy
-    df_agg = mdp.copy(deep=True)
+    return original_rewards, aggregate_rewards
+
+
+def map_aggregate_policy(aggregate_policy, state_mapping, original_domain):
+    """
+    Adapts a policy compatible with the original agent from the given aggregate policy.
+    
+    :param aggregate_policy: aggregate policy
+    :param state_mapping: state aggregation mapping
+    :param original_domain: the original domain 
+    :return: the policy
+    """
+    aggregate_policy_original = np.zeros((original_domain.num_states, 1))
+    for s_original, s_aggregate in state_mapping.items():
+        aggregate_policy_original[s_original] = aggregate_policy[s_aggregate]
+
+    return aggregate_policy_original
+
+
+def aggregate_mdp(values, bin_count, domain):
+    clustered_state_labels = cluster_values(values, bin_count)
+
+    df = domain.mdp.copy(deep=True)
 
     # state mapping
-    # should be done only once!
-    df_agg.loc[:, [COL_STATE_FROM, COL_STATE_TO]] = \
-        df_agg.loc[:, [COL_STATE_FROM, COL_STATE_TO]].replace(agg_map)
+    aggregation_states, _ = map_aggregate_states(clustered_state_labels)
+    state_columns = [consts.COL_STATE_FROM, consts.COL_STATE_TO]
+    df.loc[:, state_columns] = df.loc[:, state_columns].replace(aggregation_states)
 
     # reward mapping
-    for k, v in rewards_agg.items():
-        df_agg.loc[df_agg[COL_STATE_TO] == k, COL_REWARD] = v
+    _, aggregation_rewards = map_aggregate_rewards(aggregation_states, domain)
+    for s_original, r_aggregate in aggregation_rewards.items():
+        reward_condition = df[consts.COL_STATE_TO] == s_original
+        df.loc[reward_condition, consts.COL_REWARD] = r_aggregate
 
-    # probability mapping
-    for s in agg_state:
-        for a in range(domain_mr.num_actions):
-            for sp in agg_state:
-                cond = ((df_agg[COL_STATE_FROM] == s) & (df_agg[COL_ACTION] == a) & (df_agg[COL_STATE_TO] == sp))
-                df = df_agg.loc[cond]
+    # transition probability mapping
+    for s in aggregation_states.keys():
+        for a in range(domain.num_actions):
+            for sp in aggregation_states.keys():
+                transition_condition = ((df[consts.COL_STATE_FROM] == s) &
+                                        (df[consts.COL_ACTION] == a) &
+                                        (df[consts.COL_STATE_TO] == sp))
+                df_transition = df.loc[transition_condition]
                 if len(df) != 0:
-                    prob = df[COL_PROBABILITY].mean()
-                    df_agg.loc[cond, COL_PROBABILITY] = prob
+                    transition_probability = df_transition[consts.COL_PROBABILITY].mean()
+                    df.loc[transition_condition, consts.COL_PROBABILITY] = transition_probability
 
-    df_agg.drop_duplicates(inplace=True)
-    df_agg.sort_values(by=[COL_STATE_FROM, COL_ACTION, COL_STATE_TO], inplace=True)
-    df_agg.reset_index(drop=True, inplace=True)
+    df.drop_duplicates(inplace=True)
+    df.sort_values(by=[consts.COL_STATE_FROM, consts.COL_ACTION, consts.COL_STATE_TO], inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
-    return df_agg
+    return df, aggregation_states
 
 
 def run_machine_replacement():
-    gamma = 0.90
-    epsilon = 0.0001
-    tau = (epsilon * (1 - gamma)) / (2 * gamma)
+    domain = MachineReplacementMDPDomain()
+    solver = ValueIterationSolver(domain,
+                                  discount=gamma,
+                                  threshold=tau,
+                                  verbose=True)
+    agent = BaseAgent(domain,
+                      solver,
+                      epochs=steps)
+    state_values = agent.train()
+    rewards, samples = agent.run(external_policy='randomized')
 
-    steps = 5000
+    states = extract_states(samples)
+    bucket_width = calculate_bin_width(states)
+    bucket_count = calculate_bin_count(states, bucket_width)
 
+    mdp_aggregate, aggregation_mapping = aggregate_mdp(state_values, bucket_count, domain)
 
-    domain_mr = MachineReplacementMDP(mdp_input)
-    solver_vi = ValueIteration(domain_mr, discount=gamma, threshold=tau, verbose=True)
-    agent_mr = MachineReplacementMDPAgent(domain_mr, solver_vi, discount=gamma, horizon=steps)
+    domain_aggregate = MachineReplacementMDPDomain(mdp_aggregate)
+    solver_aggregate = ValueIterationSolver(domain_aggregate,
+                                            discount=gamma,
+                                            threshold=tau,
+                                            verbose=True)
+    agent_aggregate = BaseAgent(domain_aggregate,
+                                solver_aggregate,
+                                epochs=steps)
+    state_values_aggregate = agent_aggregate.train()
+    rewards_aggregate, samples_aggregate = agent_aggregate.run()
+    policy_aggregate = solver_aggregate.policy
 
-    agent_mr.train()
-    values = solver_vi.get_v_table()
+    adapted_policy_aggregate = map_aggregate_policy(policy_aggregate,
+                                                    aggregation_mapping,
+                                                    domain)
+    domain.reset()
+    rewards_aggregate_adapted, samples_aggregate_adapted = agent.run(external_policy=adapted_policy_aggregate)
 
-    agent_mr.run(policy=None, randomized=True)
-    total_reward_mr = agent_mr.rewards
-    samples = agent_mr.samples
-
-    samples = preprocess_samples(samples)  # extract states from the samples
-    num_buckets = discretize_samples(samples)  # range calculation
-
-    agg_values_labels = cluster_values(values, num_buckets, RANDOM_SEED)
-
-    # mapping
-    aggregate_map = dict(enumerate(agg_values_labels))
-
-    # reverse dictionary with duplicates
-    agg_to_orig = dict()
-    for s, s_agg in aggregate_map.items():
-        agg_to_orig.setdefault(s_agg, list()).append(s)
-
-    # synthesize the aggregate mdp
-    agg_mdp = aggregate(domain_mr.mdp, aggregate_map)
-
-    domain_agg_mr = MachineReplacementMDP(agg_mdp)
-    solver_agg_vi = ValueIteration(domain_agg_mr, discount=gamma, threshold=tau, verbose=True)
-    agent_agg_mr = MachineReplacementMDPAgent(domain_agg_mr, solver_agg_vi, discount=gamma, horizon=steps)
-
-    agent_agg_mr.train()
-    agg_values = solver_agg_vi.get_v_table()
-    agg_policy = solver_agg_vi.calculate_policy()
-
-    agent_agg_mr.run(policy=None, randomized=False)
-    total_reward_agg_mr = agent_agg_mr.rewards
-
-    # TODO: run aggregate policy on the true model (original)
-    orig_agg_policy = np.zeros((domain_mr.num_states, 1))
-    for s_agg, s_group in agg_to_orig.items():
-        for s in s_group:
-            orig_agg_policy[s] = agg_policy[s_agg]
-
-    agent_mr.run(policy=orig_agg_policy, randomized=False)
-    total_reward_mr_true = agent_mr.rewards
-
-    print('original reward:', total_reward_mr.sum())
-    print('aggregate reward:', total_reward_agg_mr.sum())
-    print('true aggregate reward:', total_reward_mr_true.sum())
-
-    x = np.arange(steps)
-    y = total_reward_mr.reshape(steps, ).cumsum()
-    y = total_reward_mr.reshape(steps, )
-
-    y = total_reward_agg_mr.reshape(steps, ).cumsum()
-
-    y = total_reward_mr_true.reshape(steps, ).cumsum()
-
-    plt.figure()
-    sns.lineplot(x=x, y=total_reward_mr.reshape(steps, ), err_style='band', ci=200, n_boot=1000)
-    sns.lineplot(x=x, y=total_reward_agg_mr.reshape(steps, ), err_style='band', ci=200, n_boot=1000)
-    sns.lineplot(x=x, y=total_reward_mr_true.reshape(steps, ), err_style='band', ci=200, n_boot=1000)
-    plt.show()
+    print('original return:', rewards.sum())
+    print('aggregate return:', rewards_aggregate.sum())
+    print('adapted return:', rewards_aggregate_adapted.sum())
 
 
 if __name__ == '__main__':
-    pass
+    run_machine_replacement()

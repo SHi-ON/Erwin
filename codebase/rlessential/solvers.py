@@ -5,31 +5,33 @@ import numpy as np
 from util import timing
 
 
-class ValueIteration:
+class ValueIterationSolver:
 
     def __init__(self, domain, discount, threshold,
-                 num_iterations=0, initial_values=None, verbose=False):
+                 max_iterations=0, initial_values=None, verbose=False):
         self.domain = domain
+
         self.discount = discount
         self.threshold = threshold
+
         self.initial_values = initial_values
-        self.num_iterations = num_iterations
+        self.max_iterations = max_iterations
         self.verbose = verbose
 
         # format: (#iter, V(s), distance)
         self.iter_values = list()
         self.policy = None
 
-    def get_v_table(self):
+    def get_value_table(self):
         if not self.iter_values:
             print('Value iteration has not been run yet!')
-            self.calculate_value()
+            self.calculate_values()
 
         num_s = self.domain.num_states
         last_v = self.iter_values[-1][1].reshape(num_s, 1)
         return last_v
 
-    def calculate_value(self):
+    def calculate_values(self):
         num_s = self.domain.num_states
         num_a = self.domain.num_actions
         r = self.domain.get_rewards()
@@ -50,7 +52,7 @@ class ValueIteration:
         dist = np.inf
         i = 1
         t = time.perf_counter()
-        while dist >= self.threshold or i < self.num_iterations:
+        while dist >= self.threshold or i < self.max_iterations:
 
             # noinspection PyCompatibility
             v = r + self.discount * p @ v_curr
@@ -76,17 +78,20 @@ class ValueIteration:
             print('Value iteration finished:')
             print(*self.iter_values, sep='\n')
 
+        values = self.get_value_table()
+        return values
+
     def calculate_policy(self):
         if not self.iter_values:
             print('Value iteration has not been run yet!')
-            self.calculate_value()
+            self.calculate_values()
         num_s = self.domain.num_states
         num_a = self.domain.num_actions
         r = self.domain.get_rewards()
         p = self.domain.get_probabilities()
         sum_probs = np.sum(p, axis=1, keepdims=True)
 
-        last_v = self.get_v_table()
+        last_v = self.get_value_table()
         # noinspection PyCompatibility
         last_v = r + self.discount * p @ last_v
         split_last_values = np.split(last_v, num_s)

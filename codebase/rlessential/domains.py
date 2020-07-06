@@ -7,9 +7,7 @@ from consts import *
 from sample import Sample
 
 
-class MDP(ABC):
-    # new in Python 3.4:
-    # __metaclass__ = ABCMeta
+class Domain(ABC):
 
     @abstractmethod
     def state_count(self):
@@ -72,7 +70,7 @@ class MDP(ABC):
         pass  # pragma: no cover
 
 
-class BaseMDP(MDP):
+class BaseMDPDomain(Domain):
 
     def __init__(self, mdp, initial_state=None):
         self.mdp = mdp
@@ -159,8 +157,10 @@ class BaseMDP(MDP):
             except ValueError:
                 print('Not a valid integer')
 
+        return self.state_
 
-class TwoStateMDP(BaseMDP):
+
+class TwoStateMDPDomain(BaseMDPDomain):
     """
     MDP from Figure 3.1.1 in Putterman's MDP book, page 34.
 
@@ -178,7 +178,7 @@ class TwoStateMDP(BaseMDP):
         super().__init__(mdp)
 
 
-class TwoStateParametricMDP(BaseMDP):
+class TwoStateParametricMDPDomain(BaseMDPDomain):
     """
     MDP from example 6.4.2 in Putterman's MDP book, page 182.
 
@@ -230,7 +230,7 @@ class TwoStateParametricMDP(BaseMDP):
         return [a / 2, 1 - a / 2, 1]
 
 
-class RAAMMDP(BaseMDP):
+class RAAMMDPDomain(BaseMDPDomain):
     """
     Three-state deterministic MDP problem from the [RAAM paper](http://www.cs.unh.edu/~mpetrik/pub/Petrik2014_appendix.pdf).
 
@@ -250,7 +250,7 @@ class RAAMMDP(BaseMDP):
         super().__init__(mdp)
 
 
-class MachineReplacementMDP(BaseMDP):
+class MachineReplacementMDPDomain(BaseMDPDomain):
     """
     Machine Replacement MDP problem from the [Percentile Optimization paper](http://web.hec.ca/pages/erick.delage/percentileMDP.pdf), Figure 3.
 
@@ -268,7 +268,7 @@ class MachineReplacementMDP(BaseMDP):
         super().__init__(mdp)
 
 
-class RiverSwimMDP(BaseMDP):
+class RiverSwimMDPDomain(BaseMDPDomain):
     """
     RiverSwim MDP problem from [Strehl et al. 2004](http://web.hec.ca/pages/erick.delage/percentileMDP.pdf), Figure 3.
 
@@ -286,7 +286,7 @@ class RiverSwimMDP(BaseMDP):
         super().__init__(mdp)
 
 
-class SixArmsMDP(BaseMDP):
+class SixArmsMDPDomain(BaseMDPDomain):
     """
     SixArms MDP problem from [Strehl et al. 2004](http://web.hec.ca/pages/erick.delage/percentileMDP.pdf), Figure 3.
 

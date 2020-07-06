@@ -1,19 +1,18 @@
-import abc
+from abc import ABC, abstractmethod
 
 import gym
 import numpy as np
 import tqdm
 
 
-class Agent(object):
+class Agent(ABC):
     """
     Agents prototype.
 
     The agent has the environment embedded in itself for consistency reasons.
     """
-    __metaclass__ = abc.ABCMeta
 
-    @abc.abstractmethod
+    @abstractmethod
     def choose_action(self, state):
         """
         Action selection by following exploration-exploitation trade-off.
@@ -22,13 +21,83 @@ class Agent(object):
         """
         pass  # pragma: no cover
 
-    @abc.abstractmethod
+    @abstractmethod
     def train(self):
         pass  # pragma: no cover
 
-    @abc.abstractmethod
+    @abstractmethod
     def run(self):
         pass  # pragma: no cover
+
+
+class BaseAgent(Agent):
+
+    def __init__(self, domain, solver, epochs=None):
+        self.domain = domain
+        self.solver = solver
+
+        self.epochs = epochs
+
+        self.rewards = np.zeros((self.epochs, 1))
+        self.samples = list()
+
+    def choose_action(self, state, external_policy=None):
+        # randomized action selection - uniform distribution
+        if external_policy == 'randomized':
+            allowed_actions = self.domain.get_allowed_actions()
+            action = np.random.choice(allowed_actions)
+            return action
+        # external policy is provided
+        elif external_policy is not None:
+            if type(external_policy) is not np.ndarray:
+                raise TypeError('external policy is not a valid ndarray')
+            if external_policy.shape[0] != self.domain.num_states:
+                raise ValueError('shape mismatch: external policy of shape {0} does not cover all {1} states.'
+                                 .format(external_policy.shape[0],
+                                         self.domain.num_states))
+            if not (0 <= state <= external_policy.shape[0]):
+                raise IndexError('state {0} is out of bounds for the external policy'
+                                 .format(state))
+            action = external_policy[state].item()
+            return action
+
+        # action selection from the calculated policy
+        if self.solver.policy is None:
+            self.solver.calculate_policy()
+        action = self.solver.policy[state].item()
+        return action
+
+    def train(self):
+        """
+        Calculates state values by solver
+
+        :return: state values
+        """
+        state_values = self.solver.calculate_values()
+        return state_values
+
+    def run(self, external_policy=None):
+        current_state = self.reset()
+
+        for i in tqdm.trange(self.epochs):
+            action = self.choose_action(current_state, external_policy=external_policy)
+            sample = self.domain.step(action)
+
+            self.rewards[i] = sample.reward
+            self.samples.append(sample)
+
+            current_state = sample.next_state
+
+        assert len(self.samples) == self.epochs
+
+        return self.rewards, self.samples
+
+    def reset(self):
+        self.rewards = np.zeros((self.epochs, 1))
+        self.samples = list()
+        current_state = self.domain.reset()
+
+        return current_state
 
 
 class QLearningAgent(Agent):
@@ -311,62 +380,3 @@ class RAAMAgent:
                             sum_rewards += s_r[1]
                         # TODO: check to be correct
                         self.r[a, b, s] = (1 / len(transition_reward)) * sum_rewards
-
-
-class MachineReplacementMDPAgent(Agent):
-
-    def __init__(self, domain, solver, discount, horizon=None):
-        self.domain = domain
-        self.solver = solver
-        self.discount = discount
-
-        self.horizon = horizon
-        self.state_ = 0
-
-        self.rewards = np.zeros((self.horizon, 1))
-        self.samples = list()
-
-    def choose_action(self, state, external_policy=None, random=True):
-        # TODO: try epsilon-greedy or Boltzmann distribution
-
-        # randomized action selection - uniform distribution=
-        if random:
-            allowed_actions = self.domain.get_allowed_actions()
-            return np.random.choice(allowed_actions)
-
-        # external policy is provided
-        if external_policy is not None:
-            if external_policy.shape[0] != self.domain.num_states:
-                raise ValueError('shape mismatch: external policy of shape {0} does not cover all {1} states.'
-                                 .format(external_policy.shape[0], self.domain.num_states))
-
-            if not (0 <= state <= external_policy.shape[0]):
-                raise IndexError('state {0} is out of bounds for the external policy'.format(state))
-
-            return external_policy[state].item()
-
-        # action selection from the calculated policy
-        if self.solver.policy is None:
-            self.solver.calculate_policy()
-        return self.solver.policy[state].item()
-
-    def train(self):
-        self.solver.calculate_value()
-
-    def run(self, policy=None, randomized=True):
-        curr_state = self.domain.state_
-
-        for i in tqdm.trange(self.horizon):
-            action = self.choose_action(curr_state, external_policy=policy, random=randomized)
-            sample = self.domain.step(action)
-            self.rewards[i] = sample.reward
-            curr_state = sample.next_state
-            self.samples.append(sample)
-        return self.rewards
-
-
-# showcase the agent performance
-if __name__ == '__main__':
-    agent = QLearningCartPoleAgent()
-    agent.train()
-    agent.run()

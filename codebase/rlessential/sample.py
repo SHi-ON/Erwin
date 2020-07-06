@@ -10,7 +10,7 @@ class Sample:
     def __repr__(self):
         """Create string representation of tuple."""
         return 'Sample({}, {}, {}, {}, {})\n'.format(self.current_state,
-                                                   self.action,
-                                                   self.reward,
-                                                   self.next_state,
-                                                   self.terminal)
+                                                     self.action,
+                                                     self.reward,
+                                                     self.next_state,
+                                                     self.terminal)
