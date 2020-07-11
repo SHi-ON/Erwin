@@ -1,6 +1,4 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 from scipy.stats import iqr
 from sklearn.cluster import KMeans
 
@@ -156,26 +154,28 @@ def run_machine_replacement():
     rewards, samples = agent.run(external_policy='randomized')
 
     states = extract_states(samples)
-    bucket_width = calculate_bin_width(states)
-    bucket_count = calculate_bin_count(states, bucket_width)
+    bucket_width = calculate_bin_width(samples=states)
+    bucket_count = calculate_bin_count(samples=states, bin_width=bucket_width)
 
-    mdp_aggregate, aggregation_mapping = aggregate_mdp(state_values, bucket_count, domain)
+    mdp_aggregate, aggregation_mapping = aggregate_mdp(values=state_values,
+                                                       bin_count=bucket_count,
+                                                       domain=domain)
 
     domain_aggregate = MachineReplacementMDPDomain(mdp_aggregate)
-    solver_aggregate = ValueIterationSolver(domain_aggregate,
+    solver_aggregate = ValueIterationSolver(domain=domain_aggregate,
                                             discount=gamma,
                                             threshold=tau,
                                             verbose=True)
-    agent_aggregate = BaseAgent(domain_aggregate,
-                                solver_aggregate,
+    agent_aggregate = BaseAgent(domain=domain_aggregate,
+                                solver=solver_aggregate,
                                 epochs=steps)
     state_values_aggregate = agent_aggregate.train()
     rewards_aggregate, samples_aggregate = agent_aggregate.run()
     policy_aggregate = solver_aggregate.policy
 
-    adapted_policy_aggregate = map_aggregate_policy(policy_aggregate,
-                                                    aggregation_mapping,
-                                                    domain)
+    adapted_policy_aggregate = map_aggregate_policy(aggregate_policy=policy_aggregate,
+                                                    state_mapping=aggregation_mapping,
+                                                    original_domain=domain)
     domain.reset()
     rewards_aggregate_adapted, samples_aggregate_adapted = agent.run(external_policy=adapted_policy_aggregate)
 
