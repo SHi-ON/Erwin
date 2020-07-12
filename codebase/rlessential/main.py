@@ -268,4 +268,5 @@ if __name__ == '__main__':
     machine_replacement_domain = MachineReplacementMDPDomain
     river_swim_domain = RiverSwimMDPDomain
     six_arms_domain = SixArmsMDPDomain
-    run(machine_replacement_domain)
+    original_rewards, aggregate_rewards, adapted_rewards = run(machine_replacement_domain)
+    visualize_rewards(original_rewards, aggregate_rewards, adapted_rewards)
