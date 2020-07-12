@@ -5,7 +5,7 @@ from sklearn.cluster import KMeans
 
 import consts
 from agents import BaseAgent
-from rlessential.domains import MachineReplacementMDPDomain
+from rlessential.domains import MachineReplacementMDPDomain, RiverSwimMDPDomain, SixArmsMDPDomain
 from rlessential.solvers import ValueIterationSolver
 
 # hyper-parameters
@@ -156,8 +156,8 @@ def aggregate_mdp(values, bin_count, domain):
     return df, aggregation_states
 
 
-def run_machine_replacement():
-    domain = MachineReplacementMDPDomain()
+def run(mdp_domain):
+    domain = mdp_domain()
     solver = ValueIterationSolver(domain,
                                   discount=gamma,
                                   threshold=tau,
@@ -176,7 +176,7 @@ def run_machine_replacement():
                                                        bin_count=bucket_count,
                                                        domain=domain)
 
-    domain_aggregate = MachineReplacementMDPDomain(mdp_aggregate)
+    domain_aggregate = mdp_domain(mdp_aggregate)
     solver_aggregate = ValueIterationSolver(domain=domain_aggregate,
                                             discount=gamma,
                                             threshold=tau,
@@ -197,6 +197,8 @@ def run_machine_replacement():
     print('original return:', rewards.sum())
     print('aggregate return:', rewards_aggregate.sum())
     print('adapted return:', rewards_aggregate_adapted.sum())
+
+    return rewards, rewards_aggregate, rewards_aggregate_adapted
 
 
 def visualize_rewards(rewards, rewards_aggregate, rewards_aggregate_adapted):
@@ -263,4 +265,7 @@ def visualize_rewards(rewards, rewards_aggregate, rewards_aggregate_adapted):
 
 
 if __name__ == '__main__':
-    run_machine_replacement()
+    machine_replacement_domain = MachineReplacementMDPDomain
+    river_swim_domain = RiverSwimMDPDomain
+    six_arms_domain = SixArmsMDPDomain
+    run(machine_replacement_domain)
