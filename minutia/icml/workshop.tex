@@ -1,0 +1,341 @@
+%%%%%%%% ICML 2020 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2020} with \usepackage[nohyperref]{icml2020} above.
+\usepackage{hyperref}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+%\usepackage{icml2020}
+
+% If accepted, instead use the following line for the camera-ready submission:
+\usepackage[accepted]{icml2020}
+%\usepackage[preprint]{icml2020}
+
+
+% SHi-ON packages
+% argmin argmax begin
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Submission and Formatting Instructions for ICML 2020}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Fast Uniform [Distributional] State Aggregation \\ in Reinforcement Learning}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2020
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Authors}{equal,to}
+%\icmlauthor{Bauiu C.~Yyyy}{equal,to,goo}
+%\icmlauthor{Cieua Vvvvv}{goo}
+%\icmlauthor{Iaesut Saoeu}{ed}
+%\icmlauthor{Fiuea Rrrr}{to}
+%\icmlauthor{Tateu H.~Yasehe}{ed,to,goo}
+%\icmlauthor{Aaoeu Iasoh}{goo}
+%\icmlauthor{Buiui Eueu}{ed}
+%\icmlauthor{Aeuia Zzzz}{ed}
+%\icmlauthor{Bieea C.~Yyyy}{to,goo}
+%\icmlauthor{Teoau Xxxx}{ed}
+%\icmlauthor{Eee Pppp}{ed}
+\end{icmlauthorlist}
+
+\icmlaffiliation{to}{Department of Computer Science, University of New Hampshire}
+%\icmlaffiliation{goo}{Googol ShallowMind, New London, Michigan, USA}
+%\icmlaffiliation{ed}{School of Computation, University of Edenborrow, Edenborrow, United Kingdom}
+
+\icmlcorrespondingauthor{Authors}{c.vvvvv@googol.com}
+%\icmlcorrespondingauthor{Eee Pppp}{ep@eden.co.uk}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Machine Learning, ICML}
+
+\vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+%\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+
+\begin{abstract}
+    Reinforcement learning (RL) problems often incur large scale state spaces needing sizable amount
+    of computation to process.
+    State aggregation as an analytically-transparent mean approximates and yields lower-dimension state spaces.
+%   We present a state aggregation algorithm and a learning algorithm based on the former to solve a stochastic
+%   problem.
+    We present a state aggregation algorithm method in Markov decision processes (MDP) inspired by histograms.
+    Our approach explores a \textit{splitting policy} in direct relationship with inter-quartile range
+    of collected samples.
+    We then accompanied an experiment by which we show the practical promises of the approach to achieve superior
+    results.
+\end{abstract}
+
+
+\section{Introduction}
+\label{sec:intro}
+    Real-world problems embody high-dimensional state spaces where in computational issues
+    arise.
+    Various approximation methods are proposed in the literature to reduce the resulted value function
+    dimensionality \cite{Sutton1998, Busoniu2010, Francois-Lavet2018}.
+    State aggregation is one of the simplest and most transparent state representation approximation
+    method.
+
+    State aggregation, at the core level, is to discretize together similar states to ultimately yield a
+    lower-dimension MDP. The reduced MDP requires considerably less amount of computational iterations or samples to
+    solve, which improves convergence to the .
+
+    Although state aggregation may not generalize as well as neural network-based methods, the techniques has both
+    analytical and practical advantages \cite{Lagoudakis2003}.
+    In comparison, state aggregation takes less computational power to calculate representative features.
+    Moreover, analysis and troubleshooting in a state aggregation process is more obvious than a black-box neural
+    network.
+    Approximation is a corner stone in all successful RL methods to hold a "good" mapping between a large state
+    space to a much smaller one where in value function is computable or at least feasible.
+    These "good" approximators can end up with "good" features to represent the projected state space.
+
+    The cross-fertilization in using state aggregation and deep neural networks in solving immense state
+    space problems in RL is also profound.
+    While the newly emerged methods are growing at a staggering pace, a parallel area of research has been formed
+    wherein a variety of techniques have been utilized to make these methods contravene their promised functionality.
+
+    Our contribution is a bifurcation.
+    We first introduce an algorithm for aggregation in MDPs, then we move on to show advantages of taking such
+    aggregation method to work.
+    Hereby, we explain the paper structure in brief.
+    We first lay down the core concepts of the MDP and the aggregation framework in Sections \ref{sec:mdp} and
+    \ref{sec:state-aggregation} then continue to describe the methodology in Section \ref{sec:method}.
+
+
+\section{Related Work}
+    \label{sec:related-work}
+    Aggregation was extensively appeared throughout the operations and computations research literature
+    \cite{Chatelin1982, Rogers1991, Douglas1993}.
+    It then introduced to the optimization by an iterative approach in linear programming \cite{Mendelssohn1982}.
+    On the end of this spectrum, dynamic programming (DP) leveraged state aggregation to reduce computational size of
+    the problem \cite{Bean1987}, as well as using an extension to state aggregation, \textit{soft state
+    aggregation}, in an approximate value iteration method \cite{Singh1995}, and general approximate DP frameworks
+    \cite{Gordon1995, Tsitsiklis1996}.
+
+    In the recent body of work, state aggregation has applications in conjunction to other concepts such as
+    temporal aggregation, so called \textit{options} \cite{Ciosek2015}, \textit{bottleneck simulator}
+    \cite{Serban2018}, and also in continuous space optimal control \cite{Zhong2011}.
+
+    Error analyses and regret bounds incured by state aggregation methods are comprehensively discussed by
+    \citet{VanRoy2006} and \citet{Petrik2014}.
+    Near optimality criterion in aggregation is also investigated in \citet{Bernstein2008}.
+
+    It is noteworthy to point out that, state aggregation exists in the literature under different co-hyponyms.
+    
+
+
+\section{Markov Decision Processes}
+\label{sec:mdp}
+    Reinforcement learning problems can be formulated a Markov Decision Processes (MDP)
+    framework \cite{Puterman1994, Sutton1998}.
+    MDPs facilitate handling sequential decision-making under uncertainty.
+    Discrete discounted reward criterion is the center of focus for ease of exposition in this paper.
+    For an environment and a decision maker, consider the tuple $<>$ state space $S$ and action space $A$ are defined,
+respectively.
+    The transition probabilities $P$ describe how likely is the next state to incur by taking a specific action
+    $a$ by the agent in a certain state $s$ which will later receive reward $r$.
+    For a taken action $a_i \in A$ at the state $s_i \in S$, the decision maker will be ended up in state $s_{i+1}
+    \in S$ with a likelihood expressed by the transition probabilities $P : S \times A \times S \rightarrow [0, 1]$
+    and wil receive reward $r_{i+1}$ from the rewards $R : S \times A \rightarrow \mathbb{R}$.
+
+%    \begin{equation}
+%        s_{i+1} = P(s_{i+1}|s_i, a_i)
+%    \end{equation}
+%
+%    \begin{equation}
+%        r_{i+1} = R(s_i, a_i)
+%    \end{equation}
+
+
+\section{State Aggregation}
+\label{sec:state-aggregation}
+    Value function approximation alleviates the computational hurdle of a large state-space problem.
+    We first introduce an approximate value iteration method to solve an aggregate problem.
+    State aggregation is an approximation approach to make a problem more tractable by a reduction in dimensionality in
+    state space \footnote{aggregation in action space although is possible, has less significance comparatively.}.
+    State aggregation, in particular, is a parametric feature-based approximation where the features are membership
+    functions of 0-1 form.
+    Aggregation consolidates similar states together, so called representative states, which allows the
+    \textit{aggregate} problem to be solved by an exact method \cite{Bertsekas2019}
+    The computed value function from the exact solution of the aggregate problem can be then used in the original
+    problem.
+
+    Now we formulate the aggregation by introducing the dynamics of the aggregate problem.
+    The transition probabilities between two representative states:
+
+    \begin{equation}
+        \hat{P}_{s s^\prime}(a)=\sum_{j=1}^{n} P_{s j}(a) \phi_{j y},
+    \end{equation}
+
+    where $p_ {s j}$ is the transition probabilities from a representative state, $s$, to an original state, $j$
+    and $\phi_{j s^\prime}$ is the aggregation probabilities from an original state, $j$, to a representative state,
+    $s^\prime$.
+    The rewards are defined as:
+
+    \begin{equation}
+        \hat{r}(s, a)=\sum_{j=1}^{n} P_{s j}(a) r(s, a, j),
+    \end{equation}
+
+    where $\hat{r}(s, a)$ is the received reward at state $s$ by taking action $a$.
+
+
+    Aggregation then helps us to derive the value function.
+    Approximated optimal value function is a weighted sum of optimal rewards and can be computed by
+    Equation \ref{approx val func} where $r_{s^\prime}^{\ast}$ is optimal reward at represented state $s$.
+
+    \begin{equation}
+        \label{approx val func}
+        \tilde{V}(j)=\sum_{s^\prime \in \mathcal{U}} \phi_{j s^\prime} r_{s^\prime}^{\ast},
+    \end{equation}
+
+
+\section{Method}
+\label{sec:method}
+    Splitting the observations into spans of similar observations is one way to interpret an aggregation
+    problem.
+    Histograms as classical and simple density estimators were around in the literature for decades \cite{Scott1979,
+    Scott2015}.
+    Inspired by histograms and the statistics behind finding the proper number of bins for a given distribution, we
+    build our proposed aggregation method on top of such bases.
+    Proper \textit{bin width}, according to the definition, is to find a trade-off to capture similarities in data
+    features and diminish variations caused by random sampling \cite{Knuth2019}.
+
+    Finding the bin width for a given distribution could be calculated by Freedman-Diaconis rule
+    \cite{Freedman1981}.
+    As the rule states:
+
+    \begin{equation}
+        |S_{agg}| = 2 \frac{\operatorname{IQR}(x)}{\sqrt[3]{n}}
+    \end{equation}
+
+    where n is number of observations and $IQR(x)$ is the inter-quartile range of data.
+    This segmentation rule exhibits robustness to sample distribution due to low sensitivity of IQR to outliers and
+    heteroscedasticity in the given distribution compared to conventional dispersion measures such as variance or
+    standard deviation.
+    State values, in this paper, are considered as the similarity metric \textcolor{red}{[measure]} in state
+    aggregation.
+
+    By having the inter-quartile range of data for each feature, a discretization policy can be calculated.
+
+
+    For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations
+    to the end of this paper. We use model-free LSPI and LSTDQ \citep{Lagoudakis2003} to update and
+    evaluate the policy of actions, respectively.
+
+    We developed an aggregation scheme to lower the state space dimensionality by assigning same action to the state
+    in a neighbourhood, so called nearest neighbour/ piecewise linear aggregation.
+    We then solve directly the lower dimension problem which relatively takes less computation.
+
+    The aggregate problem is stochastic even if the original problem is deterministic.
+    Once we lay out the aggregate problem framework we can solve the problem by any exact methods either value- or
+    policy-space solutions.
+
+    The objective is finding an optimal aggregate model which falls in the span of spectrum from a fine-grid model
+    to a rigid aggregate model.
+    Our presented method calculates a discretization policy for which we calculate a feasible value function.
+    Return of a policy shows the quality of the gauged policy.
+    Hence, by calculating the accumulative return (eq.\ref{eq:return}) over run of the \textit{true} model and in a
+    comparison with the original return we can measure the improvement.
+
+    \begin{equation}
+        R = \sum_{k=0}^{\infty} \gamma^{k} r_{k+1}. \label{eq:return}
+    \end{equation}
+
+
+    \subsection{Aggregation}
+    The original states with the closest \textit{calculated} values forgather to build aggregate states.
+    For this purpose, state values are clustered by K-means analysis to calculate the relevant aggregate states.
+    State aggregation merge similar transitions based on a triple $<s, s', a>$ where $s$ indicates the starting state,
+    $s'$ is the ending state, and the take action in that transition represented by $a$.
+    In the process of stacking similar transitions, we here presume all inbound transitions as outbound transition of
+    the ending state.
+    This assumption render all transitions as outbound ones, therefore we assign the average probability as the
+    transition probability in the aggregate model.
+
+
+\section{Experiment}
+    We apply the approach to two MDPs proposed by \cite{Strehl2004}.
+    \textit{RiverSwim} an MDP consists of six states and \textit{SixArms} one with seven states.
+    In \textit{RiverSwim} flow of the river is to left and the swimmer picks probabilistically equal either state 1
+    or 2 as the start point.
+    All states but two terminal states have zero reward to land at while the right most one rewards substantially
+    higher than the other one.
+    The agent in SixArms selects between six distinct actions which pulls different arms of a multi-armed bandit.
+    By pulling an arm the agent traverses to a new state.
+    Although the agent does not obtain reward by pulling the arms but going to the connected state to that arm is
+    highly rewarding in which the transition probability is in inverse relationship with the reward value.
+
+    As both problems favor keeping the agent in states with lower reward, exploration is paramount to maximize the
+    accumulated reward.
+    This is also confirmed by the authors in \cite{Strehl2004} that the agent will fail to learn when a rudimentary
+    $\epsilon$-greedy algorithm.
+
+    We use a randomized policy to simulate trajectories and collect samples to attenuate bias in action selection
+    process.
+    As it has shown the literature, $\epsilon$-greedy has a bias in solving exploration-exploitation dilemma, we
+    explore the environment by following a randomized policy with a uniform distribution.
+
+    \subsection{Machine Replacement}
+    This domain as a \textit{non-episodic} (continuous) task maintains a set of machines.
+    The goal is to find a policy to incur the least repair needed.
+    incure
+
+
+\section{Future Works}
+    We developed the presented approach with having reproducibility in mind.
+    It could be served as a launching pad for the future contributors who want to surf this newly emerged field deeper.
+    Future ideas to pursue is a generative model to be able to generate adversaries from a network.
+
+
+\bibliography{library}
+\bibliographystyle{icml2020}
+
+
+\end{document}

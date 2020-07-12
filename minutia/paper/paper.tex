@@ -80,14 +80,15 @@
     \maketitle
 
     \begin{abstract}
-        We present a state aggregation algorithm and a learning algorithm based on the former to solve a stochastic
-        problem.
-        The presented aggregation algorithm uses range of collected samples to provide the proper aggregation
-        \textit{buckets}.
-        Our approach is a batch learning by which we detect the \textit{splitting policy} using inter-quartile range
-        of data for each feature.
-        We then show the amount of robustness we can achieve as a guarantee of performance in presence of those
-        aggregation policies.
+        Real world problems often incur large scale state spaces needing sizable amount of computation to process.
+        State aggregation as an analytically-transparent mean approximates and yields lower-dimension state spaces.
+%        We present a state aggregation algorithm and a learning algorithm based on the former to solve a stochastic
+%        problem.
+        We present a state aggregation algorithm method in Markov decision processes (MDP) inspired by histograms.
+        Our approach explores a \textit{splitting policy} in direct relationship with inter-quartile range
+        of collected samples.
+        We then accompanied an experiment by which we show the practical promises of the approach to achieve superior
+        results.
     \end{abstract}
 
 
@@ -117,7 +118,7 @@
 
     \section{Markov Decision Processes}
     Reinforcement learning problems can be formulated using a Markov Decision Processes (MDP)
-    framework\cite{Puterman1994, Bertsekas}.
+    framework\cite{Puterman1994,Sutton1998}.
     MDPs facilitate handling sequential decision-making under uncertainty.
     Discrete discounted reward criterion is the center of focus for ease of exposition in this paper.
     For an environment and a decision maker, state space $S$ and action space $A$ are defined, respectively.
@@ -255,6 +256,10 @@
     As it has shown the literature, $\epsilon$-greedy has a bias in solving exploration-exploitation dilemma, we
     explore the environment by following a randomized policy with a uniform distribution.
 
+    \subsection{Machine Replacement}
+    This domain as a \textit{non-episodic} (continuous) task maintains a set of machines.
+    The goal is to find a policy to incur the least repair needed.
+    incure
     \section{Future Works}
     We developed the presented approach with having reproducibility in mind.
     It could be served as a launching pad for the future contributors who want to surf this newly emerged field deeper.
