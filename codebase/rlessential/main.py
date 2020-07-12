@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 from scipy.stats import iqr
 from sklearn.cluster import KMeans
 
@@ -13,6 +14,20 @@ epsilon = 0.0001
 tau = (epsilon * (1 - gamma)) / (2 * gamma)
 
 steps = 3000
+
+
+def average_rolling(array):
+    """
+    Calculates moving(rolling) average.
+
+    :param array: input array
+    :return: calculated cumulative moving average
+    """
+    cumulative_sum = array.cumsum()
+    a = np.arange(array.size)
+    a = a + 1
+    rolling_mean = cumulative_sum / a
+    return rolling_mean
 
 
 def extract_states(samples):
@@ -182,6 +197,69 @@ def run_machine_replacement():
     print('original return:', rewards.sum())
     print('aggregate return:', rewards_aggregate.sum())
     print('adapted return:', rewards_aggregate_adapted.sum())
+
+
+def visualize_rewards(rewards, rewards_aggregate, rewards_aggregate_adapted):
+    titles = {'original': 'Original rewards', 'aggregate': 'Aggregate rewards', 'adapted': 'Adapted aggregate rewards'}
+
+    def plot_steps(original, aggregate, adapted):
+        fig, ax = plt.subplots()
+        ax.set_xticks([], [])
+        ax.set_yticks([], [])
+
+        ax1 = fig.add_subplot(311)
+        ax1.plot(original, color='r', label=titles['original'])
+        ax1.set_title(titles['original'])
+        ax1.set_xticks([], [])
+
+        ax2 = fig.add_subplot(312)
+        ax2.plot(aggregate, color='b', label=titles['aggregate'])
+        ax2.set_title(titles['aggregate'])
+        ax2.set_xticks([], [])
+        ax2.set_ylabel('Rewards')
+
+        ax3 = fig.add_subplot(313)
+        ax3.plot(adapted, color='g', label=titles['adapted'])
+        ax3.set_title(titles['adapted'])
+
+        plt.xlabel('Steps')
+        return plt
+
+    def plot_cumulative(original, aggregate, adapted):
+        plt.figure()
+        plt.plot(original.cumsum(),
+                 color='r', label=titles['original'])
+        plt.plot(aggregate.cumsum(),
+                 color='b', label=titles['aggregate'])
+        plt.plot(adapted.cumsum(),
+                 color='g', label=titles['adapted'])
+        plt.xlabel('Steps')
+        plt.ylabel('Cumulative reward')
+        plt.legend()
+        return plt
+
+    def plot_rolling(original, aggregate, adapted):
+        rolling_original = average_rolling(original)
+        rolling_aggregate = average_rolling(aggregate)
+        rolling_adapted = average_rolling(adapted)
+
+        plt.figure()
+        plt.plot(rolling_original, color='r', label=titles['original'])
+        plt.plot(rolling_aggregate, color='b', label=titles['aggregate'])
+        plt.plot(rolling_adapted, color='g', label=titles['adapted'])
+        plt.xlabel('Steps')
+        plt.ylabel('Rolling average reward')
+        plt.legend()
+        return plt
+
+    plot_steps(rewards, rewards_aggregate, rewards_aggregate_adapted)
+    plt.show()
+
+    plot_cumulative(rewards, rewards_aggregate, rewards_aggregate_adapted)
+    plt.show()
+
+    plot_rolling(rewards, rewards_aggregate, rewards_aggregate_adapted)
+    plt.show()
 
 
 if __name__ == '__main__':

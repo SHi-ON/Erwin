@@ -1,12 +1,9 @@
 """
-Set of general utility functions in Python programming.
+Set of general utility functions in Python development.
 """
 import os
 import time
 import pickle
-
-OUTPUT_DIR = 'outputs'
-RANDOM_SEED = 42
 
 
 def timing(t):

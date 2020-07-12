@@ -42,13 +42,14 @@ class BaseAgent(Agent):
         self.samples = list()
 
     def choose_action(self, state, external_policy=None):
-        # randomized action selection - uniform distribution
-        if external_policy == 'randomized':
-            allowed_actions = self.domain.get_allowed_actions()
-            action = np.random.choice(allowed_actions)
-            return action
         # external policy is provided
-        elif external_policy is not None:
+        if external_policy is not None:
+            # randomized action selection - uniform distribution
+            if type(external_policy) is str and external_policy == 'randomized':
+                allowed_actions = self.domain.get_allowed_actions()
+                action = np.random.choice(allowed_actions)
+                return action
+
             if type(external_policy) is not np.ndarray:
                 raise TypeError('external policy is not a valid ndarray')
             if external_policy.shape[0] != self.domain.num_states:
