@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.stats import iqr
+from scipy.stats import iqr, skew
 from sklearn.cluster import KMeans
 
 import consts
@@ -9,11 +9,16 @@ from rlessential.domains import MachineReplacementMDPDomain, RiverSwimMDPDomain,
 from rlessential.solvers import ValueIterationSolver
 
 # hyper-parameters
-gamma = 0.90
-epsilon = 0.0001
-tau = (epsilon * (1 - gamma)) / (2 * gamma)
+GAMMA = 0.90
+EPSILON = 0.0001
+TAU = (EPSILON * (1 - GAMMA)) / (2 * GAMMA)
 
-steps = 3000
+STEPS = 3000
+
+# ['scott', 'fd', 'ss']
+WIDTH_METHOD = 'fd'
+# ['base', 'sqrt', 'sturge', 'rice', 'doane']
+COUNT_METHOD = 'base'
 
 
 def average_rolling(array):
@@ -47,19 +52,121 @@ def extract_states(samples):
 
 
 def calculate_bin_width(samples):
-    inter_quartile_range = iqr(samples, axis=0)
-    bin_width = 2 * inter_quartile_range / (len(samples) ** (1 / 3))
+    def scott(array):
+        width = 3.49 * array.std() / (len(array) ** (1 / 3))
+        return width
+
+    def freedman_diaconis(array):
+        inter_quartile_range = iqr(array, axis=0)
+        width = 2 * inter_quartile_range / (len(array) ** (1 / 3))
+        width = width.item()
+        return width
+
+    def shimazaki_shinomoto(array):
+        """
+        Shimazaki and Shinomoto's choice. Biased variance is recommended.
+
+        :param array: sample array
+        :type array: np.ndarray
+
+        :return: bin-width
+        :rtype: float
+        """
+
+        def l2_risk_function(points):
+            lo = points.min()
+            hi = points.max()
+
+            n_min = lo + 1  # min number of splits
+            n_max = hi + 1  # max number of splits
+
+            counts = np.arange(n_min, n_max)  # number of bins vector
+            widths = (hi - lo) / counts  # width (size) of bins vector
+
+            costs = np.zeros((widths.size, 1))  # cost function values
+            for i in range(counts.size):
+                edges = np.linspace(lo, hi, counts[i] + 1)
+                current_frequency = plt.hist(points, edges)  # number of data points in the current bin
+                current_frequency = current_frequency[0]
+                costs[i] = (2 * current_frequency.mean() - current_frequency.var()) / (widths[i] ** 2)
+
+            return costs, widths, counts
+
+        cost_function_values, bucket_widths, bucket_counts = l2_risk_function(array)
+        optimal_index = np.argmin(cost_function_values)
+        optimal_width = bucket_widths[optimal_index]
+
+        bucket_edges = np.linspace(array.min(), array.max(), bucket_counts[optimal_index] + 1)
+
+        plt.rc('text', usetex=True)
+
+        plt.figure()
+        plt.hist(array, range(bucket_edges.size))
+        plt.title('Histogram')
+        plt.ylabel('Frequency')
+        plt.xlabel('Value')
+        plt.show()
+
+        plt.figure()
+        plt.plot(bucket_widths, cost_function_values, '.b', optimal_width, min(cost_function_values), '*r')
+        plt.title('Estimated Loss Function')
+        plt.ylabel('Loss')
+        plt.xlabel('Bin count')
+        plt.show()
+
+        return optimal_width
+
+    if WIDTH_METHOD == 'scott':
+        bin_width = scott(samples)
+    elif WIDTH_METHOD == 'fd':
+        bin_width = freedman_diaconis(samples)
+    elif WIDTH_METHOD == 'ss':
+        bin_width = shimazaki_shinomoto(samples)
+    else:
+        raise KeyError('invalid bin width method')
+
     return bin_width
 
 
 def calculate_bin_count(samples, bin_width):
-    hi = np.max(samples, axis=0)
-    lo = np.min(samples, axis=0)
+    def base_choice(array, width):
+        count = np.ceil((array.max() - array.min()) / width)
+        count = int(count.item())
+        return count
 
-    bin_count = (hi - lo) / bin_width
-    bin_count = np.ceil(bin_count)
-    bin_count = bin_count.astype(int)
-    bin_count = bin_count.item()
+    def sqrt_choice(array):
+        count = np.ceil(np.sqrt(len(array)))
+        return count
+
+    def sturge(array):
+        count = np.ceil(np.log2(len(array))) + 1
+        return count
+
+    def rice(array):
+        count = np.ceil(2 * np.cbrt(len(array)))
+        return count
+
+    def doane(array):
+        n = len(array)
+        sig_g_1 = np.sqrt(6 * (n - 2) / ((n + 1) * (n + 3)))
+        g_1 = skew(array)
+        # g_1 = moment(array, moment=3)
+        count = 1 + np.log2(n) + np.log2(1 + (np.abs(g_1) / sig_g_1))
+        return count
+
+    if COUNT_METHOD == 'base':
+        bin_count = base_choice(samples, bin_width)
+    elif COUNT_METHOD == 'sqrt':
+        bin_count = sqrt_choice(samples)
+    elif COUNT_METHOD == 'sturge':
+        bin_count = sturge(samples)
+    elif COUNT_METHOD == 'rice':
+        bin_count = rice(samples)
+    elif COUNT_METHOD == 'doane':
+        bin_count = doane(samples)
+    else:
+        raise KeyError('invalid bin count method')
+
     return bin_count
 
 
@@ -95,14 +202,14 @@ def map_aggregate_rewards(state_mapping, original_domain):
     :param original_domain: the original domain
     :return: tuple of both original and aggregate rewards
     """
-    original_rewards = dict(zip(original_domain.mdp[consts.COL_STATE_TO], original_domain.mdp[consts.COL_REWARD]))
+    rewards_original = dict(zip(original_domain.mdp[consts.COL_STATE_TO], original_domain.mdp[consts.COL_REWARD]))
 
-    aggregate_rewards = dict()
+    rewards_aggregate = dict()
     for s_original, s_aggregate in state_mapping.items():
-        aggregate_rewards.setdefault(s_aggregate, int())
-        aggregate_rewards[s_aggregate] += original_rewards[s_original]
+        rewards_aggregate.setdefault(s_aggregate, int())
+        rewards_aggregate[s_aggregate] += rewards_original[s_original]
 
-    return original_rewards, aggregate_rewards
+    return rewards_original, rewards_aggregate
 
 
 def map_aggregate_policy(aggregate_policy, state_mapping, original_domain):
@@ -159,12 +266,12 @@ def aggregate_mdp(values, bin_count, domain):
 def run(mdp_domain):
     domain = mdp_domain()
     solver = ValueIterationSolver(domain,
-                                  discount=gamma,
-                                  threshold=tau,
+                                  discount=GAMMA,
+                                  threshold=TAU,
                                   verbose=True)
     agent = BaseAgent(domain,
                       solver,
-                      epochs=steps)
+                      epochs=STEPS)
     state_values = agent.train()
     rewards, samples = agent.run(external_policy='randomized')
 
@@ -178,12 +285,12 @@ def run(mdp_domain):
 
     domain_aggregate = mdp_domain(mdp_aggregate)
     solver_aggregate = ValueIterationSolver(domain=domain_aggregate,
-                                            discount=gamma,
-                                            threshold=tau,
+                                            discount=GAMMA,
+                                            threshold=TAU,
                                             verbose=True)
     agent_aggregate = BaseAgent(domain=domain_aggregate,
                                 solver=solver_aggregate,
-                                epochs=steps)
+                                epochs=STEPS)
     state_values_aggregate = agent_aggregate.train()
     rewards_aggregate, samples_aggregate = agent_aggregate.run()
     policy_aggregate = solver_aggregate.policy
@@ -255,12 +362,15 @@ def visualize_rewards(rewards, rewards_aggregate, rewards_aggregate_adapted):
         return plt
 
     plot_steps(rewards, rewards_aggregate, rewards_aggregate_adapted)
+    plt.savefig(consts.RES_PATH + 'steps_rewards.png')
     plt.show()
 
     plot_cumulative(rewards, rewards_aggregate, rewards_aggregate_adapted)
+    plt.savefig(consts.RES_PATH + 'cumulative_rewards.png')
     plt.show()
 
     plot_rolling(rewards, rewards_aggregate, rewards_aggregate_adapted)
+    plt.savefig(consts.RES_PATH + 'rolling_rewards.png')
     plt.show()
 
 

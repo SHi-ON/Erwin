@@ -5,6 +5,8 @@ import os
 import time
 import pickle
 
+OUTPUT_DIR = 'outputs'
+
 
 def timing(t):
     """
