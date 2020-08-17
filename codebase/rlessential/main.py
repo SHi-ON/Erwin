@@ -13,10 +13,10 @@ GAMMA = 0.90
 EPSILON = 0.0001
 TAU = (EPSILON * (1 - GAMMA)) / (2 * GAMMA)
 
-STEPS = 3000
+STEPS = 5000
 
 # ['scott', 'fd', 'ss']
-WIDTH_METHOD = 'fd'
+WIDTH_METHOD = 'ss'
 # ['base', 'sqrt', 'sturge', 'rice', 'doane']
 COUNT_METHOD = 'base'
 
