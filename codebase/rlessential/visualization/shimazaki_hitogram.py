@@ -7,6 +7,7 @@ from scipy import linspace
 # slides theme colors
 theme_blue = '#0C2B36'
 theme_red = '#E04D4F'
+theme_green = '#00FA92'
 
 x = normal(4, 1, 100)  # Generate n pseudo-random numbers with (mu,sigma,n)
 x = [4.37, 3.87, 4.00, 4.03, 3.50, 4.08, 2.25, 4.70, 1.73, 4.93, 1.73, 4.62, \
