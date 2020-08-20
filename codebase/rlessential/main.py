@@ -1,38 +1,31 @@
 import numpy as np
-from matplotlib import pyplot as plt
-from scipy.stats import iqr, skew
 from sklearn.cluster import KMeans
 
 import consts
+import methods
 from agents import BaseAgent
-from rlessential.domains import MachineReplacementMDPDomain, RiverSwimMDPDomain, SixArmsMDPDomain
-from rlessential.solvers import ValueIterationSolver
+from domains import MachineReplacementMDPDomain, RiverSwimMDPDomain, SixArmsMDPDomain
+from solvers import ValueIterationSolver
+from visualization.plot import visualize_rewards
 
 # hyper-parameters
 GAMMA = 0.90
 EPSILON = 0.0001
 TAU = (EPSILON * (1 - GAMMA)) / (2 * GAMMA)
 
-STEPS = 5000
+# ['sqrt', 'sturge', 'rice', 'doane', 'scott', 'freedman-diaconis', 'shimazaki-shinomoto']
+ALGORITHMS = [{'method': 'sqrt', 'steps': 90},
+              {'method': 'sturge', 'steps': 500},
+              {'method': 'rice', 'steps': 120},
+              {'method': 'doane', 'steps': 125},
 
-# ['scott', 'fd', 'ss']
-WIDTH_METHOD = 'ss'
-# ['base', 'sqrt', 'sturge', 'rice', 'doane']
-COUNT_METHOD = 'base'
+              {'method': 'scott', 'steps': 2600},
+              {'method': 'freedman-diaconis', 'steps': 3750},
+              {'method': 'shimazaki-shinomoto', 'steps': 10000}]
 
-
-def average_rolling(array):
-    """
-    Calculates moving(rolling) average.
-
-    :param array: input array
-    :return: calculated cumulative moving average
-    """
-    cumulative_sum = array.cumsum()
-    a = np.arange(array.size)
-    a = a + 1
-    rolling_mean = cumulative_sum / a
-    return rolling_mean
+i = 6
+METHOD = ALGORITHMS[i]['method']
+STEPS = ALGORITHMS[i]['steps']
 
 
 def extract_states(samples):
@@ -51,122 +44,40 @@ def extract_states(samples):
     return states
 
 
-def calculate_bin_width(samples):
-    def scott(array):
-        width = 3.49 * array.std() / (len(array) ** (1 / 3))
-        return width
+7
 
-    def freedman_diaconis(array):
-        inter_quartile_range = iqr(array, axis=0)
-        width = 2 * inter_quartile_range / (len(array) ** (1 / 3))
-        width = width.item()
-        return width
 
-    def shimazaki_shinomoto(array):
-        """
-        Shimazaki and Shinomoto's choice. Biased variance is recommended.
+def select_bin_counts(samples):
+    """
+    Calculates bin-counts via the given method.
 
-        :param array: sample array
-        :type array: np.ndarray
+    :param samples: collected samples
+    :type samples: np.ndarray
 
-        :return: bin-width
-        :rtype: float
-        """
-
-        def l2_risk_function(points):
-            lo = points.min()
-            hi = points.max()
-
-            n_min = lo + 1  # min number of splits
-            n_max = hi + 1  # max number of splits
-
-            counts = np.arange(n_min, n_max)  # number of bins vector
-            widths = (hi - lo) / counts  # width (size) of bins vector
-
-            costs = np.zeros((widths.size, 1))  # cost function values
-            for i in range(counts.size):
-                edges = np.linspace(lo, hi, counts[i] + 1)
-                current_frequency = plt.hist(points, edges)  # number of data points in the current bin
-                current_frequency = current_frequency[0]
-                costs[i] = (2 * current_frequency.mean() - current_frequency.var()) / (widths[i] ** 2)
-
-            return costs, widths, counts
-
-        cost_function_values, bucket_widths, bucket_counts = l2_risk_function(array)
-        optimal_index = np.argmin(cost_function_values)
-        optimal_width = bucket_widths[optimal_index]
-
-        bucket_edges = np.linspace(array.min(), array.max(), bucket_counts[optimal_index] + 1)
-
-        plt.rc('text', usetex=True)
-
-        plt.figure()
-        plt.hist(array, range(bucket_edges.size))
-        plt.title('Histogram')
-        plt.ylabel('Frequency')
-        plt.xlabel('Value')
-        plt.show()
-
-        plt.figure()
-        plt.plot(bucket_widths, cost_function_values, '.b', optimal_width, min(cost_function_values), '*r')
-        plt.title('Estimated Loss Function')
-        plt.ylabel('Loss')
-        plt.xlabel('Bin count')
-        plt.show()
-
-        return optimal_width
-
-    if WIDTH_METHOD == 'scott':
-        bin_width = scott(samples)
-    elif WIDTH_METHOD == 'fd':
-        bin_width = freedman_diaconis(samples)
-    elif WIDTH_METHOD == 'ss':
-        bin_width = shimazaki_shinomoto(samples)
+    :return: bin-count
+    :rtype: int
+    """
+    if METHOD == 'sqrt':
+        bin_count = methods.sqrt_choice(samples)
+    elif METHOD == 'sturge':
+        bin_count = methods.sturge(samples)
+    elif METHOD == 'rice':
+        bin_count = methods.rice(samples)
+    elif METHOD == 'doane':
+        bin_count = methods.doane(samples)
+    elif METHOD == 'scott':
+        bin_width = methods.scott(samples)
+        bin_count = methods.base_count(samples, bin_width)
+    elif METHOD == 'freedman-diaconis':
+        bin_width = methods.freedman_diaconis(samples)
+        bin_count = methods.base_count(samples, bin_width)
+    elif METHOD == 'shimazaki-shinomoto':
+        bin_width = methods.shimazaki_shinomoto(samples)
+        bin_count = methods.base_count(samples, bin_width)
     else:
-        raise KeyError('invalid bin width method')
+        raise KeyError('invalid bin-count selection method')
 
-    return bin_width
-
-
-def calculate_bin_count(samples, bin_width):
-    def base_choice(array, width):
-        count = np.ceil((array.max() - array.min()) / width)
-        count = int(count.item())
-        return count
-
-    def sqrt_choice(array):
-        count = np.ceil(np.sqrt(len(array)))
-        return count
-
-    def sturge(array):
-        count = np.ceil(np.log2(len(array))) + 1
-        return count
-
-    def rice(array):
-        count = np.ceil(2 * np.cbrt(len(array)))
-        return count
-
-    def doane(array):
-        n = len(array)
-        sig_g_1 = np.sqrt(6 * (n - 2) / ((n + 1) * (n + 3)))
-        g_1 = skew(array)
-        # g_1 = moment(array, moment=3)
-        count = 1 + np.log2(n) + np.log2(1 + (np.abs(g_1) / sig_g_1))
-        return count
-
-    if COUNT_METHOD == 'base':
-        bin_count = base_choice(samples, bin_width)
-    elif COUNT_METHOD == 'sqrt':
-        bin_count = sqrt_choice(samples)
-    elif COUNT_METHOD == 'sturge':
-        bin_count = sturge(samples)
-    elif COUNT_METHOD == 'rice':
-        bin_count = rice(samples)
-    elif COUNT_METHOD == 'doane':
-        bin_count = doane(samples)
-    else:
-        raise KeyError('invalid bin count method')
-
+    bin_count = int(bin_count)
     return bin_count
 
 
@@ -276,9 +187,8 @@ def run(mdp_domain):
     rewards, samples = agent.run(external_policy='randomized')
 
     states = extract_states(samples)
-    bucket_width = calculate_bin_width(samples=states)
-    bucket_count = calculate_bin_count(samples=states, bin_width=bucket_width)
 
+    bucket_count = select_bin_counts(samples=states)
     mdp_aggregate, aggregation_mapping = aggregate_mdp(values=state_values,
                                                        bin_count=bucket_count,
                                                        domain=domain)
@@ -304,74 +214,9 @@ def run(mdp_domain):
     print('original return:', rewards.sum())
     print('aggregate return:', rewards_aggregate.sum())
     print('adapted return:', rewards_aggregate_adapted.sum())
+    print('bin count:', bucket_count)
 
     return rewards, rewards_aggregate, rewards_aggregate_adapted
-
-
-def visualize_rewards(rewards, rewards_aggregate, rewards_aggregate_adapted):
-    titles = {'original': 'Original rewards', 'aggregate': 'Aggregate rewards', 'adapted': 'Adapted aggregate rewards'}
-
-    def plot_steps(original, aggregate, adapted):
-        fig, ax = plt.subplots()
-        ax.set_xticks([], [])
-        ax.set_yticks([], [])
-
-        ax1 = fig.add_subplot(311)
-        ax1.plot(original, color='r', label=titles['original'])
-        ax1.set_title(titles['original'])
-        ax1.set_xticks([], [])
-
-        ax2 = fig.add_subplot(312)
-        ax2.plot(aggregate, color='b', label=titles['aggregate'])
-        ax2.set_title(titles['aggregate'])
-        ax2.set_xticks([], [])
-        ax2.set_ylabel('Rewards')
-
-        ax3 = fig.add_subplot(313)
-        ax3.plot(adapted, color='g', label=titles['adapted'])
-        ax3.set_title(titles['adapted'])
-
-        plt.xlabel('Steps')
-        return plt
-
-    def plot_cumulative(original, aggregate, adapted):
-        plt.figure()
-        plt.plot(original.cumsum(),
-                 color='r', label=titles['original'])
-        plt.plot(aggregate.cumsum(),
-                 color='b', label=titles['aggregate'])
-        plt.plot(adapted.cumsum(),
-                 color='g', label=titles['adapted'])
-        plt.xlabel('Steps')
-        plt.ylabel('Cumulative reward')
-        plt.legend()
-        return plt
-
-    def plot_rolling(original, aggregate, adapted):
-        rolling_original = average_rolling(original)
-        rolling_aggregate = average_rolling(aggregate)
-        rolling_adapted = average_rolling(adapted)
-
-        plt.figure()
-        plt.plot(rolling_original, color='r', label=titles['original'])
-        plt.plot(rolling_aggregate, color='b', label=titles['aggregate'])
-        plt.plot(rolling_adapted, color='g', label=titles['adapted'])
-        plt.xlabel('Steps')
-        plt.ylabel('Rolling average reward')
-        plt.legend()
-        return plt
-
-    plot_steps(rewards, rewards_aggregate, rewards_aggregate_adapted)
-    plt.savefig(consts.RES_PATH + 'steps_rewards.png')
-    plt.show()
-
-    plot_cumulative(rewards, rewards_aggregate, rewards_aggregate_adapted)
-    plt.savefig(consts.RES_PATH + 'cumulative_rewards.png')
-    plt.show()
-
-    plot_rolling(rewards, rewards_aggregate, rewards_aggregate_adapted)
-    plt.savefig(consts.RES_PATH + 'rolling_rewards.png')
-    plt.show()
 
 
 if __name__ == '__main__':
@@ -379,4 +224,4 @@ if __name__ == '__main__':
     river_swim_domain = RiverSwimMDPDomain
     six_arms_domain = SixArmsMDPDomain
     original_rewards, aggregate_rewards, adapted_rewards = run(machine_replacement_domain)
-    visualize_rewards(original_rewards, aggregate_rewards, adapted_rewards)
+    visualize_rewards(original_rewards, aggregate_rewards, adapted_rewards, METHOD)
