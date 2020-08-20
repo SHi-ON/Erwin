@@ -41,7 +41,7 @@
 \begin{document}
 
 \twocolumn[
-\icmltitle{Fast Uniform [Distributional] State Aggregation \\ in Reinforcement Learning}
+\icmltitle{ Density-based [Distributional] State Aggregation \\ in Reinforcement Learning}
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
@@ -141,7 +141,12 @@
     While the newly emerged methods are growing at a staggering pace, a parallel area of research has been formed
     wherein a variety of techniques have been utilized to make these methods contravene their promised functionality.
 
-    Our contribution is a bifurcation.
+    Compared to other kernel-based density estimators such as \citep{HongLim2019}, histograms steer clear of feature
+    selection step which is more of an experimental process than a framework of rules to follow.
+    Our histogram-based state abstraction model yield a state space model by collecting samples in a domain-agnostic
+    way.
+
+    Our contribution is a two-fold.
     We first introduce an algorithm for aggregation in MDPs, then we move on to show advantages of taking such
     aggregation method to work.
     Hereby, we explain the paper structure in brief.
@@ -247,7 +252,8 @@ respectively.
     Proper \textit{bin width}, according to the definition, is to find a trade-off to capture similarities in data
     features and diminish variations caused by random sampling \cite{Knuth2019}.
 
-    Finding the bin width for a given distribution could be calculated by Freedman-Diaconis rule
+    \subsection{Bin width}
+    Finding the bin width for a given distribution could be calculated by Freedman-Diaconis's choice
     \cite{Freedman1981}.
     As the rule states:
 
@@ -256,18 +262,13 @@ respectively.
     \end{equation}
 
     where n is number of observations and $IQR(x)$ is the inter-quartile range of data.
-    This segmentation rule exhibits robustness to sample distribution due to low sensitivity of IQR to outliers and
+    The segmentation rule exhibits robustness to sample distribution due to low sensitivity of IQR to outliers and
     heteroscedasticity in the given distribution compared to conventional dispersion measures such as variance or
     standard deviation.
     State values, in this paper, are considered as the similarity metric \textcolor{red}{[measure]} in state
     aggregation.
 
     By having the inter-quartile range of data for each feature, a discretization policy can be calculated.
-
-
-    For the sake of clarity, we elaborate on some preliminary definitions here to have a consistent set of notations
-    to the end of this paper. We use model-free LSPI and LSTDQ \citep{Lagoudakis2003} to update and
-    evaluate the policy of actions, respectively.
 
     We developed an aggregation scheme to lower the state space dimensionality by assigning same action to the state
     in a neighbourhood, so called nearest neighbour/ piecewise linear aggregation.
@@ -287,7 +288,6 @@ respectively.
     \begin{equation}
         R = \sum_{k=0}^{\infty} \gamma^{k} r_{k+1}. \label{eq:return}
     \end{equation}
-
 
     \subsection{Aggregation}
     The original states with the closest \textit{calculated} values forgather to build aggregate states.
