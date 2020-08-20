@@ -1,0 +1,52 @@
+% Preamble
+\documentclass[11pt]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+% sans-serif typeface
+\renewcommand{\familydefault}{\sfdefault}
+
+% hyperlink setup
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    urlcolor=blue        % color of external links
+}
+
+% suppress page numbering
+\pagenumbering{gobble}
+
+% Document
+\begin{document}
+    \begin{flushleft}
+        \LARGE \textbf{Distributional State Aggregation in Reinforcement Learning}
+        \newline \break
+        \Large \textbf{Shayan Amani}
+        \newline \break
+        \textit{MS Project Presentation}
+        \newline \break
+
+        Tuesday, August 25, 2020 at 10:00 AM EST \\
+        via Zoom at \href{https://unh.zoom.us/j/98881910790}{https://unh.zoom.us/j/98881910790}
+
+    \end{flushleft}
+    \section*{Abstract}
+
+    Despite the theoretical promises, real-world problems introduce computational challenges in the adaption of reinforcement learning algorithms.
+    Such problems are often accompanied by an enormous state space, large enough to surpass the conventional memory and processing limits.
+    State aggregation encompasses ideas and methods to downscale a state space with a bounded error to yield a compact instance of the original problem ultimately.
+    Being around for decades, the recent advancement in state aggregation went in the shadow of approaches based on neural networks, though.
+    As an analytically-transparent method, state aggregation still has superior advantages over incorporating neural networks. \\
+
+    While a variety of approaches are available in the literature, the majority of the solutions are whether highly dependent on problem mechanics or make strong theoretical assumptions that render the results impractical.
+    Universal state aggregation methods are deemed to be necessary regardless of the low- level assumptions and properties.
+    This work proposes a class of non-parametric state aggregation methods merely based on the collected sample distribution.
+    Inspired by histograms as the density estimator, a myriad of practices are investigated, then experiments are performed to scrutinize the core hypothesis.
+    \newline \break
+    \textbf{Advisor}: \\
+    Marek Petrik
+
+
+\end{document}
+
